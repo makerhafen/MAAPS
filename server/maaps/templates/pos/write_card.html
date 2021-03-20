@@ -1,0 +1,105 @@
+{% extends "base_raspi.html" %}
+
+{% block content %}
+    <div class="row header">
+        <div class="col-xs-9">
+            <b class="header_title">Karte erstellen</b>
+        </div>
+        <a href="{% url 'pos__index' %}">
+            <div class="col-xs-3 header_link">
+                Zurück
+            </div>
+        </a>
+    </div>
+
+    {% if written_token != None %}
+       <h3> Token für <b>{% if written_token.machine != None %}{{written_token.machine}}{% endif %} {% if written_token.profile != None %}{{written_token.profile}}{% endif %}</b> erstellt</h3>
+    {% endif %}
+
+    <div class="row" style="text-align:center">
+        {% for token in tokens %}
+            <div id="{{ token.identifier }}" class="col-xs-12 token_list_item" style="font-size:1.5em;padding:10px;" onclick="select_token('{{ token.identifier }}')">
+                {% if token.machine != None %}{{token.machine}}{% endif %} {% if token.profile != None %}{{token.profile}}{% endif %}
+            </div>
+        {% endfor %}
+    </div>
+
+
+    <script>
+        function rfid_write(value, success_callback, error_callback){
+            document.getElementById( "write_token_button" ).classList.add("working");
+
+            var request = new XMLHttpRequest();
+            request.open("GET","http://127.0.0.1:8080/rfid/write/" + value);
+            request.addEventListener('load', function(event) {
+                document.getElementById( "write_token_button" ).classList.remove("working");
+               if (request.status >= 200 && request.status < 300) {
+                  success_callback(request.responseText)
+               } else {
+                  error_callback("hardware_response_unknown")
+               }
+            });
+            request.addEventListener('error', function(event) {
+                document.getElementById( "write_token_button" ).classList.remove("working");
+                error_callback("hardware_response_failed")
+            });
+            request.send();
+        }
+
+        function write_token(token){
+            document.getElementById("last_error").style.display = "none";
+            document.getElementById("last_error").innerHTML = "";
+            rfid_write(token, function(result_value){
+                    if(result_value == "OK"){
+                        document.getElementById( "rfid_token" ).value = token;
+                        document.getElementById( "form" ).submit();
+                    }else{
+                        document.getElementById("last_error").innerHTML = "Failed to write rfid tag";
+                        document.getElementById("last_error").style.display = "block";
+                    }
+                },
+                function(value){
+                    alert("error");
+                    error_txt = error_msg;
+                    if(error_msg == "hardware_response_unknown"){ error_txt = "Unknown hardware response";}
+                    if(error_msg == "hardware_response_failed") { error_txt = "Failed to reach hardware";}
+                    document.getElementById("last_error").innerHTML = error_txt;
+                    document.getElementById("last_error").style.display = "block";
+                }
+            );
+        }
+
+        function select_token(token){
+            document.getElementById( "rfid_token" ).value = token;
+            [].forEach.call(document.querySelectorAll(".token_list_item"), function(el) {
+                el.classList.remove("token_list_item_selected");
+            });
+            document.getElementById( token ).classList.add("token_list_item_selected")
+
+        }
+        function write_selected_token(){
+            token = document.getElementById( "rfid_token" ).value
+            if(token != ""){
+                write_token(token);
+            }
+        }
+    </script>
+
+    <style>
+        .token_list_item_selected {
+            background-color : green;
+        }
+        .working {
+            background-color:green !important;
+        }
+    </style>
+
+    <div class="row" id="last_error" style="background-color:red;height:20px;text-align:center;position:fixed;bottom:40px;width:100%;display:None"></div>
+
+    {% include "rfid/rfid_form.html" %}
+    <div class="row" id="write_token_button"  onclick="write_selected_token()" style="background-color:lightgreen;height:40px;text-align:center;position:fixed;bottom:0px;width:100%;">
+        <h4><b>Ausgewählten Tag Schreiben</b></h4>
+    </div>
+
+
+{% endblock %}

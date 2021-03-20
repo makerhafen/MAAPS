@@ -1,0 +1,96 @@
+{% extends "base_raspi.html" %}
+
+{% block content %}
+
+{% if transaction == None %}
+    <div class="row header">
+        <div class="col-xs-9">
+            <b class="header_title">Karte aufladen</b>
+        </div>
+        <a href="{% url 'pos__index' %}">
+            <div class="col-xs-3 header_link">
+                Abbrechen
+            </div>
+        </a>
+    </div>
+
+    <div class="row" style="text-align:center;font-size:2em;padding:5px">
+        <div class="col-xs-12" id="value">0 Euro</div>
+    </div>
+
+    <div style="text-align:center;font-size:2em">
+        <div class="row">
+            <div class="col-xs-3 bordered" onclick="button_clicked(5)">5 €</div>
+            <div class="col-xs-3 bordered" onclick="button_clicked(10)">10 €</div>
+            <div class="col-xs-3 bordered" onclick="button_clicked(20)">20 €</div>
+            <div class="col-xs-3 bordered" onclick="button_clicked(50)">50 € </div>
+        </div>
+    </div>
+
+    <form id="form" method="post" style="display:none">
+        {% csrf_token %}
+        <input id="rfid_token" type="text" name="rfid_token" value="{{ rfid_token }}">
+        <input id="deposit_value" type="number" name="deposit_value" value=0>
+    </form>
+
+    <div class="row" style="text-align:center">
+        <div class="col-xs-12"><h3>Tag auflegen zum bestätigen</h3></div>
+    </div>
+
+    <script>
+        function button_clicked(value){
+            document.getElementById('deposit_value').value = value;
+            document.getElementById('value').innerHTML = value.toFixed(2); + " Euro";
+        }
+    </script>
+
+    <style>
+        .bordered {
+            border: 1px solid lightgray;
+        }
+    </style>
+
+
+    {% include "rfid/rfid_bottom.html" %}
+    {% include "rfid/rfid_js.html" %}
+    <script>
+        document.getElementById( "read_token_button" ).addEventListener( "click", function ( event ) { rfid_read_and_post_form(); });
+    </script>
+
+{% else %}
+
+    <div class="row header">
+        <div class="col-xs-9">
+            <b class="header_title">Karte aufgeladen</b>
+        </div>
+    </div>
+
+    <div class="row" style="text-align:center">
+        <div class="col-xs-12">
+            <h3>
+                {{ transaction.value  |floatformat:2 }} Euro für <b>{{transaction.user.profile}}</b> eingezahlt
+            </h3>
+        </div>
+    </div>
+
+    <div class="row" style="text-align:center">
+        <div class="col-xs-12">
+            <h3>
+                Altes Guthaben: {{value_before_payment |floatformat:2 }} Euro
+            </h3>
+        </div>
+    <div class="col-xs-12">
+            <h3>
+                Neues Guthaben: {{transaction.user.profile.prepaid_deposit |floatformat:2 }} Euro
+            </h3>
+        </div>
+    </div>
+
+    <a href="{% url 'pos__index' %}">
+        <button class="btn btn-lg btn-success" style="width:100%">Ok</button>
+    </a>
+
+
+{% endif %}
+
+{% endblock %}

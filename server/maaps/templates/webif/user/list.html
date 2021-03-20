@@ -1,0 +1,48 @@
+{% extends "webif/base.html" %}
+
+{% block content %}
+    <br>
+    <div class="row">
+        <div class="col-md-8"><h4>Profile List</h4></div>
+        <div class="col-md-4" style="text-align:right"><a type="button" class="btn btn-success" href="{%url 'webif__user__create' %}">Neuen Nutzer stellen</a></div>
+    </div>
+
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Vorname</th>
+                        <th scope="col">Nachname</th>
+                        <th scope="col">Firma</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Guthaben (Euro)</th>
+                        <th scope="col">Auf Rechnung</th>
+                        <th scope="col">Wer Zahlt</th>
+                        <th scope="col">Bild</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for profile in profiles %}
+                    <tr>
+                        <td>{{ profile.user.first_name }}</td>
+                        <td>{{ profile.user.last_name }}</td>
+                        <td>{{ profile.company_name }}</td>
+                        <td>{{ profile.user.email }}</td>
+                        <td>{{ profile.prepaid_deposit }}</td>
+                        <td>{{ profile.allow_invoice }}</td>
+                        <td>{{ profile.paying_user }}</td>
+                        <td>
+                            {% if profile.profile_picture %}<img style="width:50px" src = "{{ profile.profile_picture.url }}"/>{% endif %}
+                        </td>
+                        <td><a type="button" class="btn btn-warning" href="/webif/user/update/{{ profile.id }}">Bearbeiten</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

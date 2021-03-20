@@ -1,0 +1,6 @@
+<div style="display:none">
+    <form id="form" method="post">
+        {% csrf_token %}
+        <input id="rfid_token" type="text" name="rfid_token" value="{{ rfid_token }}">
+    </form>
+</div>

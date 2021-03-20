@@ -1,0 +1,54 @@
+{% extends "base_raspi.html" %}
+
+{% block content %}
+    <div class="row" id="header" style="background-color:lightgray;">
+        <div class="col-xs-9">
+            <b style="font-size:2em">Kasse</b>
+        </div>
+        {% if admin_profile != None %}
+            <a href="{% url 'pos__logout' %}">
+                <div class="col-xs-3 header_link">
+                    Abmelden
+                </div>
+            </a>
+        {% endif %}
+
+    </div>
+
+
+
+    <br>
+    <div class="row" style="text-align:center">
+        <div class="col-xs-12">
+            <a href="{% url 'pos__payment' %}">
+                <button class="btn btn-lg btn-success" style="width:100%">Artikel Zahlen</button>
+            </a>
+        </div>
+    </div>
+
+
+    <br>
+    {{last_error}}
+
+    {% if admin_profile == None %}
+        <div class="row" style="text-align:center">
+            <div class="col-md-12">
+                <h3>Admin Karte einlesen</h3>
+            </div>
+        </div>
+
+        {% include "rfid/rfid_full.html" %}
+
+    {% else %}
+        <h3>Admin Funktionen: </h3>
+        <a href="{% url 'pos__deposit' %}">
+            <button class="btn btn-lg btn-success" style="width:100%">Karte aufladen</button>
+        </a>
+<br><br>
+        <a href="{% url 'pos__write_card' %}">
+            <button class="btn btn-lg btn-success" style="width:100%">Karte erstellen</button>
+        </a>
+    {% endif %}
+
+
+{% endblock %}

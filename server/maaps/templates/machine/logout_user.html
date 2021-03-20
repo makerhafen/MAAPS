@@ -1,0 +1,22 @@
+{% extends "machine/base.html" %}
+
+{% block content %}
+    <div class="row header">
+        <div class="col-md-12">
+            <b class="header_title">{{ machine.name }}</b>
+        </div>
+    </div>
+    Sitzung beendet <br> <br>
+
+    Von: {{ last_machine_session.start}}<br>
+    Bis: {{ last_machine_session.end}}<br>
+    <h3> Kosten: {{ last_payment_session.totalpayment |floatformat:2}} Euro<br></h3>
+    <br>
+
+    <a href="{% url 'machine__login' %}">
+        <button class="btn btn-lg btn-success" style="width:100%">Ok</button>
+    </a>
+
+    <iframe  style="display:none" src="http://127.0.0.1:8080/write_output/000"> </iframe>
+
+{% endblock %}

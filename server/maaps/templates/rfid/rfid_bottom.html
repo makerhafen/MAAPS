@@ -1,0 +1,22 @@
+<div class="row" id="last_error" style="background-color:red;height:20px;text-align:center;position:fixed;bottom:40px;width:100%;{% if last_error == None  %} display:none {% endif %}">
+    {% if last_error != None  %}
+        {% if last_error == "no_token_posted"        %} Kein Token übertragen
+        {% elif last_error == "empty_token"          %} RFID Token leer
+        {% elif last_error == "invalid_token"        %} Falsches Token Format
+        {% elif last_error == "unknown_token"        %} Unbekanntes Token
+        {% elif last_error == "no_machine_token"     %} Kein Maschinen Token
+        {% elif last_error == "no_user_token"        %} Kein Benutzer Token
+        {% elif last_error == "tutor_not_allowed"    %} Du bist kein Tutor für diese Maschine
+        {% elif last_error == "no_deposit_available" %} Kein Guthaben verfügbar
+        {% else                                      %} {{last_error}}
+        {% endif %}
+    {% endif %}
+</div>
+<style>
+    .working {
+        background-color:green !important;
+    }
+</style>
+<div class="row" id="read_token_button" style="background-color:lightgreen;height:40px;text-align:center;position:fixed;bottom:0px;width:100%;">
+    <h4><b>RFID LESEN</b></h4>
+</div>

@@ -1,0 +1,7 @@
+server/media
+server/db.sqlite3
+.DS_Store
+.idea
+__pycache__/
+*.py[cod]
+*$py.class

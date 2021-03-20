@@ -1,0 +1,35 @@
+{% extends "machine/base.html" %}
+
+{% block content %}
+    <div class="row header">
+        <div class="col-xs-9">
+            <b class="header_title">Andere Nutzer zahlt</b>
+        </div>
+        <a href="{% url 'machine__payment_required' %}">
+            <div class="col-xs-3 header_link">
+                Zurück
+            </div>
+        </a>
+    </div>
+    <div class="row" style="text-align:center">
+        <div class="col-xs-12">
+            <h3>Diese Maschine kostet {{ machine.price_per_hour  |floatformat:2 }} Euro pro Stunde.</h3>
+        </div>
+    </div>
+    <div class="row" style="text-align:center">
+        <div class="col-xs-12">
+            <h3>
+                Lies dein Tag ein um zu bestätigen das du für <b>{{machine.currentSession.user}}</b> zahlst.
+            </h3>
+        </div>
+    </div>
+
+    {% if payer_user_can_pay == False  %}
+       you can not pay, you need cash on your card
+    {% endif %}
+
+    {% include "rfid/rfid_full.html" %}
+
+    <iframe style="display:none" src="http://127.0.0.1:8080/write_output/000"> </iframe>
+
+{% endblock %}

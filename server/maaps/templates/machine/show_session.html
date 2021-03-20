@@ -1,0 +1,37 @@
+{% extends "machine/base.html" %}
+
+{% block content %}
+    <div class="row" id="header" style="background-color:lightgray;">
+        <div class="col-xs-12">
+            <b style="font-size:2em">{{ machine.name }}</b>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-9">
+            <div style="font-size:3em;text-align:center;padding-top:1px;"><h2> {{machine.currentSession.user.profile}}</h2> </div>
+        </div>
+        <div class="col-xs-3">
+            <img style="width:110px" src = "{{ machine.currentSession.user.profile.profile_picture.url }}"/>
+        </div>
+    </div>
+
+    <br>
+    <br>
+    {% if machine.ask_pay_material == True %}
+        <a href="{% url 'machine__pay_material' %}">
+            <button class="btn btn-lg btn-success" style="width:100%">Material bezahlen</button>
+        </a>
+    {% endif %}
+
+    <br>
+    <br>
+    <br>
+
+    <a href="{% url 'machine__logout_user' %}">
+        <button class="btn btn-lg btn-warning" style="width:100%">Abmelden</button>
+    </a>
+
+    <iframe style="display:none" src="http://127.0.0.1:8080/write_output/100"> </iframe>
+
+{% endblock %}

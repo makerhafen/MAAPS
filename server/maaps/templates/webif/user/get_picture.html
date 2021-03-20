@@ -1,0 +1,31 @@
+<input hidden type="text" id = "image_data" name="image_data" value="">
+<div class="row">
+    <div class="col-md-6">
+        <video style="width:100%" id="player" controls autoplay></video>
+    </div>
+    <div class="col-md-6" style="">
+        <canvas width=1280 height=960 style="width:100%;height:100%" id="canvas"></canvas>
+    </div>
+    <div class="col-md-12">
+        <button type="button" class="btn btn-success" id="capture">Foto machen</button>
+    </div>
+</div>
+
+<script>
+    const player = document.getElementById('player');
+    const canvas = document.getElementById('canvas');
+    const context = canvas.getContext('2d');
+    const captureButton = document.getElementById('capture');
+
+    const constraints = { video: true, };
+
+    captureButton.addEventListener('click', () => {
+        context.drawImage(player, 0, 0, canvas.width, canvas.height);
+        var url = canvas.toDataURL();
+        document.getElementById("image_data").value = url;
+    });
+
+    navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
+        player.srcObject = stream;
+    });
+</script>

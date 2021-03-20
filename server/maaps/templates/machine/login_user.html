@@ -1,0 +1,27 @@
+{% extends "machine/base.html" %}
+
+{% block content %}
+    <div class="row header">
+        <div class="col-md-12">
+            <b class="header_title">{{ machine.name }}</b>
+        </div>
+    </div>
+
+    <div class="row" style="text-align:center">
+        <div class="col-xs-12">
+            <h2>Benutzer anmelden</h2>
+        </div>
+    </div>
+
+    {% if user_has_no_access == True %}
+        Du hast noch keinen zugriff auf diese maschine, mach einen workshop oder melde idhc an der theke
+    {% endif %}
+    {% if token_is_invalid  %}
+        this is not a valid user token
+    {% endif %}
+
+    {% include "rfid/rfid_full.html" %}
+
+    <iframe style="display:none" src="http://127.0.0.1:8080/write_output/000"> </iframe>
+
+{% endblock %}

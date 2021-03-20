@@ -1,0 +1,107 @@
+{% extends "base_raspi.html" %}
+
+{% block content %}
+    {% if transaction == None %}
+        <div class="row header">
+            <div class="col-xs-9">
+                <b class="header_title">Artikel zahlen</b>
+            </div>
+            <a href="{% url 'pos__index' %}">
+                <div class="col-xs-3 header_link">
+                    Abbrechen
+                </div>
+            </a>
+        </div>
+        {{last_error}}
+        <div class="row" style="text-align:center;font-size:2em;padding:5px">
+            <div class="col-xs-6" id="value">0 Euro</div>
+            <div class="col-xs-6" onclick="button_clicked(0)">Clear</div>
+        </div>
+
+        <div style="text-align:center;font-size:2em">
+            <div class="row">
+                <div class="col-xs-3 bordered" onclick="button_clicked(0.1)">0.1 €</div>
+                <div class="col-xs-3 bordered" onclick="button_clicked(0.2)">0.2 €</div>
+                <div class="col-xs-3 bordered" onclick="button_clicked(0.5)">0.5 €</div>
+                <div class="col-xs-3 bordered" onclick="button_clicked(1)">1 € </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-3 bordered" onclick="button_clicked(2)">2 €</div>
+                <div class="col-xs-3 bordered" onclick="button_clicked(5)">5 €</div>
+                <div class="col-xs-3 bordered" onclick="button_clicked(10)">10 €</div>
+                <div class="col-xs-3 bordered" onclick="button_clicked(20)">20 € </div>
+            </div>
+        </div>
+
+        <div class="row" style="text-align:center">
+            <div class="col-xs-12"><h4>Tag einlesen zum zahlen</h4></div>
+        </div>
+
+        <form id="form" method="post" style="display:none">
+            {% csrf_token %}
+            <input id="rfid_token" type="text" name="rfid_token" value="{{ rfid_token }}">
+            <input id="payment_value" type="number" name="payment_value" value="0">
+        </form>
+
+        <script>
+            function button_clicked(value){
+
+                if(value == 0){
+                    document.getElementById('payment_value').value = 0;
+                    document.getElementById('value').innerHTML = "0 Euro";
+                }else{
+                    document.getElementById('payment_value').value = parseFloat(document.getElementById('payment_value').value) + value;
+                    document.getElementById('value').innerHTML =  parseFloat(document.getElementById('payment_value').value).toFixed(2) + " Euro";
+                }
+            }
+        </script>
+
+        <style>
+            .bordered {
+                border: 1px solid lightgray;
+            }
+        </style>
+
+
+        {% include "rfid/rfid_bottom.html" %}
+        {% include "rfid/rfid_js.html" %}
+        <script>
+            document.getElementById( "read_token_button" ).addEventListener( "click", function ( event ) { rfid_read_and_post_form(); });
+        </script>
+
+    {% else %}
+
+
+       <div class="row header">
+            <div class="col-xs-9">
+                <b class="header_title">Artikel bezahlt</b>
+            </div>
+        </div>
+
+        <div class="row" style="text-align:center">
+            <div class="col-xs-12">
+                <h3>
+                    {% if transaction == None %}
+                        {% if payment.creator != payment.user %}
+                            {{payment.value |floatformat:2 }} Euro werden <b>{{payment.creator.profile.paying_user}}</b> in Rechnung gestellt!
+                        {% else %}
+                            {{payment.value |floatformat:2 }} Euro werden dir in Rechnung gestellt
+                        {% endif %}
+                    {% else %}
+                        {% if payment.creator != payment.user %}
+                            {{ transaction.value |floatformat:2  }} Euro wurden von <b>{{payment.creator.profile.paying_user}}</b> Guthaben abgebucht.
+                        {% else %}
+                            {{ transaction.value |floatformat:2  }} Euro wurden von deinem Guthaben abgebucht.
+                        {% endif %}
+                    {% endif %}
+                </h3>
+            </div>
+        </div>
+
+        <a href="{% url 'pos__index' %}">
+            <button class="btn btn-lg btn-success" style="width:100%">Ok</button>
+        </a>
+
+
+    {% endif %}
+{% endblock %}

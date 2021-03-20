@@ -1,0 +1,56 @@
+{% extends "machine/base.html" %}
+
+{% block content %}
+    <div class="row header">
+        <div class="col-xs-9">
+            <b class="header_title">Zahlung bestätigen</b>
+        </div>
+        <a href="{% url 'machine__logout_user' %}">
+            <div class="col-xs-3 header_link">
+                Abbrechen
+            </div>
+        </a>
+    </div>
+
+    <div class="row" style="text-align:center">
+        <div class="col-xs-12">
+            <h3>Diese Maschine kostet {{ machine.price_per_hour}} Euro pro Stunde.</h3>
+        </div>
+    </div>
+
+    <div class="row" style="text-align:center">
+        <div class="col-xs-12">
+            <h3>
+                {% if user_can_pay == True %}
+                    {% if machine.currentSession.user.profile.paying_user != None %}
+                        <b>{{machine.currentSession.user.profile.paying_user}}</b> zahlt für Dich!
+                    {% else %}
+                        {% if machine.currentSession.user.profile.allow_invoice == True %}
+                            Du kannst auf Rechnung zahlen
+                        {% else %}
+                            Du hast {{machine.currentSession.user.profile.prepaid_deposit}} Euro Guthaben
+                        {% endif %}
+                    {% endif %}
+                {% else %}
+                    {% if machine.currentSession.user.profile.paying_user != None %}
+                        <b>{{machine.currentSession.user.profile.paying_user}}</b> zahlt für Dich, hat aber nicht genug Guthaben.
+                    {% else %}
+                        Du hast nicht genug Guthaben.
+                    {% endif %}
+                {% endif %}
+            </h3>
+        </div>
+    </div>
+    <div class="row" style="text-align:center">
+        <a href="{% url 'machine__payment_other_user_pays' %}"> <div class="col-xs-12">Ein anderer Benutzer Zahlt</div></a>
+    </div>
+    <br>
+    <br>
+    {% if user_can_pay == True %}
+        <form  method="post">
+            {% csrf_token %}
+            <button class="btn btn-lg btn-success" style="width:100%" type="submit" name="confirm_payment"value="confirm_payment">Bestätigen</button>
+        </form>
+    {% endif %}
+
+{% endblock %}

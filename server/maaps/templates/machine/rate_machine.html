@@ -1,0 +1,55 @@
+{% extends "machine/base.html" %}
+
+{% block content %}
+    <div class="row header">
+        <div class="col-xs-9">
+            <b class="header_title">Maschine bewerten</b>
+        </div>
+        <a href="{% url 'machine__logout_user' %}">
+            <div class="col-xs-3 header_link">
+                Abbrechen
+            </div>
+        </a>
+    </div>
+
+    <div class="row" style="text-align:center;">
+        <div class="col-xs-12">
+            <h3>Wie sauber und ordentlich hast du diese Maschine vorgefunden?</h3>
+        </div>
+    </div>
+
+    <div class="row" style="text-align:center;">
+        <div class="col-xs-12" style="font-size:4em;">
+            <span class="fa fa-star" id="star_1" onclick="star_clicked(1)"></span>
+            <span class="fa fa-star" id="star_2" onclick="star_clicked(2)"></span>
+            <span class="fa fa-star" id="star_3" onclick="star_clicked(3)"></span>
+            <span class="fa fa-star" id="star_4" onclick="star_clicked(4)"></span>
+            <span class="fa fa-star" id="star_5" onclick="star_clicked(5)"></span>
+        </div>
+    </div>
+
+    <script>
+        function star_clicked(number){
+            document.getElementById('clean_rating').value = number;
+            for (var i = 1; i <= number; i++) {
+               document.getElementById('star_' + i).classList.add("checked");
+            }
+            for (var i = number+1; i <= 5; i++) {
+               document.getElementById('star_' + i).classList.remove("checked");
+            }
+        }
+    </script>
+    <style>
+        .checked {
+          color: orange;
+        }
+    </style>
+<br>
+<br>
+    <form  method="post">
+        {% csrf_token %}
+        <input style="display:none" id="clean_rating" type="text" name="clean_rating" value="{{ clean_rating }}">
+        <button class="btn btn-lg btn-success" style="width:100%" type="submit" value="OK">Bewerten</button>
+    </form>
+
+{% endblock %}

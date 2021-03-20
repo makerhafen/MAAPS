@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block style %}
+    {{ block.super }}
+    <style>
+        body {
+            width:480px;
+            height:320px;
+        }
+
+        .header {
+            background-color:lightgray;
+        }
+
+        .header_title {
+            font-size:2em;
+        }
+
+        .header_link {
+            text-align:center;
+            padding-top: 4px;
+            font-size:1.5em;
+        }
+    </style>
+{% endblock %}

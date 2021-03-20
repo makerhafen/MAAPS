@@ -1,0 +1,27 @@
+{% extends "webif/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    {% if last_error != None %}
+        <div class="row">
+            <div class="col-md-12 ">
+                <b>Fehler:</b><br>
+            </div>
+        </div>
+    {% endif %}
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <h5>Neuen Benutzer anlegen</h5>
+            <form method="post">
+                {% csrf_token %}
+                {{form|crispy}}
+                {% include "webif/user/get_picture.html" %}
+                <br>
+                <br>
+                <a type="button" class="btn btn-danger" href="{%url 'webif__user__list' %}">Abbrechen</a>
+                <button type="submit" class="btn btn-success">Erstellen</button>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

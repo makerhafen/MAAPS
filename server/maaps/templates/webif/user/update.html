@@ -1,0 +1,40 @@
+{% extends "webif/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-6 col-md-offset-2"><h4>Benutzer <b>{{profile}}</b> aktualisieren</h4></div>
+        <div class="col-md-3 ">
+            {% if profile.profile_picture %}
+                <img style="width:110px" src = "{{ profile.profile_picture.url }}"/>
+            {% endif %}
+        </div>
+    </div>
+
+        {% if last_error != None %}
+            <div class="row">
+                <div class="col-md-12 ">
+                    <b>Fehler:</b><br>
+                </div>
+            </div>
+        {% endif %}
+
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <form method="post">
+                {% csrf_token %}
+                {{form|crispy}}
+                <h4>Maschinen Zugriff</h4>
+                {% for machine in machines %}
+                    <input type="checkbox" name="allowed_machines" value="{{ machine.id }}"  {% if profile.user in machine.allowed_users.all %}checked{% endif %}> {{ machine }}<br>
+                {% endfor %}
+                <h4>Foto</h4>
+                {% include "webif/user/get_picture.html" %}
+                <br>
+                <br>
+                <a type="button" class="btn btn-danger" href="{%url 'webif__user__list' %}">Cancel</a>
+                <button type="submit" class="btn btn-success">Update</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

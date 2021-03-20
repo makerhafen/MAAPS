@@ -1,0 +1,25 @@
+{% extends "machine/base.html" %}
+
+{% block content %}
+    <div class="row header">
+        <div class="col-xs-9">
+            <b class="header_title">Machine Login</b>
+        </div>
+        <a href="{% url 'index' %}">
+            <div class="col-xs-3 header_link">
+                Abbrechen
+            </div>
+        </a>
+    </div>
+
+    <div class="row" style="text-align:center">
+        <div class="col-xs-12">
+            <h2>Maschinen Karte auflegen um Endgerät zu entsperren</h2>
+        </div>
+    </div>
+
+    {% include "rfid/rfid_full.html" %}
+
+    <iframe style="display:none" src="http://127.0.0.1:8080/write_output/000"> </iframe>
+
+{% endblock %}

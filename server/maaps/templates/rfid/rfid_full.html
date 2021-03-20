@@ -1,0 +1,6 @@
+{% include "rfid/rfid_bottom.html" %}
+{% include "rfid/rfid_form.html" %}
+{% include "rfid/rfid_js.html" %}
+<script>
+    document.getElementById( "read_token_button" ).addEventListener( "click", function ( event ) { rfid_read_and_post_form(); });
+</script>

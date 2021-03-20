@@ -1,0 +1,42 @@
+{% extends "machine/base.html" %}
+
+{% block content %}
+    <div class="row header">
+        <div class="col-xs-9">
+            <b class="header_title">Tutor benötigt</b>
+        </div>
+        <a href="{% url 'machine__logout_user' %}">
+            <div class="col-xs-3 header_link">
+                Abbrechen
+            </div>
+        </a>
+    </div>
+
+    <div class="row" style="text-align:center">
+        <div class="col-xs-12">
+            {% if tutor_required %}
+                <h2> Du benötigst noch einen Tutor.</h2>
+                <h3> Du hast diese Maschine erst <b>{{machine_usage_count}}</b> von <b>{{machine.tutor_required_count}}</b> mal benutzt.</h3>
+            {% else %}
+                {% if tutor_required_once %}
+                    <h2> Du benötigst diese mal einen Tutor.</h2>
+                    <h3> Du hast diese Maschine seit {{machine.tutor_required_once_after_month}} Monaten nicht benutzt</h3>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+
+    <br>
+    <br>
+
+    <div class="row" style="text-align:center">
+        <div class="col-xs-12">
+            <h4>Tutor Karte einlesen</h4>
+        </div>
+    </div>
+
+    {% include "rfid/rfid_full.html" %}
+
+    <iframe style="display:none" src="http://127.0.0.1:8080/write_output/000"> </iframe>
+
+{% endblock %}

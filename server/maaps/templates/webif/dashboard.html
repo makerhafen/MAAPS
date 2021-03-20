@@ -1,0 +1,15 @@
+{% extends "webif/base.html" %}
+
+{% block content %}
+
+    <h3>Aktive sitzungen</h3>
+    {% for machineSession in machineSessions_active %}
+        {{ machineSession }}
+    {% endfor %}
+
+    <h3>Kürzliche beendet sitzungen</h3>
+    {% for machineSession in machineSessions_ended %}
+        {{ machineSession }}
+    {% endfor %}
+
+{% endblock %}
