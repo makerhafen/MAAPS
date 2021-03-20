@@ -56,13 +56,13 @@ def write_rfid(text):
         time.sleep(0.1)
     return id, output
 
-def install(lcd_rotation, host):
+def install_lcd(lcd_rotation):
     os.system("apt-get update")
     os.system("apt-get upgrade")
-    if lcd_rotation != -1:
-        os.system("cd /tmp/ && git clone https://github.com/waveshare/LCD-show.git")
-        os.system("cd /tmp/LCD-show/ && chmod +x LCD35-show && ./LCD35-show %s" % lcd_rotation)
+    os.system("cd /tmp/ && git clone https://github.com/waveshare/LCD-show.git")
+    os.system("cd /tmp/LCD-show/ && chmod +x LCD35-show && ./LCD35-show %s" % lcd_rotation)
 
+def install(host):
     os.system("pip3 install spidev mfrc522 bottle")
     configline = 'dtoverlay=spi1-1cs,cs0_pin=16 # bcm pin 16, pcb pin 36'
     content = open("/boot/config.txt","r").read()
@@ -86,10 +86,12 @@ if len(sys.argv) > 1:
     if sys.argv[1] == "read":
         print("RFID TAG AUFLEGEN")
         print(read_rfid())
-    if sys.argv[1] == "install":
+    if sys.argv[1] == "install_lcd":
         lcd_rotation = sys.argv[2] # 0,90,180,270 or -1 to disable lcd install
-        host = sys.argv[3] # 0,90,180,270 or -1 to disable lcd install
-        install(lcd_rotation,host)
+        install_lcd(lcd_rotation)
+    if sys.argv[1] == "install":
+        host = sys.argv[2]
+        install(host)
     exit(0)
 
 from bottle import route, run
