@@ -165,7 +165,7 @@ def Machine__create_token(sender, instance, *args, **kwargs):
     if instance.tokens.all().count() == 0:
         token = Token()
         token.enabled = True
-        token.can_write = True
+        token.can_write = False
         token.machine = instance
         token.save()
 

@@ -7,3 +7,4 @@ from .payment_required import machine__payment_required
 from .rate_machine import machine__rate_machine
 from .show_session import machine__show_session
 from .tutor_required import machine__tutor_required
+from .logout_machine import machine__logout_machine
