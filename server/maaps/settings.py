@@ -6,7 +6,7 @@ SECRET_KEY = 'fo15rp=#xbqzp$4w07r%b^tl34707gxoa8zbr51a@lc&kp3s&e'
 
 DEBUG = True
 
-ALLOWED_HOSTS = ["192.168.6.240", "192.168.42.26","127.0.0.1"]
+ALLOWED_HOSTS = ["*"]
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 

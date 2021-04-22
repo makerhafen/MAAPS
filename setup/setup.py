@@ -134,6 +134,7 @@ n0dxqd1kD55tippq4uMcM9jEvlNV3Dy7qucKLSE1i4cLQuFl1wBJOKfLj3LMCHYg
     '''
 
     def install(self):
+        self._git_download()
         self._ssh('''
            sudo apt-get install stunnel
         ''')
@@ -205,5 +206,5 @@ for server in servers:
 #    machine.install(servers[0])
 #for pos in poss:
 #    pos.install(servers[0])
-for server in servers:
-    server.backup()
+#for server in servers:
+#    server.backup()
