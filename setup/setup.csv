@@ -1,0 +1,4 @@
+type   , ip            , username , password  , lcd_rotation , token
+server , 192.168.43.105, pi       , raspberry , 0            ,
+pos    , 192.168.43.105, pi       , raspberry , 0            ,
+machine, 192.168.43.105, pi       , raspberry , 0            , M:Lasercutter;47638c5c8b4e250744cd

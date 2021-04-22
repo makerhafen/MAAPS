@@ -14,8 +14,8 @@ RELAY_3_GPIO =  6 # Raspi GPIO for Relay 3
 ##
 class Installer():
     def install_lcd(self, lcd_rotation):
-        os.system("apt-get update")
-        os.system("apt-get upgrade")
+        os.system("apt-get -y update")
+        os.system("apt-get -y upgrade")
         os.system("pip3 install spidev mfrc522 bottle")
         os.system("cd /tmp/ && git clone https://github.com/waveshare/LCD-show.git")
         os.system("cd /tmp/LCD-show/ && chmod +x LCD35-show && ./LCD35-show %s" % lcd_rotation)
@@ -34,7 +34,7 @@ class Installer():
 
     def _install_autostart_hardwarepy(self):
         content = open("/etc/xdg/lxsession/LXDE-pi/autostart","r").read()
-        configline = 'python3 /home/pi/hardware.py'
+        configline = 'python3 /home/pi/MAAPS/client/hardware.py'
         if configline not in content:
             content += "\n%s" % configline
             open("/etc/xdg/lxsession/LXDE-pi/autostart","w").write(content)
@@ -100,13 +100,13 @@ except: # Dummy class for debugging without client
             pass
         def write(self, value):
             print("Dummy RFID write '%s'" % value)
-
+            return 12345, value
         def write_no_block(self, value):
             return self.write(value)
 
         def read(self):
             print("Dummy RFID read")
-            return 3143143, "test value" # id, value
+            return 54321, "test value"
 
         def read_no_block(self):
             return self.read()
@@ -198,17 +198,21 @@ def route_relay(names="all", value="off"):
 ## Commandline
 ##
 if __name__ == "__main__":
-    rfid = RFID()
-    relayboard = RelayBoard()
 
     if len(sys.argv) == 1:
+        rfid = RFID()
+        relayboard = RelayBoard()
         bottle.run(host='127.0.0.1', port=8080)
     else:
         if sys.argv[1] == "write":
+            rfid = RFID()
+            relayboard = RelayBoard()
             print("RFID TAG AUFLEGEN")
             print(rfid.write(sys.argv[2]))
 
         elif sys.argv[1] == "read":
+            rfid = RFID()
+            relayboard = RelayBoard()
             print("RFID TAG AUFLEGEN")
             print(rfid.read())
 
