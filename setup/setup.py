@@ -24,8 +24,8 @@ class System():
         self._ssh('''
         git clone https://github.com/makerhafen/MAAPS.git ; 
         cd MAAPS ; git pull ; 
-        cd client ; sudo pip3 install -r requirements.py ; cd ..
-        cd server ; sudo pip3 install -r requirements.py
+        cd client ; sudo pip3 install -r requirements.txt ; cd ..
+        cd server ; sudo pip3 install -r requirements.txt
         ''')
 
     def _scp(self, source, destination, timeout=120):
