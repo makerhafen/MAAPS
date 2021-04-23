@@ -1,6 +1,5 @@
 import time
 import sys
-import os
 
 RFID_SPI_BUS = 1    # SPI BUS for RFID
 RFID_SPI_DEVICE = 0 # SPI device for RFID
@@ -8,44 +7,6 @@ RFID_SPI_DEVICE = 0 # SPI device for RFID
 RELAY_1_GPIO = 26 # Raspi GPIO for Relay 1
 RELAY_2_GPIO = 13 # Raspi GPIO for Relay 2
 RELAY_3_GPIO =  6 # Raspi GPIO for Relay 3
-
-##
-## Installer
-##
-class Installer():
-    def install_lcd(self, lcd_rotation):
-        os.system("apt-get -y update")
-        os.system("apt-get -y upgrade")
-        os.system("pip3 install spidev mfrc522 bottle")
-        os.system("cd /tmp/ && git clone https://github.com/waveshare/LCD-show.git")
-        os.system("cd /tmp/LCD-show/ && chmod +x LCD35-show && ./LCD35-show %s" % lcd_rotation)
-
-    def install(self, host, type, token=""):
-        self._install_spi()
-        self._install_autostart_hardwarepy()
-        self._install_autostart_chromium(host, type, token)
-
-    def _install_spi(self):
-        configline = 'dtoverlay=spi1-1cs,cs0_pin=16 # bcm pin 16, pcb pin 36'
-        content = open("/boot/config.txt","r").read()
-        if configline not in content:
-            content += "\n%s" % configline
-        open("/boot/config.txt", "w").write(content)
-
-    def _install_autostart_hardwarepy(self):
-        content = open("/etc/xdg/lxsession/LXDE-pi/autostart","r").read()
-        configline = 'python3 /home/pi/MAAPS/client/hardware.py'
-        if configline not in content:
-            content += "\n%s" % configline
-            open("/etc/xdg/lxsession/LXDE-pi/autostart","w").write(content)
-
-    def _install_autostart_chromium(self, host, type, token):
-        content = open("/etc/xdg/lxsession/LXDE-pi/autostart","r").read()
-        cmd = "chromium-browser --disable-restore-session-state --kiosk"
-        content = "\n".join([l for l in content.split("\n") if not l.startswith(cmd)]) # remove old config line
-        content += "\n%s '%s/%s/%s'" % (cmd, host, type, token)
-        open("/etc/xdg/lxsession/LXDE-pi/autostart","w").write(content)
-
 
 ##
 ## RELAY
@@ -86,7 +47,6 @@ class RelayBoard():
         self.relay_1 = self._Relay("Relay 1", RELAY_1_GPIO)
         self.relay_2 = self._Relay("Relay 2", RELAY_2_GPIO)
         self.relay_3 = self._Relay("Relay 3", RELAY_3_GPIO)
-
 
 ##
 ## RFID
@@ -193,35 +153,22 @@ def route_relay(names="all", value="off"):
     print(names, value)
     return "OK"
 
-
 ##
 ## Commandline
 ##
 if __name__ == "__main__":
+    rfid = RFID()
+    relayboard = RelayBoard()
 
     if len(sys.argv) == 1:
-        rfid = RFID()
-        relayboard = RelayBoard()
         bottle.run(host='127.0.0.1', port=8080)
     else:
         if sys.argv[1] == "write":
-            rfid = RFID()
-            relayboard = RelayBoard()
             print("RFID TAG AUFLEGEN")
             print(rfid.write(sys.argv[2]))
-
         elif sys.argv[1] == "read":
-            rfid = RFID()
-            relayboard = RelayBoard()
             print("RFID TAG AUFLEGEN")
             print(rfid.read())
-
-        elif sys.argv[1] == "install_lcd":
-            Installer().install_lcd(sys.argv[2]) # 0,90,180,270 or -1 to disable lcd install
-
-        elif sys.argv[1] == "install":
-            Installer().install(host = sys.argv[2], type = sys.argv[3], token = sys.argv[4] if len(sys.argv) >= 4 else "")
-
         else:
             print("Unknown Option '%s'" % sys.argv[1])
 
