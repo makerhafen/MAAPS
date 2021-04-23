@@ -1,4 +1,4 @@
-type   , ip            , username , password  , lcd_rotation , token
-server , 192.168.43.105, pi       , raspberry , 0            ,
-pos    , 192.168.43.105, pi       , raspberry , 0            ,
-machine, 192.168.43.105, pi       , raspberry , 0            , M:Lasercutter;4ca09c53a3ac422d5a23
+type   , ip            , mac_address       , username , password  , lcd_rotation , token
+server , 192.168.43.105, dc:a6:32:0b:d9:9b , pi       , raspberry , 0            ,
+pos    , 192.168.43.105, dc:a6:32:0b:d9:9b , pi       , raspberry , 0            ,
+machine, 192.168.43.105, dc:a6:32:0b:d9:9b , pi       , raspberry , 0            , M:Lasercutter;4ca09c53a3ac422d5a23

@@ -7,9 +7,10 @@ import sys
 SSH_OPTIONS = '-q -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -oPubkeyAuthentication=no'
 
 class System():
-    def __init__(self, type, ip, username, password, lcd_rotation, token):
+    def __init__(self, type, ip, mac_address, username, password, lcd_rotation, token):
         self.type = type
         self.ip = ip
+        self.mac_address = mac_address
         self.username = username
         self.password = password
         self.lcd_rotation = lcd_rotation
@@ -29,12 +30,10 @@ class System():
 
     def _scp(self, source, destination, timeout=120):
         ssh_cmd = 'scp %s %s %s@%s:%s' % (SSH_OPTIONS, source, self.username, self.ip,destination )
-        print(ssh_cmd)
         return self._ssh_exec(ssh_cmd, timeout)
 
     def _ssh(self, cmd, timeout=120):
         ssh_cmd = 'ssh %s@%s %s "%s"' % (self.username, self.ip, SSH_OPTIONS, cmd)
-        print(ssh_cmd)
         return self._ssh_exec(ssh_cmd, timeout)
 
     def _ssh_exec(self,ssh_cmd , timeout):
@@ -100,6 +99,8 @@ class Server(System):
     sslVersion = all
     options = NO_SSLv2
     '''
+    def __init__(self, type, ip, mac_address, username, password):
+        super().__init__(type, ip, mac_address, username, password, None, "")
 
     def install(self):
         self._install_stunnel()
@@ -136,6 +137,7 @@ class Server(System):
         self._ssh_exec(ssh_cmd, 120)
         ssh_cmd = 'scp %s %s@%s:/home/pi/MAAPS/server/db.sqlite3 %s' % (SSH_OPTIONS, self.username, self.ip,destination )
         self._ssh_exec(ssh_cmd, 120)
+        print("Backup done to '%s'" % destination)
 
 class POS(Raspberry):
     pass
@@ -157,24 +159,23 @@ class SiteSetup():
             l = l.strip()
             if l == "":continue
             parts = [p.strip() for p in l.split(",")]
-            type, ip, username, password, lcd_rotation, token = parts
+            type, ip, mac_address, username, password, lcd_rotation, token = parts
             if type == "server":
                 if self.server is not None:
                     raise Exception("Only one server is allowed")
-                self.server = Server(type, ip, username, password, lcd_rotation, token)
+                self.server = Server(type, ip, mac_address, username, password)
             elif type == "pos":
-                self.poss.append(POS(type, ip, username, password, lcd_rotation, token))
+                self.poss.append(POS(type, ip, mac_address, username, password, lcd_rotation, token))
             elif type == "machine":
-                self.machines.append(Machine(type, ip, username, password, lcd_rotation, token))
-
+                self.machines.append(Machine(type, ip, mac_address, username, password, lcd_rotation, token))
 
 help = '''
     setup.py
     setup.py install <ip | all> # install/upgrade raspberry pi machine or pos
     setup.py serversetup  # install/upgrade server
+    setup.py backup  # backup server
+    #setup.py search <first_ip> <nr_of_ips>  # search for raspberry PIs in local network 
 '''
-
-siteSetup = SiteSetup()
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
@@ -182,6 +183,9 @@ if __name__ == "__main__":
         print(help)
         exit(1)
     option = sys.argv[1]
+
+    siteSetup = SiteSetup()
+
     if option == "install":
         if len(sys.argv) < 3:
             print("\n    Error: Missing target ip or all")
@@ -194,8 +198,13 @@ if __name__ == "__main__":
         for pos in siteSetup.poss:
             if pos.ip == target or target == "all":
                 pos.install(siteSetup.server)
+
+    elif option == "backup":
+        siteSetup.server.backup()
+
     elif option == "serversetup":
         siteSetup.server.install()
+
     else:
         print("unknown option '%s'" % sys.argv[1])
 
