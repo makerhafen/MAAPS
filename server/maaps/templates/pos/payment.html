@@ -85,13 +85,13 @@
                         {% if payment.creator != payment.user %}
                             {{payment.value |floatformat:2 }} Euro werden <b>{{payment.creator.profile.paying_user}}</b> in Rechnung gestellt!
                         {% else %}
-                            {{payment.value |floatformat:2 }} Euro werden dir in Rechnung gestellt
+                            {{payment.value |floatformat:2 }} Euro werden dir in Rechnung gestellt <b>{{payment.user.profile}}</b>
                         {% endif %}
                     {% else %}
                         {% if payment.creator != payment.user %}
                             {{ transaction.value |floatformat:2  }} Euro wurden von <b>{{payment.creator.profile.paying_user}}</b> Guthaben abgebucht.
                         {% else %}
-                            {{ transaction.value |floatformat:2  }} Euro wurden von deinem Guthaben abgebucht.
+                            {{ transaction.value |floatformat:2  }} Euro wurden von deinem Guthaben abgebucht <b>{{payment.user.profile}}</b>
                         {% endif %}
                     {% endif %}
                 </h3>
