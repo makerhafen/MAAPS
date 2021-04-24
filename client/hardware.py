@@ -1,5 +1,6 @@
 import time
 import sys
+import os
 
 RFID_SPI_BUS = 1    # SPI BUS for RFID
 RFID_SPI_DEVICE = 0 # SPI device for RFID
@@ -30,24 +31,39 @@ except:
 
 class RelayBoard():
     class _Relay():
-        def __init__(self, name, RASPI_GPIO):
+        def __init__(self, name, RASPI_GPIO, board):
             self.name = name
             self.RASPI_GPIO = RASPI_GPIO
             self._ledio = LED(RASPI_GPIO)
+            self.board = board
+            self.is_active = False
             self.disable()
 
         def enable(self):
             print("%s enable" % self.name)
             self._ledio.off()  # relay board is low active
+            self.is_active = True
 
         def disable(self):
             print("%s disable" % self.name)
             self._ledio.on()
+            self.is_active = False
 
     def __init__(self):
-        self.relay_1 = self._Relay("Relay 1", RELAY_1_GPIO)
-        self.relay_2 = self._Relay("Relay 2", RELAY_2_GPIO)
-        self.relay_3 = self._Relay("Relay 3", RELAY_3_GPIO)
+        self.relay_1 = self._Relay("Relay 1", RELAY_1_GPIO, self)
+        self.relay_2 = self._Relay("Relay 2", RELAY_2_GPIO, self)
+        self.relay_3 = self._Relay("Relay 3", RELAY_3_GPIO, self)
+
+    def check_screenblank(self):
+        if self.relay_1.is_active is True or self.relay_2.is_active is True or self.relay_3.is_active is True:
+            self._disable_screenblank()
+        else:
+            self._enable_screenblank()
+
+    def _disable_screenblank(self):
+        os.system('export DISPLAY=:0;xset s off')
+    def _enable_screenblank(self):
+        os.system('export DISPLAY=:0;xset s 180')
 
 ##
 ## RFID

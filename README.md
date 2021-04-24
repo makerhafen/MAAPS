@@ -4,7 +4,7 @@ MAAPS - Machine Access And Payments System
 
 ### Hardware
 
-- Raspberry PI 4
+- Raspberry PI
 - Raspberry 3.5 inch Touch Display https://www.amazon.de/dp/B07YV5WYM3
 - RFID card reader https://www.amazon.de/dp/B074S9FZC5
 - Raspberry Pi Relay Board https://www.amazon.de/dp/B01FZ7XLJ4
@@ -33,25 +33,24 @@ Add devices to setup/devices.csv, edit setup/wpa_supplicant.conf to match your w
 ```
 python3 setup.py serversetup
 ```
-On first install login to server now, go to /home/pi/MAAPS/server and run
+On first install login to server now, go to /home/{PI_USERNAME}/MAAPS/server and run
 ```
 python3 manage.py createsuperuser 
 ```
-
 
 to add your first user. 
 Open the user admin page https://SERVERIP/webif/user/list, add firstname and lastname to admin user and save.
 Open the django admin page at https://SERVERIP/admin/, open the "Tokens" page and get the token identifier for admin (for example U:admin;4c31a8d19b95a7dfe85c)
 
-#### First Point of Sale
+#### Point of Sale
 Install your first point of sale
 ```
 python3 setup.py install <POS_IP>
 ```
 After that, we must write our first admin RFID card. 
-Login to the first POS, go to /home/pi/MAAPS/client/. 
+Login to the first POS, go to /home/{PI_USERNAME}/MAAPS/client/. 
 Use the token you got from the token admin page
 ```
 python3 hardware.py write "YOUR_ADMIN_TOKEN_HERE" 
 ```
-After your first card was created, you can login on the POS with this card and write additional cards.
+After your first card was created, you can login on the POS with this card and create additional cards.
