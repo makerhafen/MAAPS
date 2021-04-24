@@ -135,7 +135,7 @@ class Server(System):
         ''' % (self.username, self.username))
 
     def backup(self):
-        date_time = datetime.now().strftime("%m.%d.%Y_%H:%M:%S")
+        date_time = datetime.now().strftime("%Y.%m.%d_%H:%M:%S")
         destination = "backups/%s/" % date_time
         os.system("mkdir -p '%s'" % destination)
         ssh_cmd = 'scp -r %s %s@%s:/home/%s/MAAPS/server/media/ %s' % (SSH_OPTIONS, self.username, self.ip, self.username ,destination )

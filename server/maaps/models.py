@@ -18,7 +18,7 @@ class Token(models.Model):
 
 def rename_file(instance, filename):
     ext = filename.split('.')[-1]
-    filename = '{}_{}_{}.{}'.format(instance.user.username, datetime.today().strftime('%Y-%m-%d'),("%s" % uuid.uuid4()).split("-")[0], ext)
+    filename = '{}_{}.{}'.format(instance.user.username, datetime.today().strftime('%Y.%m.%d_%H:%M:%S'), ext)
     return os.path.join('photos/', filename)
 
 class Profile(models.Model):

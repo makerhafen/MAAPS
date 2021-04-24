@@ -32,7 +32,7 @@ class UserForm(forms.Form):
         user.save()
         if self.profile_picture is not None:
             img_io = io.BytesIO(self.profile_picture)
-            user.profile.profile_picture.save("image.png", File(img_io))
+            user.profile.profile_picture.save("image.jpg", File(img_io))
         user.profile.allow_invoice = self.cleaned_data["allow_invoice"]
         user.profile.company_name = self.cleaned_data["company_name"]
         user.profile.paying_user = self.cleaned_data["paying_user"]
