@@ -62,8 +62,8 @@ class Raspberry(System):
             echo 'avoid_warnings=1' | sudo tee -a  /boot/config.txt ;
         ''')
         self._ssh('''
-            cat /etc/xdg/lxsession/LXDE-pi/autostart | grep -v "xset s " > 1 ; sudo mv 1 /etc/xdg/lxsession/LXDE-pi/autostart ;
-            echo "export DISPLAY=:0;xset s 180" | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart ;
+            cat /etc/xdg/lxsession/LXDE-pi/autostart | grep -v 'xset s ' > 1 ; sudo mv 1 /etc/xdg/lxsession/LXDE-pi/autostart ;
+            echo 'export DISPLAY=:0;xset s 180' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart ;
         ''')
 
     def _install_lcd(self):
