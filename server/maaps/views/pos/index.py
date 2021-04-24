@@ -8,10 +8,13 @@ def pos__index(request):
     error = None
     if admin_profile is None:
         profile, error = get_profile_from_post(request)
-        if profile is not None and profile.user.is_staff:
-            request.session["profile_id"] = profile.id
-            admin_profile = profile
-            
+        if profile is not None:
+            if profile.user.is_staff:
+                request.session["profile_id"] = profile.id
+                admin_profile = profile
+            else:
+                error = "user_is_not_staff"
+
     template = loader.get_template('pos/index.html')
     return HttpResponse(template.render({
         "admin_profile": admin_profile,
