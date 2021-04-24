@@ -61,12 +61,10 @@ class Raspberry(System):
         self._install_autostart_chromium(server)
 
     def _install_lcd(self):
-        self._ssh('''
-            apt-get -y update;
-            apt-get -y upgrade;
-            cd /tmp/ && git clone https://github.com/waveshare/LCD-show.git;
-            cd /tmp/LCD-show/ && chmod +x LCD35-show && ./LCD35-show %s;
-        ''' % self.lcd_rotation)
+        self._ssh('sudo apt-get -y update', timeout=180)
+        self._ssh('sudo apt-get -y upgrade', timeout=60*5)
+        self._ssh('cd /tmp/ && git clone https://github.com/waveshare/LCD-show.git;')
+        self._ssh('cd /tmp/LCD-show/ && chmod +x LCD35-show && sudo ./LCD35-show %s;' % self.lcd_rotation)
 
     def _install_spi(self):
         self._ssh('''
@@ -79,6 +77,10 @@ class Raspberry(System):
         self._ssh('''
             cat /etc/xdg/lxsession/LXDE-pi/autostart | grep -v hardware.py > 1 ; sudo mv 1 /etc/xdg/lxsession/LXDE-pi/autostart ;
             echo "python3 /home/pi/MAAPS/client/hardware.py" | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart ;
+        ''')
+        self._ssh('''
+            cat /boot/config.txt | grep -v avoid_warnings > 1 ; sudo mv 1 /boot/config.txt ;
+            echo "avoid_warnings = 1" | sudo tee -a  /boot/config.txt ;
         ''')
 
     def _install_autostart_chromium(self, server):
@@ -112,7 +114,7 @@ class Server(System):
         self._ssh('''
             sudo apt-get install stunnel ; 
             cd /etc/stunnel/;
-            sudo rm stunnel.key stunnel.cert stunnel.pem 
+            sudo rm stunnel.key stunnel.cert stunnel.pem ;
             openssl genrsa 2048 |sudo tee -a stunnel.key ; 
             sudo openssl req -new -x509 -nodes -sha1 -days 365 -key stunnel.key  -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=www.example.com"|sudo tee -a  stunnel.cert ;   
             sudo cat stunnel.key stunnel.cert |sudo tee -a  stunnel.pem ;     
@@ -152,8 +154,26 @@ class SiteSetup():
         self.machines = []
         self._read_data()
 
+    def scan_network(self, network):
+        import scapy.all as scapy
+        partialip = ".".join(network.split(".")[0:-1])
+        for i in range(0, 256):
+            curr_ip = partialip + "." + str(i)
+            arp_request = scapy.ARP(pdst=curr_ip)
+            broadcast = scapy.Ether(dst="ff:ff:ff:ff:ff:ff")
+            arp_request_broadcast = broadcast / arp_request
+            answered_list = scapy.srp(arp_request_broadcast, timeout=0.3, verbose=False)[0]
+            for element in answered_list:
+                ip = element[1].psrc
+                mac = element[1].hwsrc
+                status = ""
+                if mac.startswith("dc:a6:32"):
+                    status = "THIS IS A PI"
+                print(ip + "\t\t" + mac + "\t" + status)
+                break
+
     def _read_data(self):
-        lines = open("setup.csv","r").read().split("\n")[1:]
+        lines = open("devices.csv","r").read().split("\n")[1:]
 
         for l in lines:
             l = l.strip()
@@ -174,6 +194,7 @@ help = '''
     setup.py install <ip | all> # install/upgrade raspberry pi machine or pos
     setup.py serversetup  # install/upgrade server
     setup.py backup  # backup server
+    setup.py configcard <dir> # config sd card
     #setup.py search <first_ip> <nr_of_ips>  # search for raspberry PIs in local network 
 '''
 
@@ -199,8 +220,26 @@ if __name__ == "__main__":
             if pos.ip == target or target == "all":
                 pos.install(siteSetup.server)
 
+    elif option == "scan":
+        if len(sys.argv) < 3:
+            print("\n    Error: Missing target network to scan")
+            print(help)
+            exit(1)
+        network = sys.argv[2]
+        siteSetup.scan_network(network)
+
+    elif option == "configcard":
+        if len(sys.argv) < 3:
+            print("\n    Error: Missing target directory")
+            print(help)
+            exit(1)
+        directory = sys.argv[2]
+        open(os.path.join(directory, "wpa_supplicant.conf" ), "w").write(open("wpa_supplicant.conf","r").read())
+        open(os.path.join(directory, "ssh"), "w").write('')
+
     elif option == "backup":
         siteSetup.server.backup()
+
 
     elif option == "serversetup":
         siteSetup.server.install()
