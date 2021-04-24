@@ -16,10 +16,6 @@ class System():
         self.lcd_rotation = lcd_rotation
         self.token = token
 
-    def ping(self):
-        print("### PING %s %s" % (self.type, self.ip))
-        os.system("ping -c 2 -t 2 -q -Q %s" % self.ip)
-
     def _git_download(self):
         self._ssh('''
         git clone https://github.com/makerhafen/MAAPS.git ; 
@@ -59,6 +55,7 @@ class Raspberry(System):
         self._install_spi()
         self._install_hardwarepy()
         self._install_autostart_chromium(server)
+        self._ssh('sudo reboot')
 
     def _install_lcd(self):
         self._ssh('sudo apt-get -y update', timeout=180)
@@ -69,18 +66,18 @@ class Raspberry(System):
     def _install_spi(self):
         self._ssh('''
             cat /boot/config.txt | grep -v MAAPS > 1 ; sudo mv 1 /boot/config.txt ;
-            echo "dtoverlay=spi1-1cs,cs0_pin=16 # bcm pin 16, pcb pin 36, MAAPS" | sudo tee -a  /boot/config.txt ;
+            echo 'dtoverlay=spi1-1cs,cs0_pin=16 # bcm pin 16, pcb pin 36, MAAPS' | sudo tee -a  /boot/config.txt ;
         ''')
 
     def _install_hardwarepy(self):
         self._git_download()
         self._ssh('''
             cat /etc/xdg/lxsession/LXDE-pi/autostart | grep -v hardware.py > 1 ; sudo mv 1 /etc/xdg/lxsession/LXDE-pi/autostart ;
-            echo "python3 /home/pi/MAAPS/client/hardware.py" | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart ;
+            echo 'python3 /home/pi/MAAPS/client/hardware.py' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart ;
         ''')
         self._ssh('''
             cat /boot/config.txt | grep -v avoid_warnings > 1 ; sudo mv 1 /boot/config.txt ;
-            echo "avoid_warnings = 1" | sudo tee -a  /boot/config.txt ;
+            echo 'avoid_warnings = 1' | sudo tee -a  /boot/config.txt ;
         ''')
 
     def _install_autostart_chromium(self, server):

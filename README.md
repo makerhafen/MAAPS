@@ -25,45 +25,33 @@ MAAPS - Machine Access And Payments System
 | Pin 37     | GPIO 26  | Relais 1 | Relais CH1  | Jumper auf Relais board |
 
 
-### Server
+### Setup
+
+Add devices to setup/devices.csv, edit setup/wpa_supplicant.conf to match your wlan.
+
+#### Server
 ```
-python3 manage.py migrate
+python3 setup.py serversetup
+```
+On first install login to server now, go to /home/pi/MAAPS/server and run
+```
 python3 manage.py createsuperuser 
 ```
-Run Server with
-```
-python3 manage runserver 0.0.0.0:8000
-```
-Open a browser, connect to your server on {ip:port}/admin and login with your admin user.
 
 
-### Raspberry
+to add your first user. 
+Open the user admin page https://SERVERIP/webif/user/list, add firstname and lastname to admin user and save.
+Open the django admin page at https://SERVERIP/admin/, open the "Tokens" page and get the token identifier for admin (for example U:admin;4c31a8d19b95a7dfe85c)
 
-Copy /raspberry/hardware.py to your raspberry pi /home/pi/hardware.py.
-
-##### Install LCD driver
-Set {lcd_rotation} to 0,90,180,270 depending on your needs, your pi will reboot after this command
-``` 
-sudo python3 hardware.py install_lcd {lcd_rotation} 
+#### First Point of Sale
+Install your first point of sale
 ```
-
-##### Write first card
-Open the admin page {ip:port}/admin, open the "Tokens" page and get the token identifier for admin (for example U:admin;4c31a8d19b95a7dfe85c)
+python3 setup.py install <POS_IP>
 ```
-python3 hardware.py write "YOUR_TOKEN_HERE"
+After that, we must write our first admin RFID card. 
+Login to the first POS, go to /home/pi/MAAPS/client/. 
+Use the token you got from the token admin page
 ```
-
-##### Setup Point Of Sale   
+python3 hardware.py write "YOUR_ADMIN_TOKEN_HERE" 
 ```
-sudo python3 hardware.py install {host_and_port} pos
-```
-Set {host_and_port} according to your server setup  
-
-##### Setup Machine
-Add Machine in admin webinterface, get machine token.
-
-```
-sudo python3 hardware.py install {host_and_port} machine {token}
-```
-Set {host_and_port} according to your server setup  
-Set {token} to token of machine
+After your first card was created, you can login on the POS with this card and write additional cards.
