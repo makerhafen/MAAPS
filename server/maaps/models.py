@@ -3,8 +3,10 @@ from django.dispatch import receiver
 from django.db.models.signals import pre_save,post_save
 from django.contrib.auth.models import User
 from django.db.models import Q
+from django_resized import ResizedImageField
 import os, uuid
 from datetime import datetime, timedelta
+from django.utils.timezone import now
 
 
 class Token(models.Model):
@@ -18,7 +20,7 @@ class Token(models.Model):
 
 def rename_file(instance, filename):
     ext = filename.split('.')[-1]
-    filename = '{}_{}.{}'.format(instance.user.username, datetime.today().strftime('%Y.%m.%d_%H:%M:%S'), ext)
+    filename = '{}_{}.{}'.format(instance.user.username, now().strftime('%Y.%m.%d_%H.%M.%S'), ext)
     return os.path.join('photos/', filename)
 
 class Profile(models.Model):
@@ -28,7 +30,7 @@ class Profile(models.Model):
     paying_user = models.OneToOneField("Profile", on_delete=models.CASCADE, blank=True, null=True)
     prepaid_deposit = models.FloatField(default=0)
     allow_invoice   = models.BooleanField(default=False)
-    profile_picture = models.ImageField(blank=True, null=True, upload_to=rename_file)
+    profile_picture = ResizedImageField(blank=True, null=True, upload_to=rename_file)
     company_name = models.CharField(max_length=200, blank=True)
 
     def __str__(self):
