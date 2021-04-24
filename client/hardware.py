@@ -43,11 +43,13 @@ class RelayBoard():
             print("%s enable" % self.name)
             self._ledio.off()  # relay board is low active
             self.is_active = True
+            self.board.check_screenblank()
 
         def disable(self):
             print("%s disable" % self.name)
             self._ledio.on()
             self.is_active = False
+            self.board.check_screenblank()
 
     def __init__(self):
         self.relay_1 = self._Relay("Relay 1", RELAY_1_GPIO, self)
