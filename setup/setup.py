@@ -51,15 +51,18 @@ class System():
 class Raspberry(System):
     def install(self, server):
         self._install_lcd()
-        time.sleep(30)
+        time.sleep(30) # wait for pi to reboot
         self._install_spi()
         self._install_hardwarepy()
         self._install_autostart_chromium(server)
         self._ssh('sudo reboot')
 
-    def _install_lcd(self):
+    def update_raspberry(self):
         self._ssh('sudo apt-get -y update', timeout=180)
-        self._ssh('sudo apt-get -y upgrade', timeout=60*5)
+        self._ssh('sudo apt-get -y upgrade', timeout=180)
+        self._ssh('sudo apt-get remove lxplug-ptbatt pulseaudio cups-browsed lxpanel', timeout=180)
+
+    def _install_lcd(self):
         self._ssh('cd /tmp/ && git clone https://github.com/waveshare/LCD-show.git;')
         self._ssh('cd /tmp/LCD-show/ && chmod +x LCD35-show && sudo ./LCD35-show %s;' % self.lcd_rotation)
 
@@ -77,7 +80,7 @@ class Raspberry(System):
         ''')
         self._ssh('''
             cat /boot/config.txt | grep -v avoid_warnings > 1 ; sudo mv 1 /boot/config.txt ;
-            echo 'avoid_warnings = 1' | sudo tee -a  /boot/config.txt ;
+            echo 'avoid_warnings=1' | sudo tee -a  /boot/config.txt ;
         ''')
 
     def _install_autostart_chromium(self, server):
@@ -237,7 +240,6 @@ if __name__ == "__main__":
 
     elif option == "backup":
         siteSetup.server.backup()
-
 
     elif option == "serversetup":
         siteSetup.server.install()

@@ -34,6 +34,7 @@ class RelayBoard():
             self.name = name
             self.RASPI_GPIO = RASPI_GPIO
             self._ledio = LED(RASPI_GPIO)
+            self.disable()
 
         def enable(self):
             print("%s enable" % self.name)
@@ -158,9 +159,9 @@ def route_relay(names="all", value="off"):
 ##
 if __name__ == "__main__":
     rfid = RFID()
-    relayboard = RelayBoard()
 
     if len(sys.argv) == 1:
+        relayboard = RelayBoard()
         bottle.run(host='127.0.0.1', port=8080)
     else:
         if sys.argv[1] == "write":
