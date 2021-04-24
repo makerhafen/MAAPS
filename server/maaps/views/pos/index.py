@@ -4,7 +4,10 @@ from django.shortcuts import redirect
 from maaps.views.functions.session import get_profile_from_post, get_profile_from_session
 
 def pos__index(request):
-    admin_profile = get_profile_from_session(request)
+    profile = get_profile_from_session(request)
+    admin_profile = None
+    if profile.user.is_staff:
+        admin_profile = profile
     error = None
     if admin_profile is None:
         admin_profile, error = get_profile_from_post(request)

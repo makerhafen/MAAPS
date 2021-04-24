@@ -104,6 +104,7 @@ class Server(System):
     def install(self):
         self._install_stunnel()
         self._install_server()
+        self._ssh('sudo reboot')
 
     def _install_stunnel(self):
         open("/tmp/stunnel_conf","w").write(Server.stunnel_conf)
@@ -116,7 +117,7 @@ class Server(System):
             sudo openssl req -new -x509 -nodes -sha1 -days 365 -key stunnel.key  -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=www.example.com"|sudo tee -a  stunnel.cert ;   
             sudo cat stunnel.key stunnel.cert |sudo tee -a  stunnel.pem ;     
             sudo mv /tmp/stunnel.conf /etc/stunnel/stunnel.conf ; 
-            cat /etc/xdg/lxsession/LXDE-pi/autostart | grep -v stunnel > 1 ; sudo mv 1 /etc/xdg/lxsession/LXDE-pi/autostart ; 
+            cat /etc/xdg/lxsession/LXDE-pi/autostart | grep -v stunnel > /tmp/1 ; sudo mv /tmp/1 /etc/xdg/lxsession/LXDE-pi/autostart ; 
             echo "nohup sudo stunnel4 /etc/stunnel/stunnel.conf" | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart ;  
         ''')
 
