@@ -36,10 +36,15 @@
             </div>
             <div class="col-xs-6">
                 <a href="{% url 'machine__auto_logout' %}">
-                    <button class="btn btn-lg btn-warning" style="width:100%">Automatisch abmelden</button>
+                    <button class="btn btn-lg btn-success" style="width:100%">Automatisch abmelden</button>
                 </a>
             </div>
         </div>
+        {% if machine.currentSession.autologout_at != None %}
+            <p id="auto_logout" style="text-align:center">
+                Automatisch abmelden in <b>{{machine.currentSession.autologout_timediff.1}}</b> Stunde und <b>{{machine.currentSession.autologout_timediff.2}}</b> Minuten.
+            </p>
+        {% endif %}
     {% else %}
         <a href="{% url 'machine__logout_user' %}">
             <button class="btn btn-lg btn-warning" style="width:100%">Abmelden</button>

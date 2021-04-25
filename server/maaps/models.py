@@ -5,9 +5,9 @@ from django.contrib.auth.models import User
 from django.db.models import Q
 from django_resized import ResizedImageField
 import os, uuid
-from datetime import datetime, timedelta
+from datetime import timedelta
 from django.utils.timezone import now
-
+import math
 
 class Token(models.Model):
     created    = models.DateTimeField(auto_now_add=True)
@@ -66,7 +66,7 @@ class Machine(models.Model):
     def user_requires_tutor_once(self, user):
         if user.is_staff: return False
         if self.count_usages(user) > 0:
-            nr_of_latest_sessions = MachineSession.objects.filter(~Q(start=None), ~Q(end=None), machine = self, user = user, end__gt=datetime.now() - timedelta(days=self.tutor_required_once_after_month*31)).count()
+            nr_of_latest_sessions = MachineSession.objects.filter(~Q(start=None), ~Q(end=None), machine = self, user = user, end__gt=now() - timedelta(days=31*self.tutor_required_once_after_month)).count()
             if nr_of_latest_sessions == 0 :
                 return True
         return False
@@ -89,6 +89,14 @@ class MachineSession(models.Model):
     end     = models.DateTimeField(default=None, blank=True, null=True)
     comment = models.CharField(max_length=10000, blank=True)
     rating_clean = models.IntegerField(default=-1)
+
+    @property
+    def autologout_timediff(self):
+        if self.autologout_at is not None:
+            timediff_total_minutes = int(math.ceil(( self.autologout_at - now()).total_seconds()/60))
+            timediff_minutes = timediff_total_minutes % 60
+            timediff_hours = int((timediff_total_minutes - timediff_minutes) / 60)
+            return timediff_total_minutes, timediff_hours, timediff_minutes
 
 class MachineSessionPayment(models.Model):
     created         = models.DateTimeField(auto_now_add=True)

@@ -17,11 +17,11 @@
     <p id="auto_logout"    style="display:none;text-align:center">Automatisch abmelden in <b id="timediff_hours"></b> Stunde und <b id="timediff_minutes"></b> Minuten.</p>
 
     <br>
-    <button class="btn btn-lg btn-success" onclick="value_minus(60)">- 1h</button>
-    <button class="btn btn-lg btn-success" onclick="value_minus(10)">- 10min</button>
-    <button class="btn btn-lg btn-success" onclick="value_plus(10)">+ 10min</button>
-    <button class="btn btn-lg btn-success" onclick="value_plus(60)">+ 1h</button>
-    <button class="btn btn-lg btn-success" onclick="value_clear()">Clear</button>
+    <button class="btn btn-lg btn-success" onclick="update_value(-60)">- 1h</button>
+    <button class="btn btn-lg btn-success" onclick="update_value(-10)">- 10min</button>
+    <button class="btn btn-lg btn-success" onclick="update_value(10)">+ 10min</button>
+    <button class="btn btn-lg btn-success" onclick="update_value(60)">+ 1h</button>
+    <button class="btn btn-lg btn-success" onclick="clear_value()">Clear</button>
 
     <form  method="post">
         {% csrf_token %}
@@ -30,13 +30,8 @@
     </form>
 
     <script>
-
-        function value_plus(minutes){
-            document.getElementById('autologout_in_minutes').value =  parseFloat(document.getElementById('autologout_in_minutes').value) + minutes;
-            update_view();
-        }
-        function value_minus(minutes){
-            v = parseFloat(document.getElementById('autologout_in_minutes').value) - minutes;
+        function update_value(minutes){
+            v = Math.ceil(parseFloat(document.getElementById('autologout_in_minutes').value) + minutes);
             if (v > 0){
                  document.getElementById('autologout_in_minutes').value = v;
             }else{
@@ -44,14 +39,14 @@
             }
             update_view();
         }
-        function value_clear(){
+        function clear_value(){
             document.getElementById('autologout_in_minutes').value = 0;
             update_view();
         }
         function update_view(){
             value = parseFloat(document.getElementById('autologout_in_minutes').value);
-            minutes = Math.floor(value % 60);
-            hours = Math.floor( (value - minutes) / 60);
+            minutes = Math.ceil(value % 60);
+            hours = Math.ceil( (value - minutes) / 60);
             document.getElementById('timediff_hours').innerHTML = hours;
             document.getElementById('timediff_minutes').innerHTML = minutes;
             if (value > 0){
@@ -66,7 +61,7 @@
         {% if timediff_total_minutes == None %}
             document.getElementById('autologout_in_minutes').value = 0;
         {% else %}
-            document.getElementById('autologout_in_minutes').value = Math.floor({{ timediff_total_minutes }});
+            document.getElementById('autologout_in_minutes').value = Math.ceil({{ timediff_total_minutes }});
         {% endif %}
         update_view();
     </script>
