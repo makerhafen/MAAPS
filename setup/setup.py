@@ -42,6 +42,10 @@ class System():
         print(stdout)
         return stdout
 
+    def reboot(self):
+        self._ssh('sudo reboot')
+        print("System %s rebooting" % self.ip)
+
 
 class Raspberry(System):
     def install(self, server):
@@ -51,7 +55,7 @@ class Raspberry(System):
         self._install_spi()
         self._install_hardwarepy()
         self._install_autostart_chromium(server)
-        self._ssh('sudo reboot')
+        self.reboot()
 
     def _update_raspberry(self):
         self._ssh('sudo apt-get -y update', timeout=600)
@@ -111,7 +115,7 @@ class Server(System):
     def install(self):
         self._install_stunnel()
         self._install_server()
-        self._ssh('sudo reboot')
+        self.reboot()
 
     def _install_stunnel(self):
         open("/tmp/stunnel_conf","w").write(Server.stunnel_conf)
@@ -154,8 +158,8 @@ class Server(System):
         self._ssh_exec(ssh_cmd, 120)
         ssh_cmd = 'scp %s %s/db.sqlite3 %s@%s:/home/%s/MAAPS/server/' % (SSH_OPTIONS, source_dir, self.username, self.ip, self.username )
         self._ssh_exec(ssh_cmd, 120)
-        print("Restore done from '%s', rebooting" % source_dir)
-        self._ssh('sudo reboot')
+        print("Restore done from '%s'" % source_dir)
+        self.reboot()
 
 
 class POS(Raspberry):
@@ -164,6 +168,7 @@ class POS(Raspberry):
 
 class Machine(Raspberry):
     pass
+
 
 class SiteSetup():
     def __init__(self):
@@ -202,6 +207,7 @@ class SiteSetup():
                 self.poss.append(POS(type, ip, mac_address, username, password, lcd_rotation, token))
             elif type == "machine":
                 self.machines.append(Machine(type, ip, mac_address, username, password, lcd_rotation, token))
+
 
 help = '''
     setup.py
