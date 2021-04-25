@@ -1,0 +1,74 @@
+{% extends "machine/base.html" %}
+
+{% block content %}
+    <div class="row header">
+        <div class="col-xs-9">
+            <b class="header_title">Automatisch abmelden</b>
+        </div>
+        <a href="{% url 'machine__show_session' %}">
+            <div class="col-xs-3 header_link">
+                Abbrechen
+            </div>
+        </a>
+    </div>
+    <br>
+
+    <p id="no_auto_logout" style="display:none;text-align:center">Niemals</p>
+    <p id="auto_logout"    style="display:none;text-align:center">Automatisch abmelden in <b id="timediff_hours"></b> Stunde und <b id="timediff_minutes"></b> Minuten.</p>
+
+    <br>
+    <button class="btn btn-lg btn-success" onclick="value_minus(60)">- 1h</button>
+    <button class="btn btn-lg btn-success" onclick="value_minus(10)">- 10min</button>
+    <button class="btn btn-lg btn-success" onclick="value_plus(10)">+ 10min</button>
+    <button class="btn btn-lg btn-success" onclick="value_plus(60)">+ 1h</button>
+    <button class="btn btn-lg btn-success" onclick="value_clear()">Clear</button>
+
+    <form  method="post">
+        {% csrf_token %}
+        <input style="display:none" id="autologout_in_minutes" type="text" name="autologout_in_minutes" value="{{ timediff_total_minutes }}">
+        <button class="btn btn-lg btn-success" style="width:100%" type="submit" value="OK">Einstellen</button>
+    </form>
+
+    <script>
+
+        function value_plus(minutes){
+            document.getElementById('autologout_in_minutes').value =  parseFloat(document.getElementById('autologout_in_minutes').value) + minutes;
+            update_view();
+        }
+        function value_minus(minutes){
+            v = parseFloat(document.getElementById('autologout_in_minutes').value) - minutes;
+            if (v > 0){
+                 document.getElementById('autologout_in_minutes').value = v;
+            }else{
+                document.getElementById('autologout_in_minutes').value = 0;
+            }
+            update_view();
+        }
+        function value_clear(){
+            document.getElementById('autologout_in_minutes').value = 0;
+            update_view();
+        }
+        function update_view(){
+            value = parseFloat(document.getElementById('autologout_in_minutes').value);
+            minutes = Math.floor(value % 60);
+            hours = Math.floor( (value - minutes) / 60);
+            document.getElementById('timediff_hours').innerHTML = hours;
+            document.getElementById('timediff_minutes').innerHTML = minutes;
+            if (value > 0){
+                document.getElementById('no_auto_logout').style.display = "none";
+                document.getElementById('auto_logout').style.display = "block";
+            }else{
+                document.getElementById('no_auto_logout').style.display = "block";
+                document.getElementById('auto_logout').style.display = "none";
+            }
+        }
+
+        {% if timediff_total_minutes == None %}
+            document.getElementById('autologout_in_minutes').value = 0;
+        {% else %}
+            document.getElementById('autologout_in_minutes').value = Math.floor({{ timediff_total_minutes }});
+        {% endif %}
+        update_view();
+    </script>
+
+{% endblock %}

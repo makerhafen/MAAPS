@@ -74,3 +74,17 @@ def get_profile_from_post(request):
         else:
             lasterror = "no_user_token"
     return obj, lasterror
+
+def get_profile_from_url_token(token):
+    if token is None:
+        return None, "no_token_posted"
+    if token == "":
+        return None, "empty_token"
+    if ";" not in token:
+        return None, "invalid_token"
+
+    try:
+        obj = models.Token.objects.get(identifier=token).profile
+        return obj, ""
+    except Exception as e:
+        return None, "unknown_token"

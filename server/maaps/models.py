@@ -45,6 +45,7 @@ class Machine(models.Model):
     comment         = models.CharField(max_length=10000, blank=True)
     ask_clean       = models.BooleanField(default=False)
     ask_pay_material= models.BooleanField(default=False)
+    show_autologout = models.BooleanField(default=False)
     price_per_hour  =  models.FloatField(default=0) # in Euro
     price_per_usage =  models.FloatField(default=0) # in Euro
     tutor_required_count            = models.IntegerField(default=0) # wir oft
@@ -83,6 +84,7 @@ class MachineSession(models.Model):
     machine = models.ForeignKey(Machine, on_delete=models.CASCADE)
     user    = models.ForeignKey(User, on_delete=models.CASCADE, related_name="machine_user_sessions")
     tutor   = models.ForeignKey(User, on_delete=models.CASCADE, related_name="machine_tutor_sessions",blank=True, null=True)
+    autologout_at = models.DateTimeField(default=None, blank=True, null=True)
     start   = models.DateTimeField(default=None, blank=True, null=True)
     end     = models.DateTimeField(default=None, blank=True, null=True)
     comment = models.CharField(max_length=10000, blank=True)
@@ -188,3 +190,4 @@ def Invoice__collect_payments(sender, instance, *args, **kwargs):
             unpayed_material.invoice = instance
             unpayed_material.save()
     instance.total_payment = total_to_pay
+    instance.save()

@@ -5,7 +5,8 @@ from maaps.models import Token
 
 def machine__login_machine(request, machine_token=""):
     error = None
-    if machine_token != "":
+    if machine_token != "" and machine_token is not None:
+        machine_token = "M:" + machine_token
         try:
             machine = Token.objects.get(identifier=machine_token).machine
             request.session["machine_id"] = machine.id

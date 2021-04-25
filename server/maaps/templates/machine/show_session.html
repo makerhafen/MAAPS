@@ -27,10 +27,24 @@
     <br>
     <br>
     <br>
-
-    <a href="{% url 'machine__logout_user' %}">
-        <button class="btn btn-lg btn-warning" style="width:100%">Abmelden</button>
-    </a>
+    {% if machine.show_autologout == True %}
+        <div class="row">
+            <div class="col-xs-6">
+                <a href="{% url 'machine__logout_user' %}">
+                    <button class="btn btn-lg btn-warning" style="width:100%">Abmelden</button>
+                </a>
+            </div>
+            <div class="col-xs-6">
+                <a href="{% url 'machine__auto_logout' %}">
+                    <button class="btn btn-lg btn-warning" style="width:100%">Automatisch abmelden</button>
+                </a>
+            </div>
+        </div>
+    {% else %}
+        <a href="{% url 'machine__logout_user' %}">
+            <button class="btn btn-lg btn-warning" style="width:100%">Abmelden</button>
+        </a>
+    {% endif %}
 
     <iframe style="display:none" src="http://127.0.0.1:8080/relay/1/on"> </iframe>
 
