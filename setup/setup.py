@@ -7,6 +7,8 @@ from datetime import datetime
 
 SSH_OPTIONS = '-q -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -oPubkeyAuthentication=no'
 
+PI_MACS = ["dc:a6:32:", ]
+
 class System():
     def __init__(self, type, ip, mac_address, username, password, lcd_rotation, token):
         self.type = type
@@ -165,7 +167,6 @@ class Server(System):
 class POS(Raspberry):
     pass
 
-
 class Machine(Raspberry):
     pass
 
@@ -190,8 +191,9 @@ class SiteSetup():
                 ip = element[1].psrc
                 mac = element[1].hwsrc
                 status = ""
-                if mac.startswith("dc:a6:32"):
-                    status = "THIS IS A PI"
+                for PI_MAC in PI_MACS:
+                    if mac.startswith(PI_MAC):
+                        status = "THIS IS A PI"
                 print(ip + "\t\t" + mac + "\t" + status)
                 break
 
