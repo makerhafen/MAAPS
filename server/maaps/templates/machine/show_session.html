@@ -42,8 +42,15 @@
         </div>
         {% if machine.currentSession.autologout_at != None %}
             <p id="auto_logout" style="text-align:center">
-                Automatisch abmelden in <b>{{machine.currentSession.autologout_timediff.1}}</b> Stunde und <b>{{machine.currentSession.autologout_timediff.2}}</b> Minuten.
+                Automatisch abmelden in
+                {% if machine.currentSession.autologout_timediff.1 > 0 %}
+                    <b>{{machine.currentSession.autologout_timediff.1}}</b> Stunde und
+                {% endif %}
+                <b>{{machine.currentSession.autologout_timediff.2}}</b> Minuten.
             </p>
+            <script>
+                setTimeout(function(){location.reload();}, 30000);
+            </script>
         {% endif %}
     {% else %}
         <a href="{% url 'machine__logout_user' %}">

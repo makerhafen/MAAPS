@@ -1,5 +1,6 @@
 from django.shortcuts import redirect
 import maaps.models as models
+from django.utils import timezone
 
 def find_session_redirect(machine):
     if machine is None:
@@ -88,3 +89,36 @@ def get_profile_from_url_token(token):
         return obj, ""
     except Exception as e:
         return None, "unknown_token"
+
+
+def end_session(machine):
+    current_session = machine.currentSession
+    current_payment_session = None
+    if current_session != None:
+        if hasattr(current_session, "paymentsession"):
+
+            current_payment_session = current_session.paymentsession
+            current_payment_session.end = timezone.now()
+
+            timediff_hours = (current_payment_session.end - current_payment_session.start).total_seconds()/3600.0
+            total_price = round(machine.price_per_usage + timediff_hours * machine.price_per_hour,2)
+
+            current_payment_session.totalpayment = total_price
+
+            if current_payment_session.user.profile.allow_invoice is False:
+                transaction = models.Transaction()
+                transaction.user = current_payment_session.user
+                transaction.value = current_payment_session.totalpayment
+                transaction.type = models.TransactionType.from_deposit_for_material
+                transaction.save()
+                current_payment_session.transaction = transaction
+                current_payment_session.user.profile.prepaid_deposit -= current_payment_session.totalpayment
+                current_payment_session.user.profile.save()
+
+            current_payment_session.save()
+
+        machine.currentSession = None
+        machine.save()
+        current_session.end = timezone.now()
+        current_session.save()
+        return current_session, current_payment_session
