@@ -65,9 +65,9 @@ class RelayBoard():
             self._enable_screenblank()
 
     def _disable_screenblank(self):
-        os.system('export DISPLAY=:0;xset s off')
+        os.system('export DISPLAY=:0;xset s off;xset s -dpms')
     def _enable_screenblank(self):
-        os.system('export DISPLAY=:0;xset s 180')
+        os.system('export DISPLAY=:0;xset s 180;xset s +dpms')
 
 ##
 ## RFID
