@@ -60,14 +60,9 @@ class RelayBoard():
 
     def check_screenblank(self):
         if self.relay_1.is_active is True or self.relay_2.is_active is True or self.relay_3.is_active is True:
-            self._disable_screenblank()
+            os.system('export DISPLAY=:0;xset s off;xset s -dpms')
         else:
-            self._enable_screenblank()
-
-    def _disable_screenblank(self):
-        os.system('export DISPLAY=:0;xset s off;xset s -dpms')
-    def _enable_screenblank(self):
-        os.system('export DISPLAY=:0;xset s 180;xset s +dpms')
+            os.system('export DISPLAY=:0;xset s 180;xset s +dpms')
 
 ##
 ## RFID
