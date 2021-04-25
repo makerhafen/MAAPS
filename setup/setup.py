@@ -56,7 +56,7 @@ class Raspberry(System):
     def _update_raspberry(self):
         self._ssh('sudo apt-get -y update', timeout=600)
         self._ssh('sudo apt-get -y upgrade', timeout=600)
-        self._ssh('sudo apt-get -y remove lxplug-ptbatt pulseaudio cups-browsed piwiz zenity', timeout=600)
+        self._ssh('sudo apt-get -y remove lxplug-ptbatt pulseaudio cups-browsed piwiz', timeout=600)
         self._ssh('''
             cat /boot/config.txt | grep -v avoid_warnings > 1 ; sudo mv 1 /boot/config.txt ;
             echo 'avoid_warnings=1' | sudo tee -a  /boot/config.txt ;
