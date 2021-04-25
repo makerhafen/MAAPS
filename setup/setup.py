@@ -56,19 +56,20 @@ class Raspberry(System):
     def _update_raspberry(self):
         self._ssh('sudo apt-get -y update', timeout=600)
         self._ssh('sudo apt-get -y upgrade', timeout=600)
-        self._ssh('sudo apt-get -y remove lxplug-ptbatt pulseaudio cups-browsed', timeout=600)
+        self._ssh('sudo apt-get -y remove lxplug-ptbatt pulseaudio cups-browsed piwiz zenity', timeout=600)
         self._ssh('''
             cat /boot/config.txt | grep -v avoid_warnings > 1 ; sudo mv 1 /boot/config.txt ;
             echo 'avoid_warnings=1' | sudo tee -a  /boot/config.txt ;
         ''')
         self._ssh('''
             cat /etc/xdg/lxsession/LXDE-pi/autostart | grep -v 'xset s ' > 1 ; sudo mv 1 /etc/xdg/lxsession/LXDE-pi/autostart ;
-            echo 'export DISPLAY=:0;xset s 180' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart ;
+            echo 'export DISPLAY=:0;xset s 180;xset s -dpms' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart ;
         ''')
 
     def _install_lcd(self):
         self._ssh('cd /tmp/ && git clone https://github.com/waveshare/LCD-show.git;')
         self._ssh('cd /tmp/LCD-show/ && chmod +x LCD35-show && sudo ./LCD35-show %s;' % self.lcd_rotation)
+
 
     def _install_spi(self):
         self._ssh('''
@@ -95,6 +96,8 @@ class Server(System):
     pid=
     cert = /etc/stunnel/stunnel.pem
     sslVersion = SSLv3
+    debug=2
+    syslog=no
     [https]
     accept=443
     connect=8001
