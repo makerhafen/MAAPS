@@ -1,11 +1,13 @@
 import maaps.models as models
 from django.utils import timezone
 
+
 def user_can_pay(user_profile):
-    user_can_pay = user_profile.prepaid_deposit > 0 or user_profile.allow_invoice
-    if user_can_pay is False:
+    _user_can_pay = user_profile.prepaid_deposit > 0 or user_profile.allow_invoice
+    if _user_can_pay is False:
         return False, "no_deposit_available"
     return True, ""
+
 
 def create_payment_session(machine, paying_user_profile):
     r, error = user_can_pay(paying_user_profile)
@@ -21,6 +23,7 @@ def create_payment_session(machine, paying_user_profile):
     machine.currentSession.paymentsession = paymentSession
     machine.currentSession.save()
     return None
+
 
 def create_material_payment(value, paying_user_profile, user_profile):
     transaction = None

@@ -4,6 +4,7 @@ from django.shortcuts import redirect
 import maaps.models as models
 from maaps.views.functions.session import get_profile_from_post, get_profile_from_session
 
+
 def pos__deposit(request):
     admin_profile = get_profile_from_session(request)
     if admin_profile is None:
@@ -13,7 +14,7 @@ def pos__deposit(request):
     value_before_payment = None
     error = None
     deposit_value = request.POST.get("deposit_value", None)
-    if deposit_value != None:
+    if deposit_value is not None:
         deposit_value = float(deposit_value)
         if deposit_value <= 0:
             error = "invalid_deposit_value"
@@ -36,4 +37,3 @@ def pos__deposit(request):
         "last_error": error,
         "value_before_payment": value_before_payment
     }, request))
-

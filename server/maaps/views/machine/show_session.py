@@ -13,7 +13,7 @@ def machine__show_session(request):
         machine.currentSession.start = timezone.now()
         machine.currentSession.save()
 
-    if machine.currentSession.autologout_at != None:
+    if machine.currentSession.autologout_at is not None:
         if machine.currentSession.autologout_timediff[0] <= 0:
             current_session, current_payment_session = end_session(machine)
             return find_session_redirect(machine)

@@ -2,20 +2,23 @@ from django.shortcuts import redirect
 import maaps.models as models
 from django.utils import timezone
 
+
 def find_session_redirect(machine):
     if machine is None:
         return redirect('machine__login')
     if machine.currentSession is None:
         return redirect('machine__login_user')
-    if machine.currentSession.tutor == None and machine.user_requires_tutor(machine.currentSession.user):
+    if machine.currentSession.tutor is None and machine.user_requires_tutor(machine.currentSession.user):
         return redirect('machine__tutor_required')
-    if machine.currentSession.tutor == None and machine.user_requires_tutor_once(machine.currentSession.user):
+    if machine.currentSession.tutor is None and machine.user_requires_tutor_once(machine.currentSession.user):
         return redirect('machine__tutor_required')
     if machine.currentSession.rating_clean == -1 and machine.ask_clean is True:
         return redirect('machine__rate_machine')
-    if (machine.price_per_hour > 0 or machine.currentSession.machine.price_per_usage > 0) and hasattr(machine.currentSession, "paymentsession") == False:
+    if (machine.price_per_hour > 0 or machine.currentSession.machine.price_per_usage > 0) and hasattr(
+            machine.currentSession, "paymentsession") == False:
         return redirect('machine__payment_required')
     return redirect('machine__show_session')
+
 
 def get_machine_from_session(request):
     machine_id = request.session.get("machine_id", None)
@@ -27,6 +30,7 @@ def get_machine_from_session(request):
             pass
     return machine
 
+
 def get_profile_from_session(request):
     profile_id = request.session.get("profile_id", None)
     profile = None
@@ -36,6 +40,7 @@ def get_profile_from_session(request):
         except:
             pass
     return profile
+
 
 def get_token_from_post(request):
     if request.method != "POST":
@@ -48,12 +53,13 @@ def get_token_from_post(request):
     if "\t" not in rfid_token:
         return None, "invalid_token"
 
-    id, rfid_token = rfid_token.split('\t')
+    _id, rfid_token = rfid_token.split('\t')
     try:
         obj = models.Token.objects.get(identifier=rfid_token)
         return obj, ""
     except Exception as e:
         return None, "unknown_token"
+
 
 def get_machine_from_post(request):
     token, lasterror = get_token_from_post(request)
@@ -63,8 +69,9 @@ def get_machine_from_post(request):
             obj = token.machine
             request.session["machine_id"] = token.machine.id
         else:
-            lasterror ="no_machine_token"
+            lasterror = "no_machine_token"
     return obj, lasterror
+
 
 def get_profile_from_post(request):
     token, lasterror = get_token_from_post(request)
@@ -75,6 +82,7 @@ def get_profile_from_post(request):
         else:
             lasterror = "no_user_token"
     return obj, lasterror
+
 
 def get_profile_from_url_token(token):
     if token is None:
@@ -94,14 +102,14 @@ def get_profile_from_url_token(token):
 def end_session(machine):
     current_session = machine.currentSession
     current_payment_session = None
-    if current_session != None:
+    if current_session is not None:
         if hasattr(current_session, "paymentsession"):
 
             current_payment_session = current_session.paymentsession
             current_payment_session.end = timezone.now()
 
-            timediff_hours = (current_payment_session.end - current_payment_session.start).total_seconds()/3600.0
-            total_price = round(machine.price_per_usage + timediff_hours * machine.price_per_hour,2)
+            timediff_hours = (current_payment_session.end - current_payment_session.start).total_seconds() / 3600.0
+            total_price = round(machine.price_per_usage + timediff_hours * machine.price_per_hour, 2)
 
             current_payment_session.totalpayment = total_price
 

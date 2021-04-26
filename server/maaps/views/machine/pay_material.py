@@ -14,12 +14,12 @@ def machine__pay_material(request):
     value_before_payment = None
 
     payment_value = request.POST.get("payment_value", None)
-    if payment_value != None:
+    if payment_value is not None:
         payment_value = float(payment_value)
         if payment_value > 0.001:
             user_profile, error = get_profile_from_post(request)
             if user_profile is not None:
-                if user_profile.paying_user != None:
+                if user_profile.paying_user is not None:
                     paying_user_profile = user_profile.paying_user
                 else:
                     paying_user_profile = user_profile

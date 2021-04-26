@@ -5,9 +5,10 @@ from .user_form import UserForm
 import base64
 from django.contrib.admin.views.decorators import staff_member_required
 
+
 @staff_member_required
-def webif__user__update(request, id):
-    profile = models.Profile.objects.get(id=id)
+def webif__user__update(request, user_id):
+    profile = models.Profile.objects.get(id=user_id)
     machines = models.Machine.objects.all()
     form = UserForm(initial={
         'email': profile.user.email,
@@ -22,8 +23,8 @@ def webif__user__update(request, id):
         form = UserForm(request.POST)
         form.profile = profile
         if form.is_valid():
-            image_data = request.POST.get('image_data',None)
-            allowed_machines = request.POST.getlist('allowed_machines',None)
+            image_data = request.POST.get('image_data', None)
+            allowed_machines = request.POST.getlist('allowed_machines', None)
             form.allowed_machines = allowed_machines
             if image_data is not None and "," in image_data:
                 form.profile_picture = base64.b64decode(bytes(image_data.split(",")[-1], 'UTF-8'))
@@ -33,4 +34,5 @@ def webif__user__update(request, id):
             except Exception as e:
                 print("Failed to save form:", e)
                 error = "%s" % e
-    return render(request,'webif/user/update.html',{'form':form, 'profile': profile, 'machines': machines, "last_error": error })
+    return render(request, 'webif/user/update.html',
+                  {'form': form, 'profile': profile, 'machines': machines, "last_error": error})

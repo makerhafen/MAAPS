@@ -127,7 +127,7 @@ class Invoice(models.Model):
     total_payment = models.FloatField(default=0)
     transaction   = models.OneToOneField("Transaction", on_delete=models.SET_NULL, blank=True, null=True,related_name="invoice")
 
-class TransactionType():
+class TransactionType:
     from_cash_for_deposit     = "from_cash_for_deposit"
     from_cash_for_invoice     = "from_cash_for_invoice"
     from_bank_for_deposit     = "from_bank_for_deposit"
@@ -153,10 +153,10 @@ def Token__update_identifier(sender, instance, *args, **kwargs):
     if instance.identifier == "":
         uid = "%s" % uuid.uuid4()
         uid = "".join(uid.split("-")[-3:]) # 20 zeichen, 48 max
-        if instance.profile != None:
-            instance.identifier = "U:%s" % (instance.profile.user.username)
-        if instance.machine != None:
-            instance.identifier = "M:%s" % (instance.machine.name)
+        if instance.profile is not None:
+            instance.identifier = "U:%s" % instance.profile.user.username
+        if instance.machine is not None:
+            instance.identifier = "M:%s" % instance.machine.name
         instance.identifier = instance.identifier[:28]
         instance.identifier = "%s;%s" % (instance.identifier , uid)
 

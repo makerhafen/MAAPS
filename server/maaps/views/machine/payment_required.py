@@ -6,7 +6,7 @@ from maaps.views.functions.payment import user_can_pay, create_payment_session
 
 def machine__payment_required(request):
     machine = get_machine_from_session(request)
-    if machine is  None:
+    if machine is None:
         return find_session_redirect(machine)
 
     paying_user_profile = machine.currentSession.user.profile
