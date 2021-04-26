@@ -8,6 +8,8 @@ def machine__show_session(request):
     machine = get_machine_from_session(request)
     if machine is None:
         return find_session_redirect(machine)
+    if machine.currentSession is None:
+        return find_session_redirect(machine)
 
     if machine.currentSession.start is None:
         machine.currentSession.start = timezone.now()

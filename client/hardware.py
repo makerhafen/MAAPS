@@ -115,7 +115,7 @@ class RFID:
 
     def read(self):
         token_id, text = None, None
-        for i in range(7):
+        for i in range(5):
             token_id, text = self.rfid_reader.read_no_block()
             if token_id is not None:
                 text = text.strip()
@@ -126,7 +126,7 @@ class RFID:
 
     def write(self, text):
         token_id, output = None, None
-        for i in range(7):
+        for i in range(5):
             token_id, output = self.rfid_reader.write_no_block(text)
             if token_id is not None:
                 break

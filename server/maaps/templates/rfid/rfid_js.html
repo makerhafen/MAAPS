@@ -1,23 +1,26 @@
 <script>
-    function rfid_read(success_callback, error_callback){
+    function rfid_read(success_callback, error_callback, error_cnt = 0){
         document.getElementById( "read_token_button" ).classList.add("working");
         var request = new XMLHttpRequest();
         request.open("GET","http://127.0.0.1:8080/rfid/read/");
         request.addEventListener('load', function(event) {
             document.getElementById( "read_token_button" ).classList.remove("working");
             if (request.status >= 200 && request.status < 300) {
-                token = request.responseText.trim()
+                token = request.responseText.trim();
                 if(token != ""){
-                    success_callback(token)
+                    success_callback(token);
                 }else{
-                     error_callback("no_token_read")
+                    if(error_cnt < 4){
+                        error_callback("no_token_read");
+                    }else{
+                        rfid_read(success_callback, error_callback, error_cnt = error_cnt + 1);
+                    }
                 }
            } else {
                 error_callback("hardware_response_unknown")
            }
         });
         request.addEventListener('error', function(event) {
-            alert("error");
             document.getElementById( "read_token_button" ).classList.remove("working");
             error_callback("hardware_response_failed")
         });
