@@ -117,7 +117,7 @@ class RFID:
         token_id, text = None, None
         for i in range(7):
             token_id, text = self.rfid_reader.read_no_block()
-            if id is not None:
+            if token_id is not None:
                 text = text.strip()
                 print("successful read", text)
                 break
@@ -128,7 +128,7 @@ class RFID:
         token_id, output = None, None
         for i in range(7):
             token_id, output = self.rfid_reader.write_no_block(text)
-            if id is not None:
+            if token_id is not None:
                 break
             time.sleep(0.1)
         return token_id, output
@@ -153,7 +153,7 @@ def btl_enable_cors(fn):
 @btl_enable_cors
 def route_rfid_read():
     token_id, text = rfid.read()
-    if id is None:
+    if token_id is None:
         return ""
     return "%s\t%s" % (token_id, text)
 
@@ -163,7 +163,7 @@ def route_rfid_read():
 def route_rfid_write(value=""):
     if value != "":
         token_id, text = rfid.write(value)
-        if id is not None:
+        if token_id is not None:
             return "OK"
     return "Failed"
 
