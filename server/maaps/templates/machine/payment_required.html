@@ -14,7 +14,7 @@
 
     <div class="row" style="text-align:center">
         <div class="col-xs-12">
-            <h3>Diese Maschine kostet {{ machine.price_per_hour}} Euro pro Stunde.</h3>
+            <h3>Diese Maschine kostet {{ machine.price_per_hour |floatformat:2}} Euro pro Stunde.</h3>
         </div>
     </div>
 
@@ -28,7 +28,7 @@
                         {% if machine.currentSession.user.profile.allow_invoice == True %}
                             Du kannst auf Rechnung zahlen
                         {% else %}
-                            Du hast {{machine.currentSession.user.profile.prepaid_deposit}} Euro Guthaben
+                            Du hast {{machine.currentSession.user.profile.prepaid_deposit  |floatformat:2}} Euro Guthaben
                         {% endif %}
                     {% endif %}
                 {% else %}

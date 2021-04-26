@@ -98,19 +98,6 @@ class Raspberry(System):
 
 
 class Server(System):
-    stunnel_conf = '''
-    pid=
-    cert = /etc/stunnel/stunnel.pem
-    sslVersion = SSLv3
-    debug=2
-    syslog=no
-    [https]
-    accept=443
-    connect=8001
-    TIMEOUTclose=1
-    sslVersion = all
-    options = NO_SSLv2
-    '''
     def __init__(self, type, ip, mac_address, username, password):
         super().__init__(type, ip, mac_address, username, password, None, "")
 
@@ -120,7 +107,19 @@ class Server(System):
         self.reboot()
 
     def _install_stunnel(self):
-        open("/tmp/stunnel_conf","w").write(Server.stunnel_conf)
+        open("/tmp/stunnel_conf","w").write('''
+            pid=
+            cert = /etc/stunnel/stunnel.pem
+            sslVersion = SSLv3
+            debug=2
+            syslog=no
+            [https]
+            accept=443
+            connect=8001
+            TIMEOUTclose=1
+            sslVersion = all
+            options = NO_SSLv2
+        ''')
         self._ssh_exec('scp %s /tmp/stunnel_conf %s@%s:/tmp/stunnel.conf' % (SSH_OPTIONS, self.username, self.ip), 120)
         self._ssh('sudo apt-get install stunnel')
         self._ssh('''

@@ -17,16 +17,21 @@
     <p id="auto_logout"    style="display:none;text-align:center">Automatisch abmelden in <b id="timediff_hours"></b> Stunde und <b id="timediff_minutes"></b> Minuten.</p>
 
     <br>
-    <button class="btn btn-lg btn-success" onclick="update_value(-60)">- 1h</button>
-    <button class="btn btn-lg btn-success" onclick="update_value(-10)">- 10min</button>
-    <button class="btn btn-lg btn-success" onclick="update_value( 10)">+ 10min</button>
-    <button class="btn btn-lg btn-success" onclick="update_value( 60)">+ 1h</button>
-    <button class="btn btn-lg btn-success" onclick="clear_value()">Clear</button>
+    <div class="row">
+        <div class="col-xs-2" style="padding-left:3px;padding-right:3px;"><button class="btn btn-success" style="width:100%" onclick="update_value(-60)">-1h</button></div>
+        <div class="col-xs-2" style="padding-left:3px;padding-right:3px;"><button class="btn btn-success" style="width:100%" onclick="update_value(-10)">-10min</button></div>
+        <div class="col-xs-2" style="padding-left:3px;padding-right:3px;"><button class="btn btn-success" style="width:100%" onclick="update_value( 10)">+10min</button></div>
+        <div class="col-xs-2" style="padding-left:3px;padding-right:3px;"><button class="btn btn-success" style="width:100%" onclick="update_value( 60)">+1h</button></div>
+        <div class="col-xs-4" style="padding-left:3px;padding-right:3px;"><button class="btn btn-success" style="width:100%" onclick="clear_value()">Clear</button></div>
+    </div>
 
+    <br>
+    <br>
+    <br>
     <form  method="post">
         {% csrf_token %}
         <input style="display:none" id="autologout_in_minutes" type="text" name="autologout_in_minutes" value="{{ timediff_total_minutes }}">
-        <button class="btn btn-lg btn-success" style="width:100%" type="submit" value="OK">Einstellen</button>
+        <button class="btn btn-lg btn-success" style="width:100%" type="submit" value="OK">Speichern</button>
     </form>
 
     <script>

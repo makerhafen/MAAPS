@@ -4,12 +4,12 @@
 
     <h3>Aktive sitzungen</h3>
     {% for machineSession in machineSessions_active %}
-        {{ machineSession }}
+        {{ machineSession }} <br>
     {% endfor %}
 
-    <h3>Kürzliche beendet sitzungen</h3>
+    <h3>Kürzliche beendet Sitzungen</h3>
     {% for machineSession in machineSessions_ended %}
-        {{ machineSession }}
+        {{ machineSession }} <br>
     {% endfor %}
 
 {% endblock %}
