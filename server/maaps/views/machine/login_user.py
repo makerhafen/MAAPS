@@ -19,11 +19,11 @@ def machine__login_user(request, user_token=""):
 
     if user_profile is not None:
         if machine.user_is_allowed(user_profile.user):
-            machineSession = models.MachineSession()
-            machineSession.machine = machine
-            machineSession.user = user_profile.user
-            machineSession.save()
-            machine.currentSession = machineSession
+            machinesession = models.MachineSession()
+            machinesession.machine = machine
+            machinesession.user = user_profile.user
+            machinesession.save()
+            machine.currentSession = machinesession
             machine.save()
             return find_session_redirect(machine)
         else:

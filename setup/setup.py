@@ -9,9 +9,10 @@ SSH_OPTIONS = '-q -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -oPu
 
 PI_MACS = ["dc:a6:32:", ]
 
-class System():
-    def __init__(self, type, ip, mac_address, username, password, lcd_rotation, token):
-        self.type = type
+
+class System:
+    def __init__(self, system_type, ip, mac_address, username, password, lcd_rotation, token):
+        self.system_type = system_type
         self.ip = ip
         self.mac_address = mac_address
         self.username = username
@@ -28,7 +29,7 @@ class System():
         ssh_cmd = 'ssh %s@%s %s "%s"' % (self.username, self.ip, SSH_OPTIONS, cmd)
         return self._ssh_exec(ssh_cmd, timeout)
 
-    def _ssh_exec(self,ssh_cmd , timeout):
+    def _ssh_exec(self, ssh_cmd, timeout):
         fname = tempfile.mktemp()
         fout = open(fname, 'w')
         child = pexpect.spawnu(ssh_cmd, timeout=timeout)  # spawnu for Python 3
@@ -53,7 +54,7 @@ class Raspberry(System):
     def install(self, server):
         self._update_raspberry()
         self._install_lcd()
-        time.sleep(30) # wait for pi to reboot
+        time.sleep(30)  # wait for pi to reboot
         self._install_spi()
         self._install_hardwarepy()
         self._install_autostart_chromium(server)
@@ -76,7 +77,6 @@ class Raspberry(System):
         self._ssh('cd /tmp/ && git clone https://github.com/waveshare/LCD-show.git;')
         self._ssh('cd /tmp/LCD-show/ && chmod +x LCD35-show && sudo ./LCD35-show %s;' % self.lcd_rotation)
 
-
     def _install_spi(self):
         self._ssh('''
             cat /boot/config.txt | grep -v MAAPS > 1 ; sudo mv 1 /boot/config.txt ;
@@ -94,12 +94,12 @@ class Raspberry(System):
         self._ssh('''
             cat /etc/xdg/lxsession/LXDE-pi/autostart | grep -v chromium-browser > 1 ; sudo mv 1 /etc/xdg/lxsession/LXDE-pi/autostart ;
             echo "chromium-browser --disable-restore-session-state --kiosk '%s:8001/%s/%s'" | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart ;
-        ''' % (server.ip, self.type, self.token.replace(";","\;")))
+        ''' % (server.ip, self.system_type, self.token.replace(";", "\;")))
 
 
 class Server(System):
-    def __init__(self, type, ip, mac_address, username, password):
-        super().__init__(type, ip, mac_address, username, password, None, "")
+    def __init__(self, system_type, ip, mac_address, username, password):
+        super().__init__(system_type, ip, mac_address, username, password, None, "")
 
     def install(self):
         self._install_stunnel()
@@ -107,7 +107,7 @@ class Server(System):
         self.reboot()
 
     def _install_stunnel(self):
-        open("/tmp/stunnel_conf","w").write('''
+        open("/tmp/stunnel_conf", "w").write('''
             pid=
             cert = /etc/stunnel/stunnel.pem
             sslVersion = SSLv3
@@ -146,18 +146,22 @@ class Server(System):
         date_time = datetime.now().strftime("%Y.%m.%d_%H:%M:%S")
         destination = "backups/%s/" % date_time
         os.system("mkdir -p '%s'" % destination)
-        ssh_cmd = 'scp -r %s %s@%s:/home/%s/MAAPS/server/media/ %s' % (SSH_OPTIONS, self.username, self.ip, self.username ,destination )
+        ssh_cmd = 'scp -r %s %s@%s:/home/%s/MAAPS/server/media/ %s' % (
+            SSH_OPTIONS, self.username, self.ip, self.username, destination)
         self._ssh_exec(ssh_cmd, 120)
-        ssh_cmd = 'scp %s %s@%s:/home/%s/MAAPS/server/db.sqlite3 %s' % (SSH_OPTIONS, self.username, self.ip, self.username, destination )
+        ssh_cmd = 'scp %s %s@%s:/home/%s/MAAPS/server/db.sqlite3 %s' % (
+            SSH_OPTIONS, self.username, self.ip, self.username, destination)
         self._ssh_exec(ssh_cmd, 120)
         print("Backup done to '%s'" % destination)
 
-    def restore(self,source_dir):
+    def restore(self, source_dir):
         self._ssh('ps ax|grep -i runserver|cut -d? -f 1 |cut -dp -f1|xargs kill', 120)
         time.sleep(1)
-        ssh_cmd = 'scp %s -r %s/media/ %s@%s:/home/%s/MAAPS/server/ ' % (SSH_OPTIONS, source_dir, self.username, self.ip, self.username )
+        ssh_cmd = 'scp %s -r %s/media/ %s@%s:/home/%s/MAAPS/server/ ' % (
+            SSH_OPTIONS, source_dir, self.username, self.ip, self.username)
         self._ssh_exec(ssh_cmd, 120)
-        ssh_cmd = 'scp %s %s/db.sqlite3 %s@%s:/home/%s/MAAPS/server/' % (SSH_OPTIONS, source_dir, self.username, self.ip, self.username )
+        ssh_cmd = 'scp %s %s/db.sqlite3 %s@%s:/home/%s/MAAPS/server/' % (
+            SSH_OPTIONS, source_dir, self.username, self.ip, self.username)
         self._ssh_exec(ssh_cmd, 120)
         print("Restore done from '%s'" % source_dir)
         self.reboot()
@@ -166,11 +170,12 @@ class Server(System):
 class POS(Raspberry):
     pass
 
+
 class Machine(Raspberry):
     pass
 
 
-class SiteSetup():
+class SiteSetup:
     def __init__(self):
         self.server = None
         self.poss = []
@@ -197,20 +202,20 @@ class SiteSetup():
                 break
 
     def _read_data(self):
-        for l in open("devices.csv","r").read().split("\n")[1:]:
+        for l in open("devices.csv", "r").read().split("\n")[1:]:
             l = l.strip()
-            if l == "":continue
-            type, ip, mac_address, username, password, lcd_rotation, token = [p.strip() for p in l.split(",")]
-            if type == "server":
+            if l == "": continue
+            system_type, ip, mac_address, username, password, lcd_rotation, token = [p.strip() for p in l.split(",")]
+            if system_type == "server":
                 if self.server is not None: raise Exception("Only one server is allowed")
-                self.server = Server(type, ip, mac_address, username, password)
-            elif type == "pos":
-                self.poss.append(POS(type, ip, mac_address, username, password, lcd_rotation, token))
-            elif type == "machine":
-                self.machines.append(Machine(type, ip, mac_address, username, password, lcd_rotation, token))
+                self.server = Server(system_type, ip, mac_address, username, password)
+            elif system_type == "pos":
+                self.poss.append(POS(system_type, ip, mac_address, username, password, lcd_rotation, token))
+            elif system_type == "machine":
+                self.machines.append(Machine(system_type, ip, mac_address, username, password, lcd_rotation, token))
 
 
-help = '''
+helptxt = '''
     setup.py
     setup.py configcard <dir> # enable ssh and wlan on SD card mounted to <dir>
     setup.py search <network>  # search /24 (256 ips) in <network> for raspberry PIs
@@ -222,7 +227,7 @@ help = '''
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("\n    Error: Missing Option\n%s" % help)
+        print("\n    Error: Missing Option\n%s" % helptxt)
         exit(1)
 
     option = sys.argv[1]
@@ -231,22 +236,22 @@ if __name__ == "__main__":
 
     if option == "configcard":
         if len(sys.argv) < 3:
-            print("\n    Error: Missing target directory\n%s" % help)
+            print("\n    Error: Missing target directory\n%s" % helptxt)
             exit(1)
         directory = sys.argv[2]
-        open(os.path.join(directory, "wpa_supplicant.conf" ), "w").write(open("wpa_supplicant.conf","r").read())
+        open(os.path.join(directory, "wpa_supplicant.conf"), "w").write(open("wpa_supplicant.conf", "r").read())
         open(os.path.join(directory, "ssh"), "w").write('')
         print("Card configured")
 
     elif option == "scan":
         if len(sys.argv) < 3:
-            print("\n    Error: Missing target network to scan\n%s" % help)
+            print("\n    Error: Missing target network to scan\n%s" % helptxt)
             exit(1)
         siteSetup.scan_network(sys.argv[2])
 
     elif option == "install":
         if len(sys.argv) < 3:
-            print("\n    Error: Missing target ip or all\n%s" % help)
+            print("\n    Error: Missing target ip or all\n%s" % helptxt)
             exit(1)
         target = sys.argv[2]
         for machine in siteSetup.machines:
@@ -264,10 +269,9 @@ if __name__ == "__main__":
 
     elif option == "restore":
         if len(sys.argv) < 3:
-            print("\n    Error: Missing source folder\n%s" % help)
+            print("\n    Error: Missing source folder\n%s" % helptxt)
             exit(1)
         siteSetup.server.restore(sys.argv[2])
 
     else:
         print("unknown option '%s'" % sys.argv[1])
-

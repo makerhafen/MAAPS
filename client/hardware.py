@@ -1,13 +1,17 @@
 import time
 import sys
 import os
+from bottle import route
+import bottle
+from bottle import response
 
-RFID_SPI_BUS = 1    # SPI BUS for RFID
-RFID_SPI_DEVICE = 0 # SPI device for RFID
 
-RELAY_1_GPIO = 26 # Raspi GPIO for Relay 1
-RELAY_2_GPIO = 13 # Raspi GPIO for Relay 2
-RELAY_3_GPIO =  6 # Raspi GPIO for Relay 3
+RFID_SPI_BUS = 1  # SPI BUS for RFID
+RFID_SPI_DEVICE = 0  # SPI device for RFID
+
+RELAY_1_GPIO = 26  # Raspi GPIO for Relay 1
+RELAY_2_GPIO = 13  # Raspi GPIO for Relay 2
+RELAY_3_GPIO = 6  # Raspi GPIO for Relay 3
 
 ##
 ## RELAY
@@ -16,25 +20,29 @@ try:
     from gpiozero import LED
     import RPi.GPIO as GPIO
 except:
-    class LED(): # for local debugging without client
+    class LED:  # for local debugging without client
         def __init__(self, pin):
             self.pin = pin
             print("Dummy LED class, Pin %s" % self.pin)
+
         def on(self):
             print("Dummy LED class, Pin %s, ON" % self.pin)
+
         def off(self):
             print("Dummy LED class, Pin %s, OFF" % self.pin)
 
-    class GPIO():
+
+    class GPIO:
         @classmethod
         def cleanup(cls): pass
 
-class RelayBoard():
-    class _Relay():
-        def __init__(self, name, RASPI_GPIO, board):
+
+class RelayBoard:
+    class _Relay:
+        def __init__(self, name, raspi_gpio, board):
             self.name = name
-            self.RASPI_GPIO = RASPI_GPIO
-            self._ledio = LED(RASPI_GPIO)
+            self.RASPI_GPIO = raspi_gpio
+            self._ledio = LED(raspi_gpio)
             self.board = board
             self.is_active = False
 
@@ -64,92 +72,101 @@ class RelayBoard():
         else:
             os.system('export DISPLAY=:0;xset s 180;xset s +dpms')
 
+
 ##
 ## RFID
 ##
 try:
     from mfrc522 import SimpleMFRC522
     from mfrc522 import MFRC522
-except: # Dummy class for debugging without client
-    class SimpleMFRC522():
+except:  # Dummy class for debugging without client
+    class SimpleMFRC522:
         def __init__(self, bus, device):
             pass
-        def write(self, value):
+
+        @staticmethod
+        def write(value):
             print("Dummy RFID write '%s'" % value)
             return 12345, value
+
         def write_no_block(self, value):
             return self.write(value)
 
-        def read(self):
+        @staticmethod
+        def read():
             print("Dummy RFID read")
             return 54321, "test value"
 
         def read_no_block(self):
             return self.read()
 
-    class MFRC522():
+
+    class MFRC522:
         def __init__(self, bus, device): pass
 
-class RFID():
+
+class RFID:
     def __init__(self):
-        def simpleMFRC522__init(self, bus, device):  # monkey patch SimpleMFRC522 to support bus and device parameter
-            self.READER = MFRC522(bus=bus, device=device)
+        def simpleMFRC522__init(_self, bus, device):  # monkey patch SimpleMFRC522 to support bus and device parameter
+            _self.READER = MFRC522(bus=bus, device=device)
+
         SimpleMFRC522.__init__ = simpleMFRC522__init
         self.rfid_reader = SimpleMFRC522(bus=RFID_SPI_BUS, device=RFID_SPI_DEVICE)
 
     def read(self):
-        id, text = None, None
+        token_id, text = None, None
         for i in range(7):
-            id, text  = self.rfid_reader.read_no_block()
-            if id != None:
+            token_id, text = self.rfid_reader.read_no_block()
+            if id is not None:
                 text = text.strip()
                 print("successful read", text)
                 break
             time.sleep(0.1)
-        return id, text
+        return token_id, text
 
     def write(self, text):
-        id, output = None, None
+        token_id, output = None, None
         for i in range(7):
-            id, output  = self.rfid_reader.write_no_block(text)
-            if id != None:
+            token_id, output = self.rfid_reader.write_no_block(text)
+            if id is not None:
                 break
             time.sleep(0.1)
-        return id, output
+        return token_id, output
 
 
 ##
 ## WEB API
 ##
-from bottle import route
-import bottle
-from bottle import response
-
 def btl_enable_cors(fn):
     def _enable_cors(*args, **kwargs):
         response.headers['Access-Control-Allow-Origin'] = '*'
         response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, OPTIONS'
-        response.headers['Access-Control-Allow-Headers'] = 'Origin, Accept, Content-Type, X-Requested-With, X-CSRF-Token, X-Test'
+        response.headers[
+            'Access-Control-Allow-Headers'] = 'Origin, Accept, Content-Type, X-Requested-With, X-CSRF-Token, X-Test'
         if bottle.request.method != 'OPTIONS':
             return fn(*args, **kwargs)
+
     return _enable_cors
+
 
 @route('/rfid/read/', method=['OPTIONS', 'GET'])
 @btl_enable_cors
 def route_rfid_read():
-    id, text = rfid.read()
+    token_id, text = rfid.read()
     if id is None:
         return ""
-    return "%s\t%s" % (id, text)
+    return "%s\t%s" % (token_id, text)
+
 
 @route('/rfid/write/<value>', method=['OPTIONS', 'GET'])
 @btl_enable_cors
 def route_rfid_write(value=""):
     if value != "":
-        id, text = rfid.write(value)
+        token_id, text = rfid.write(value)
         if id is not None:
             return "OK"
     return "Failed"
+
 
 @route('/relay/<names>/<value>', method=['OPTIONS', 'GET'])  # 1,2,3,all   on,off
 @btl_enable_cors
@@ -169,6 +186,7 @@ def route_relay(names="all", value="off"):
     print(names, value)
     return "OK"
 
+
 ##
 ## Commandline
 ##
@@ -187,4 +205,3 @@ if __name__ == "__main__":
             print(rfid.read())
         else:
             print("Unknown Option '%s'" % sys.argv[1])
-
