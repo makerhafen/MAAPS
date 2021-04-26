@@ -95,7 +95,7 @@ except:  # Dummy class for debugging without client
         @staticmethod
         def read():
             print("Dummy RFID read")
-            return 54321, "test value"
+            return 54321, "U:admin;4c31a8d19b95a7dfe85c"
 
         def read_no_block(self):
             return self.read()

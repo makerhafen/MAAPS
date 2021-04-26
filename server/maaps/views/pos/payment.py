@@ -16,10 +16,11 @@ def pos__payment(request):
             error = "invalid_payment_value"
         else:
             user_profile, error = get_profile_from_post(request)
-            paying_user_profile = user_profile
-            if user_profile.paying_user is not None:  # read user via card, his paying user pays
-                paying_user_profile = user_profile.paying_user
-            payment, transaction = create_material_payment(payment_value, paying_user_profile, user_profile)
+            if user_profile is not None:
+                paying_user_profile = user_profile
+                if user_profile.paying_user is not None:  # read user via card, his paying user pays
+                    paying_user_profile = user_profile.paying_user
+                payment, transaction = create_material_payment(payment_value, paying_user_profile, user_profile)
 
     template = loader.get_template('pos/payment.html')
     return HttpResponse(template.render({
