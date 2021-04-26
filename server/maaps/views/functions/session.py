@@ -56,7 +56,7 @@ def get_token_from_post(request):
     _id, rfid_token = rfid_token.split('\t')
     try:
         obj = models.Token.objects.get(identifier=rfid_token)
-        return obj, ""
+        return obj, None
     except Exception as e:
         return None, "unknown_token"
 
@@ -94,7 +94,7 @@ def get_profile_from_url_token(token):
 
     try:
         obj = models.Token.objects.get(identifier=token).profile
-        return obj, ""
+        return obj, None
     except Exception as e:
         return None, "unknown_token"
 
