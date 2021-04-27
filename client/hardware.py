@@ -21,7 +21,7 @@ try:
     import RPi.GPIO as GPIO
 except:
     class LED:  # for local debugging without client
-        def __init__(self, pin):
+        def __init__(self, pin, active_high):
             self.pin = pin
             print("Dummy LED class, Pin %s" % self.pin)
 
@@ -42,19 +42,19 @@ class RelayBoard:
         def __init__(self, name, raspi_gpio, board):
             self.name = name
             self.RASPI_GPIO = raspi_gpio
-            self._ledio = LED(raspi_gpio)
+            self._ledio = LED(raspi_gpio, active_high=False)  # relay board is low active
             self.board = board
             self.is_active = False
 
         def enable(self):
             print("%s enable" % self.name)
-            self._ledio.off()  # relay board is low active
+            self._ledio.on()
             self.is_active = True
             self.board.check_screenblank()
 
         def disable(self):
             print("%s disable" % self.name)
-            self._ledio.on()
+            self._ledio.off()
             self.is_active = False
             self.board.check_screenblank()
 
