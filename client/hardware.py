@@ -41,7 +41,7 @@ class RelayBoard:
     class _Relay:
         def __init__(self, name, raspi_gpio, board):
             self.name = name
-            self.RASPI_GPIO = raspi_gpio
+            self.raspi_gpio = raspi_gpio
             self._ledio = LED(raspi_gpio, active_high=False)  # relay board is low active
             self.board = board
             self.is_active = False
@@ -62,9 +62,6 @@ class RelayBoard:
         self.relay_1 = self._Relay("Relay 1", RELAY_1_GPIO, self)
         self.relay_2 = self._Relay("Relay 2", RELAY_2_GPIO, self)
         self.relay_3 = self._Relay("Relay 3", RELAY_3_GPIO, self)
-        self.relay_1.disable()
-        self.relay_2.disable()
-        self.relay_3.disable()
 
     def check_screenblank(self):
         if self.relay_1.is_active is True or self.relay_2.is_active is True or self.relay_3.is_active is True:
