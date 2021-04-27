@@ -56,8 +56,7 @@ class Machine(models.Model):
     price_per_usage = models.FloatField(default=0)  # in Euro
     tutor_required_count = models.IntegerField(default=0)  # wir oft
     tutor_required_once_after_month = models.IntegerField(default=24)  # all
-    currentSession = models.ForeignKey("MachineSession", on_delete=models.SET_NULL, related_name="_current_session",
-                                       blank=True, null=True)
+    currentSession = models.ForeignKey("MachineSession", on_delete=models.SET_NULL, related_name="_current_session", blank=True, null=True)
     allowed_users = models.ManyToManyField(User, related_name="allowed_machines")
 
     def __str__(self):
@@ -73,9 +72,7 @@ class Machine(models.Model):
     def user_requires_tutor_once(self, user):
         if user.is_staff: return False
         if self.count_usages(user) > 0:
-            nr_of_latest_sessions = MachineSession.objects.filter(~Q(start=None), ~Q(end=None), machine=self, user=user,
-                                                                  end__gt=now() - timedelta(
-                                                                      days=31 * self.tutor_required_once_after_month)).count()
+            nr_of_latest_sessions = MachineSession.objects.filter(~Q(start=None), ~Q(end=None), machine=self, user=user, end__gt=now() - timedelta( days=31 * self.tutor_required_once_after_month)).count()
             if nr_of_latest_sessions == 0:
                 return True
         return False
@@ -93,8 +90,7 @@ class MachineSession(models.Model):
     updated = models.DateTimeField(auto_now=True)
     machine = models.ForeignKey(Machine, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="machine_user_sessions")
-    tutor = models.ForeignKey(User, on_delete=models.CASCADE, related_name="machine_tutor_sessions", blank=True,
-                              null=True)
+    tutor = models.ForeignKey(User, on_delete=models.CASCADE, related_name="machine_tutor_sessions", blank=True, null=True)
     autologout_at = models.DateTimeField(default=None, blank=True, null=True)
     start = models.DateTimeField(default=None, blank=True, null=True)
     end = models.DateTimeField(default=None, blank=True, null=True)
@@ -114,12 +110,9 @@ class MachineSessionPayment(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    machinesession = models.OneToOneField(MachineSession, on_delete=models.CASCADE, related_name="paymentsession",
-                                          blank=True, null=True)
-    transaction = models.ForeignKey("Transaction", on_delete=models.CASCADE, blank=True, null=True,
-                                    related_name="machineSessionPayments")
-    invoice = models.ForeignKey("Invoice", on_delete=models.SET_NULL, blank=True, null=True,
-                                related_name="machineSessionPayments")
+    machinesession = models.OneToOneField(MachineSession, on_delete=models.CASCADE, related_name="paymentsession", blank=True, null=True)
+    transaction = models.ForeignKey("Transaction", on_delete=models.CASCADE, blank=True, null=True, related_name="machineSessionPayments")
+    invoice = models.ForeignKey("Invoice", on_delete=models.SET_NULL, blank=True, null=True, related_name="machineSessionPayments")
     price_per_hour = models.FloatField(default=0)  # in euro
     price_per_usage = models.FloatField(default=0)  # in euro
     totalpayment = models.FloatField(default=0)
@@ -130,15 +123,11 @@ class MachineSessionPayment(models.Model):
 class MaterialPayment(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="materialPaymentsUser",
-                             verbose_name='Benutzer')  ## the user that actually pays
-    creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name="materialPaymentsCreator",
-                                verbose_name='Erstellt durch')  # the user that created this payment
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="materialPaymentsUser", verbose_name='Benutzer')  ## the user that actually pays
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name="materialPaymentsCreator", verbose_name='Erstellt durch')  # the user that created this payment
     value = models.FloatField(default=0)
-    transaction = models.ForeignKey("Transaction", on_delete=models.CASCADE, blank=True, null=True,
-                                    related_name="materialPayments")
-    invoice = models.ForeignKey("Invoice", on_delete=models.SET_NULL, blank=True, null=True,
-                                related_name="materialPayments")
+    transaction = models.ForeignKey("Transaction", on_delete=models.CASCADE, blank=True, null=True, related_name="materialPayments")
+    invoice = models.ForeignKey("Invoice", on_delete=models.SET_NULL, blank=True, null=True,  related_name="materialPayments")
 
 
 class Invoice(models.Model):
@@ -146,8 +135,7 @@ class Invoice(models.Model):
     updated = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     total_payment = models.FloatField(default=0)
-    transaction = models.OneToOneField("Transaction", on_delete=models.SET_NULL, blank=True, null=True,
-                                       related_name="invoice")
+    transaction = models.OneToOneField("Transaction", on_delete=models.SET_NULL, blank=True, null=True, related_name="invoice")
 
 
 class TransactionType:
@@ -166,8 +154,7 @@ class Transaction(models.Model):
     value = models.FloatField(default=0)
     comment = models.CharField(max_length=10000)
     type = models.CharField(max_length=10000)
-    authorized_by = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True,
-                                      related_name="authorized_transactions")
+    authorized_by = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="authorized_transactions")
 
     def __str__(self):
         return "Transaction for: " + self.user.username + " , " + "%s" % self.value + "Euro"
@@ -215,8 +202,7 @@ def Invoice__collect_payments(sender, instance, *args, **kwargs):
     total_to_pay = 0
 
     if total_payments == 0:
-        unpayed_machine_sessions = MachineSessionPayment.objects.filter(~Q(end=None), user=instance.user, invoice=None,
-                                                                        transaction=None)
+        unpayed_machine_sessions = MachineSessionPayment.objects.filter(~Q(end=None), user=instance.user, invoice=None, transaction=None)
         unpayed_materials = MaterialPayment.objects.filter(user=instance.user, invoice=None, transaction=None)
         for unpayed_machine_session in unpayed_machine_sessions:
             total_to_pay += unpayed_machine_session.totalpayment
