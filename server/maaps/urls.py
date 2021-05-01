@@ -35,8 +35,8 @@ urlpatterns = [
     path('webif/'                     , views.webif__dashboard   , name='webif__dashboard'),
     path('webif/user/list'            , views.webif__user__list  , name='webif__user__list'),
     path('webif/user/create'          , views.webif__user__create, name='webif__user__create'),
-    path('webif/user/update/<int:id>' , views.webif__user__update, name='webif__user__update'),
-    path('webif/user/delete/<int:id>' , views.webif__user__delete, name='webif__user__delete'),
+    path('webif/user/update/<int:user_id>' , views.webif__user__update, name='webif__user__update'),
+    path('webif/user/delete/<int:user_id>' , views.webif__user__delete, name='webif__user__delete'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
