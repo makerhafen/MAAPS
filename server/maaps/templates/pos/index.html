@@ -15,24 +15,24 @@
 
     </div>
 
-    <br>
-    <div class="row" style="text-align:center">
-        <div class="col-xs-12">
-            <a href="{% url 'pos__payment' %}">
-                <button class="btn btn-lg btn-success" style="width:100%">Artikel Zahlen</button>
-            </a>
-        </div>
-    </div>
-    <br>
-    <div class="row" style="text-align:center">
-        <div class="col-xs-12">
-            <a href="{% url 'pos__info' %}">
-                <button class="btn btn-lg btn-success" style="width:100%">Karteninfo anzeigen</button>
-            </a>
-        </div>
-    </div>
+
 
     {% if admin_profile == None %}
+        <div class="row" style="text-align:center">
+            <div class="col-xs-12">
+                <a href="{% url 'pos__payment' %}">
+                    <button class="btn btn-lg btn-success" style="width:100%">Artikel Zahlen</button>
+                </a>
+            </div>
+        </div>
+        <br>
+        <div class="row" style="text-align:center">
+            <div class="col-xs-12">
+                <a href="{% url 'pos__info' %}">
+                    <button class="btn btn-lg btn-success" style="width:100%">Karteninfo anzeigen</button>
+                </a>
+            </div>
+        </div>
         <br>
         <div class="row" style="text-align:center">
             <div class="col-xs-12">
@@ -46,7 +46,7 @@
         <a href="{% url 'pos__deposit' %}">
             <button class="btn btn-lg btn-success" style="width:100%">Karte aufladen</button>
         </a>
-        <br><br>
+        <br>
         <a href="{% url 'pos__write_card' %}">
             <button class="btn btn-lg btn-success" style="width:100%">Karte erstellen</button>
         </a>

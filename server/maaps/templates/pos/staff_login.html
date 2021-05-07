@@ -5,14 +5,11 @@
         <div class="col-xs-9">
             <b style="font-size:2em">Admin anmelden</b>
         </div>
-        {% if admin_profile != None %}
-            <a href="{% url 'pos__logout' %}">
-                <div class="col-xs-3 header_link">
-                    Zurück
-                </div>
-            </a>
-        {% endif %}
-
+        <a href="{% url 'pos__index' %}">
+            <div class="col-xs-3 header_link">
+                Zurück
+            </div>
+        </a>
     </div>
     <div class="row" style="text-align:center">
         <div class="col-xs-12">

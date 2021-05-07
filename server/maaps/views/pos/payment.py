@@ -6,13 +6,6 @@ from maaps.views.functions.payment import create_material_payment
 
 
 def pos__payment(request):
-    admin_profile = get_profile_from_session(request)
-    if admin_profile is None:
-        return redirect('pos__index')
-    if not admin_profile.user.is_staff: # this page is only allowed by admin
-        request.session["profile_id"] = None
-        return redirect('pos__index')
-
     payment, transaction = None, None
     error = None
     value_before_payment = None
