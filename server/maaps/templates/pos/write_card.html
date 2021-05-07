@@ -12,18 +12,6 @@
         </a>
     </div>
 
-    {% if written_token != None %}
-       <h3> Token für <b>{% if written_token.machine != None %}{{written_token.machine}}{% endif %} {% if written_token.profile != None %}{{written_token.profile}}{% endif %}</b> erstellt</h3>
-    {% endif %}
-
-    <div class="row" style="text-align:center">
-        {% for token in tokens %}
-            <div id="{{ token.identifier }}" class="col-xs-12 token_list_item" style="font-size:1.5em;padding:10px;" onclick="select_token('{{ token.identifier }}')">
-                {% if token.machine != None %}{{token.machine}}{% endif %} {% if token.profile != None %}{{token.profile}}{% endif %}
-            </div>
-        {% endfor %}
-    </div>
-
 
     <script>
         function rfid_write(value, success_callback, error_callback, error_cnt = 0 ){
@@ -98,12 +86,38 @@
         }
     </style>
 
-    <div class="row" id="last_error" style="background-color:red;height:20px;text-align:center;position:fixed;bottom:40px;width:100%;display:None"></div>
+    {% if written_token != None %}
+        <div class="row" style="text-align:center">
+            <h3> Token für
+                <b>
+                   {% if written_token.machine != None %}{{written_token.machine}}{% endif %}
+                   {% if written_token.profile != None %}{{written_token.profile}}{% endif %}
+                </b>
+                erstellt
+            </h3>
+            <br>
+        </div>
+        <div class="row" style="text-align:center">
+            <button type="button" class="btn btn-lg btn-success" onClick="window.location.reload();">OK</button>
+        </div>
+    {% else %}
+        <div class="row" style="text-align:center">
+            {% for token in tokens %}
+                <div id="{{ token.identifier }}" class="col-xs-12 token_list_item" style="font-size:1.5em;padding:10px;" onclick="select_token('{{ token.identifier }}')">
+                    {% if token.machine != None %}{{token.machine}}{% endif %} {% if token.profile != None %}{{token.profile}}{% endif %}
+                </div>
+            {% endfor %}
+        </div>
+        <div class="row" id="last_error" style="background-color:red;height:20px;text-align:center;position:fixed;bottom:40px;width:100%;display:None"></div>
 
-    {% include "rfid/rfid_form.html" %}
-    <div class="row" id="write_token_button"  onclick="write_selected_token()" style="background-color:lightgreen;height:40px;text-align:center;position:fixed;bottom:0px;width:100%;">
-        <h4><b>Ausgewählten Tag Schreiben</b></h4>
-    </div>
+        {% include "rfid/rfid_form.html" %}
+        <div class="row" id="write_token_button"  onclick="write_selected_token()" style="background-color:lightgreen;height:40px;text-align:center;position:fixed;bottom:0px;width:100%;">
+            <h4><b>Ausgewählten Tag Schreiben</b></h4>
+        </div>
+
+    {% endif %}
+
+
 
 
 {% endblock %}

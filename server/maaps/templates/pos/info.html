@@ -1,0 +1,46 @@
+{% extends "base_raspi.html" %}
+
+{% block content %}
+    <div class="row" id="header" style="background-color:lightgray;">
+        <div class="col-xs-9">
+            <b style="font-size:2em">Info</b>
+        </div>
+        <a href="{% url 'pos__index' %}">
+            <div class="col-xs-3 header_link">
+                Zurück
+            </div>
+        </a>
+    </div>
+
+    {% if user_profile == None %}
+        <div class="col-xs-12" style="text-align:center">
+            <h3>Karte einlesen</h3>
+        </div>
+    {% else %}
+        <div class="row">
+            <div class="col-xs-9">
+                <div style="font-size:3em;text-align:center;padding-top:1px;"><h2> {{user_profile}}</h2></div>
+            </div>
+            <div class="col-xs-3">
+                <img style="width:110px" src="{{ user_profile.profile_picture.url }}"/>
+            </div>
+        </div>
+        <br>
+        <div class="row" style="text-align:center">
+            <div class="col-xs-12">
+                {% if user_profile.paying_user != None %}
+                    <b>{{user_profile.paying_user}}</b> zahlt für Dich!
+                {% else %}
+                    {% if user_profile.allow_invoice == True %}
+                        Du kannst auf Rechnung zahlen
+                    {% else %}
+                        Du hast {{user_profile.prepaid_deposit |floatformat:2}} Euro Guthaben
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+
+    {% include "rfid/rfid_full.html" %}
+
+{% endblock %}

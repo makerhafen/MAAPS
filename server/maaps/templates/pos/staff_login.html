@@ -1,0 +1,26 @@
+{% extends "base_raspi.html" %}
+
+{% block content %}
+    <div class="row" id="header" style="background-color:lightgray;">
+        <div class="col-xs-9">
+            <b style="font-size:2em">Admin anmelden</b>
+        </div>
+        {% if admin_profile != None %}
+            <a href="{% url 'pos__logout' %}">
+                <div class="col-xs-3 header_link">
+                    Zurück
+                </div>
+            </a>
+        {% endif %}
+
+    </div>
+    <div class="row" style="text-align:center">
+        <div class="col-xs-12">
+                <h3>Mitarbeiter Karte auflegen</h3>
+        </div>
+    </div>
+    <br>
+    {% include "rfid/rfid_full.html" %}
+
+
+{% endblock %}

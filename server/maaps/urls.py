@@ -10,11 +10,14 @@ urlpatterns = [
     path(r'', views.index, name='index'),
 
     # Point of sale
-    path(r'pos/'          , views.pos__index      , name='pos__index'),
-    path(r'pos/logout'    , views.pos__logout     , name='pos__logout'),
-    path(r'pos/deposit'   , views.pos__deposit    , name='pos__deposit'),
-    path(r'pos/payment'   , views.pos__payment    , name='pos__payment'),
-    path(r'pos/write_card', views.pos__write_card , name='pos__write_card'),
+    path(r'pos/'           , views.pos__index      , name='pos__index'),
+    path(r'pos/logout'     , views.pos__logout     , name='pos__logout'),
+    path(r'pos/deposit'    , views.pos__deposit    , name='pos__deposit'),
+    path(r'pos/payment'    , views.pos__payment    , name='pos__payment'),
+    path(r'pos/write_card' , views.pos__write_card , name='pos__write_card'),
+    path(r'pos/info'       , views.pos__info       , name='pos__info'),
+    path(r'pos/staff_login', views.pos__staff_login, name='pos__staff_login'),
+    path(r'pos/staff_login/<user_token>', views.pos__staff_login, name='pos__staff_login'),
 
     # Machine
     path(r'machine/'                          , views.machine__login_machine    , name='machine__login'),
