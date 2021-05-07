@@ -2,25 +2,21 @@
 
 {% block content %}
     <div class="row" id="header" style="background-color:lightgray;">
-        <div class="col-xs-9">
             {% if admin_profile == None %}
-                <b style="font-size:2em">Kasse</b>
-            {% else %}
-                <b style="font-size:2em; color:red;">Mitarbeiter Funktionen</b>
-            {% endif %}
-
-        </div>
-        {% if admin_profile != None %}
-            <a href="{% url 'pos__logout' %}">
-                <div class="col-xs-3 header_link">
-                    Abmelden
+                <div class="col-xs-9">
+                    <b style="font-size:2em">Kasse</b>
                 </div>
-            </a>
-        {% endif %}
-
+            {% else %}
+                <div class="col-xs-9">
+                    <b style="font-size:2em; color:red;">Mitarbeiter Funktionen</b>
+                </div>
+                <a href="{% url 'pos__logout' %}">
+                    <div class="col-xs-3 header_link">
+                        Abmelden
+                    </div>
+                </a>
+            {% endif %}
     </div>
-
-
 
     {% if admin_profile == None %}
         <br>
@@ -65,9 +61,6 @@
             </div>
         </div>
     {% endif %}
-
-
-
 
 
 {% endblock %}
