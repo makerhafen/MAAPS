@@ -25,7 +25,7 @@ class UserForm(forms.Form):
 
     class Meta:
         model = Profile
-        fields = ("email", "first_name", "last_name", "company_name", "allow_invoice","commercial_account", "paying_user", "city")
+        fields = ("email", "first_name", "last_name", "company_name", "allow_invoice", "commercial_account", "paying_user", "city")
 
     def save(self, commit=True):
         try:
@@ -53,8 +53,6 @@ class UserForm(forms.Form):
         user.profile.city = self.cleaned_data["city"]
         user.profile.birthdate = self.cleaned_data["birthdate"]
         user.profile.save()
-        print("HERHEHR")
-        print(self.cleaned_data["commercial_account"])
         allowed_machines = [int(allowed_machine) for allowed_machine in self.allowed_machines]
         all_machines = Machine.objects.all()
         for machine in all_machines:

@@ -19,4 +19,4 @@ def webif__user__create_new_card(request, user_id):
     new_token.enabled = True
     new_token.can_write = True
     new_token.save()
-    return redirect('webif__user__show', user_id = profile.id)
+    return redirect('webif__user__show', user_id=profile.id)

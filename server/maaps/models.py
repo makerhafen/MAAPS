@@ -35,14 +35,14 @@ class Profile(models.Model):
     paying_user = models.OneToOneField("Profile", on_delete=models.CASCADE, blank=True, null=True)
     prepaid_deposit = models.FloatField(default=0)
     allow_invoice = models.BooleanField(default=False)
-    commercial_account = models.BooleanField(default=False) # == mit mwst
-    monthly_payment = models.BooleanField(default=False) # monatlich oder tagesaccount
+    commercial_account = models.BooleanField(default=False)  # == mit mwst
+    monthly_payment = models.BooleanField(default=False)  # monatlich oder tagesaccount
     profile_picture = ResizedImageField(blank=True, null=True, upload_to=rename_file)
-    company_name = models.CharField(max_length=200, blank=True,default="")
-    street = models.CharField(max_length=200, blank=True,default="")
+    company_name = models.CharField(max_length=200, blank=True, default="")
+    street = models.CharField(max_length=200, blank=True, default="")
     postalcode = models.CharField(max_length=200, default="", blank=True)
-    city = models.CharField(max_length=200, blank=True,default="")
-    birthdate =  models.DateField(blank=True, null=True, default=None)
+    city = models.CharField(max_length=200, blank=True, default="")
+    birthdate = models.DateField(blank=True, null=True, default=None)
 
     def __str__(self):
         if self.company_name != "":
@@ -84,7 +84,7 @@ class Machine(models.Model):
     def user_requires_tutor_once(self, user):
         if user.is_staff: return False
         if self.count_usages(user) > 0:
-            nr_of_latest_sessions = MachineSession.objects.filter(~Q(start=None), ~Q(end=None), machine=self, user=user, end__gt=now() - timedelta( days=31 * self.tutor_required_once_after_month)).count()
+            nr_of_latest_sessions = MachineSession.objects.filter(~Q(start=None), ~Q(end=None), machine=self, user=user, end__gt=now() - timedelta(days=31 * self.tutor_required_once_after_month)).count()
             if nr_of_latest_sessions == 0:
                 return True
         return False
@@ -118,7 +118,6 @@ class MachineSession(models.Model):
             return timediff_total_minutes, timediff_hours, timediff_minutes
 
 
-
 class MachineSessionPayment(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -132,6 +131,7 @@ class MachineSessionPayment(models.Model):
     transaction = models.ForeignKey("Transaction", on_delete=models.CASCADE, blank=True, null=True, related_name="machineSessionPayments")
     invoice = models.ForeignKey("Invoice", on_delete=models.SET_NULL, blank=True, null=True, related_name="machineSessionPayments")
 
+
 class MaterialPayment(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -140,7 +140,8 @@ class MaterialPayment(models.Model):
     creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name="materialPaymentsCreator", verbose_name='Erstellt durch')  # the user that created this payment
     value = models.FloatField(default=0)
     transaction = models.ForeignKey("Transaction", on_delete=models.CASCADE, blank=True, null=True, related_name="materialPayments")
-    invoice = models.ForeignKey("Invoice", on_delete=models.SET_NULL, blank=True, null=True,  related_name="materialPayments")
+    invoice = models.ForeignKey("Invoice", on_delete=models.SET_NULL, blank=True, null=True, related_name="materialPayments")
+
 
 class SpaceRentPayment(models.Model):
     created = models.DateTimeField(auto_now_add=True)
@@ -150,7 +151,7 @@ class SpaceRentPayment(models.Model):
     end = models.DateTimeField(blank=True, null=True)
     value = models.FloatField(default=0)
     transaction = models.ForeignKey("Transaction", on_delete=models.CASCADE, blank=True, null=True, related_name="SpaceRentPayments")
-    invoice = models.ForeignKey("Invoice", on_delete=models.SET_NULL, blank=True, null=True,  related_name="SpaceRentPayments")
+    invoice = models.ForeignKey("Invoice", on_delete=models.SET_NULL, blank=True, null=True, related_name="SpaceRentPayments")
 
 
 class Invoice(models.Model):
@@ -159,7 +160,7 @@ class Invoice(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     total_payment = models.FloatField(default=0)
     transaction = models.OneToOneField("Transaction", on_delete=models.SET_NULL, blank=True, null=True, related_name="invoice")
-    include_tax = models.BooleanField(default=False) # == mit mwst, rechnung oder spendenquittung
+    include_tax = models.BooleanField(default=False)  # == mit mwst, rechnung oder spendenquittung
 
 
 class TransactionType:
@@ -225,7 +226,7 @@ def Invoice__collect_payments(sender, instance, *args, **kwargs):
     total_payments = instance.materialPayments.all().count() + instance.machineSessionPayments.all().count()
     total_to_pay = 0
 
-    if total_payments == 0: # check that invoice is new
+    if total_payments == 0:  # check that invoice is new
         unpayed_machine_sessions = MachineSessionPayment.objects.filter(~Q(end=None), user=instance.user, invoice=None, transaction=None)
         unpayed_materials = MaterialPayment.objects.filter(user=instance.user, invoice=None, transaction=None)
         for unpayed_machine_session in unpayed_machine_sessions:

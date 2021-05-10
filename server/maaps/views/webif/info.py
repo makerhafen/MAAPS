@@ -8,4 +8,4 @@ from django.utils import timezone
 
 @staff_member_required
 def webif__info(request):
-    return HttpResponse( loader.get_template('webif/info.html').render({}, request))
+    return HttpResponse(loader.get_template('webif/info.html').render({}, request))
