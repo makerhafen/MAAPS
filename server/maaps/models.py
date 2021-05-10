@@ -55,6 +55,7 @@ class Profile(models.Model):
             return None
         return tokens[0]
 
+
 class Machine(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
