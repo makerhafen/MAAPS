@@ -9,7 +9,7 @@ def machine__login_user(request, user_token=""):
     machine = get_machine_from_session(request)
     if machine is None:
         return find_session_redirect(machine)
-    if machine.currentSession is not None:
+    if machine.current_session is not None:
         return find_session_redirect(machine)
 
     user_profile, error = get_profile_from_post(request)
@@ -23,7 +23,7 @@ def machine__login_user(request, user_token=""):
             machinesession.machine = machine
             machinesession.user = user_profile.user
             machinesession.save()
-            machine.currentSession = machinesession
+            machine.current_session = machinesession
             machine.save()
             return find_session_redirect(machine)
         else:

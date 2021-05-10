@@ -19,7 +19,7 @@
                         <th scope="col">Email</th>
                         <th scope="col">Guthaben (Euro)</th>
                         <th scope="col">Auf Rechnung</th>
-                        <th scope="col">Wer Zahlt</th>
+                        <th scope="col">Jemand anderes zahlt</th>
                         <th scope="col">Bild</th>
                     </tr>
                 </thead>
@@ -30,13 +30,15 @@
                         <td>{{ profile.user.last_name }}</td>
                         <td>{{ profile.company_name }}</td>
                         <td>{{ profile.user.email }}</td>
-                        <td>{{ profile.prepaid_deposit }}</td>
+                        <td {% if profile.prepaid_deposit < 0 %}style="color:red"{% endif %}>{{ profile.prepaid_deposit }}</td>
                         <td>{{ profile.allow_invoice }}</td>
                         <td>{{ profile.paying_user }}</td>
                         <td>
                             {% if profile.profile_picture %}<img style="width:50px" src = "{{ profile.profile_picture.url }}"/>{% endif %}
                         </td>
-                        <td><a type="button" class="btn btn-warning" href="/webif/user/update/{{ profile.id }}">Bearbeiten</a>
+                        <td>
+                            <a type="button" class="btn btn-warning" href="/webif/user/update/{{ profile.id }}">Bearbeiten</a>
+                            <a type="button" class="btn btn-success" href="/webif/user/show/{{ profile.id }}">Anzeigen</a>
                         </td>
                     </tr>
                     {% endfor %}

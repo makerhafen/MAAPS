@@ -1,10 +1,10 @@
 from django.http import HttpResponse
 from django.template import loader
-from maaps.views.functions.session import get_machine_from_session, find_session_redirect, get_profile_from_post
+from maaps.views.functions.session import get_machine_from_session, find_session_redirect, get_profile_from_post, get_profile_from_url_token
 from maaps.views.functions.payment import create_material_payment
 
 
-def machine__pay_material(request):
+def machine__pay_material(request, user_token=""):
     machine = get_machine_from_session(request)
     if machine is None:
         return find_session_redirect(machine)
@@ -25,7 +25,7 @@ def machine__pay_material(request):
                     paying_user_profile = user_profile
 
                 value_before_payment = paying_user_profile.prepaid_deposit
-                payment, transaction = create_material_payment(payment_value, paying_user_profile, user_profile)
+                payment, transaction = create_material_payment(payment_value, paying_user_profile, user_profile, machine)
 
     template = loader.get_template('machine/pay_material.html')
     return HttpResponse(template.render({

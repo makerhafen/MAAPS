@@ -1,0 +1,97 @@
+{% extends "webif/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<br>
+<br>
+Rechung für {{invoice}}
+    <div class="row">
+        <div class="col-md-6">
+            Vorname: <b>{{profile.user.first_name}}</b> <br>
+            Nachname: <b>{{profile.user.last_name}}</b> <br>
+            Username: <b>{{profile.user.username}}</b>  <br>
+            Email: <b>{{profile.user.email}}</b>        <br>
+            Firma: <b>{{profile.company}}</b>           <br>
+            Rechnung erlaubt: <b>{{profile.allow_invoice}}</b>           <br>
+            Jemand anders zahlt: <b>{{profile.paying_user}}</b>           <br>
+            Guthaben:<b {% if profile.prepaid_deposit < 0 %}style="color:red"{% endif %}>{{profile.prepaid_deposit}}</b><br>
+        </div>
+        <div class="col-md-6 ">
+            <a type="button" class="btn btn-warning" href="/webif/user/update/{{ profile.id }}">Bearbeiten</a>
+            {% if profile.allow_invoice %}
+                <a type="button" class="btn btn-warning" href="/webif/user/create_invoice/{{ profile.id }}">Rechnung erstellen</a>
+            {% endif %}
+            <br>
+            <br>
+            {% if profile.profile_picture %}
+                <img style="width:110px" src = "{{ profile.profile_picture.url }}"/>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if last_error != None %}
+        <div class="row">
+            <div class="col-md-12 ">
+                <b>Fehler:</b><br>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Maschinen Sitzungen</h3>
+        </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Maschine</th>
+                        <th scope="col">Startzeit</th>
+                        <th scope="col">Benutzer</th>
+                        <th scope="col">Tutor</th>
+                        <th scope="col">Jemand anderes zahlt</th>
+                        <th scope="col">Sauerkeit</th>
+                        <th scope="col">Automatisch abmelden</th>
+                        <th scope="col">Kosten</th>
+                        <th scope="col">Bezahlt?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for machineSession in profile.user.machine_user_sessions.all %}
+                    <tr>
+                        <td>{{ machineSession.machine }}</td>
+                        <td>{{ machineSession.start }}</td>
+                        <td>
+                            {{ machineSession.user.profile }}
+                            {% if machineSession.user.profile.profile_picture %}<img style="width:50px" src = "{{ machineSession.user.profile.profile_picture.url }}"/>{% endif %}
+                        </td>
+                        <td>
+                            {{ machineSession.tutor }}
+                            {% if machineSession.tutor.profile.profile_picture %}<img style="width:50px" src = "{{ machineSession.tutor.profile.profile_picture.url }}"/>{% endif %}
+                        </td>
+                        <td>
+                            {% if machineSession.paymentsession.user != machineSession.user %}
+                                {{ machineSession.paymentsession.user.profile }}
+                                {% if machineSession.paymentsession.user.profile.profile_picture %}<img style="width:50px" src = "{{ machineSession.paymentsession.user.profile.profile_picture.url }}"/>{% endif %}
+                            {% endif %}
+                        </td>
+                        <td>{{ machineSession.rating_clean }}</td>
+                        <td>{{ machineSession.autologout_at }}</td>
+                        <td>{{ machineSession.paymentsession.value }} Euro</td>
+                        <td>
+                            {% if machineSession.paymentsession.value > 0 %}
+                                {% if machineSession.paymentsession.invoice or machineSession.paymentsession.transaction %}
+                                    ja
+                                {% else %}
+                                    <p style="color:red">nein</p>
+                                {% endif %}
+                            {% endif %}
+
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+    </div>
+
+
+{% endblock %}

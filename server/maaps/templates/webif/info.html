@@ -1,0 +1,173 @@
+{% extends "webif/base.html" %}
+
+{% block content %}
+
+<h3>Neuen Benutzer registrieren</h3>
+<ul>
+    <li>Webinterface Benutzer anlegen klicken</li>
+    <li>Bei Firmenkunde Hauptaccount:
+        <ul>
+            <li>Vorname, Nachname von Vertretungsberechtigtem der Firma</li>
+            <li>Firmenname eintragen</li>
+            <li>Kommerzieller Account auswählen</li>
+            <li>ggf. "Bezahlung auf Rechnung" auswählen</li>
+        </ul>
+    </li>
+    <li>Bei Firmenkunde Mitarbeiteraccount:
+        <ul>
+            <li>Vorname, Nachname von Mitarbeiter</li>
+            <li>Firmenname eintragen</li>
+            <li>Address kann weggelassen werden</li>
+            <li>Bei "Ein anderer Benutzer zahlt für diesen Benutzer" Firma Hauptaccount auswählen</li>
+        </ul>
+
+    </li>
+    <li>
+        Bei Langzeit Benutzern die NICHT "Ein anderer Benutzer zahlt für diesen Benutzer" haben:
+        <ul>
+            <li>Monatlich Zahlen auswählen</li>
+        </ul>
+    </li>
+    <li>Speichern klicken</li>
+    <li>-> "Haftungsausschluss aktualisieren"</li>
+    <li>-> "Neue RFID Karte schreiben"</li>
+    <li>Wenn NICHT "Bezahlung auf Rechnung" und NICHT "Ein anderer Benutzer zahlt für diesen Benutzer":
+        <ul>
+            <li>-> "Prepaid Guthaben aufladen mit Bargeld" mindestens Tagespreis einzahlen</li>
+        </ul>
+    </li>
+</ul>
+
+<h3>Haftungsausschluss aktualisieren</h3>
+<ul>
+    <li>In Benutzerliste bei Benutzer auf "Anzeigen" klicken</li>
+    <li>"Haftungsausschluss" auswählen und die angezeigte Seite ausdrucken.</li>
+    <li>Haftungsausschluss unterschreiben lassen, bei minderjährigen von allen erziehungsberechtigten</li>
+    <li>Haftungsausschluss abheften und auf der Seite "Haftungsausschluss unterschrieben" klicken</li>
+</ul>
+
+<h3>Karte verloren</h3>
+<ul>
+    <li>10 Euro Strafe kassieren</li>
+    <li>Webinterface "Benutzer" öffnen</li>
+    <li>Benutzer aus der liste raussuchen</li>
+    <li>"anzeigen" anklicken</li>
+    <li>"Neue RFID Karte erstellen" anklicken</li>
+    <li>-> "Neue RFID Karte schreiben"</li>
+</ul>
+
+
+<h3>Prepaid Guthaben aufladen mit Bargeld</h3>
+<ul>
+    <li>Am Kassenterminal anmelden mit Admin Karte</li>
+    <li>"Guthaben aufladen" auswählen</li>
+    <li>Betrag wählen</li>
+    <li>Geld kassieren und in Kasse tun</li>
+    <li>Benutzerkarte einlesen</li>
+    <li>Admin am Kassenterminal AUSLOGGEN</li>
+</ul>
+
+
+<h3>Prepaid Guthaben aufladen mit Überweisung/Paypal</h3>
+<ul>
+    <li>Webinterface "Benutzer" öffnen</li>
+    <li>Benutzer aus der liste raussuchen</li>
+    <li>"anzeigen" anklicken</li>
+    <li>"Einzahlung verbuchen" anklicken</li>
+    <li>Betrag eingeben</li>
+    <li>"OK" klicken</li>
+</ul>
+
+
+<h3>Rechnungen erstellen</h3>
+<ul>
+    <li>Webinterface "Rechnungen" öffnen</li>
+    <li>"Rechnungen erstellen" anklicken</li>
+    <li>Liste zeigt alle benutzer für die Rechnungen angelegt werden können</li>
+    <li>Benutzer auswählen und "Rechung Erstellen" klicken</li>
+    <li>Rechnung kann auf der nächsten seite angepasst werden, wenn nötig items ausschliessen</li>
+    <li>"Erstellen" klicken</li>
+    <li>Angezeigte Rechnung ausdrucken</li>
+</ul>
+
+<h3>Spendenquittung generieren</h3>
+
+
+<h3>Neue RFID Karte schreiben:</h3>
+<ul>
+    <li>Am Kassenterminal anmelden mit Admin Karte</li>
+    <li>"Karte erstellen" auswählen</li>
+    <li>Benutzer auswählen, RFID Karte schreiben</li>
+    <li>Admin am Kassenterminal AUSLOGGEN</li>
+    <li>Karte übergeben</li>
+</ul>
+
+
+
+<h3>Workflow Tagesbenutzer:</h3>
+<ul>
+    <li>Registrieren</li>
+    <li>Mindestens Tagesbetrag auf karte einzahlen</li>
+    <li>Anmelden</li>
+    <li>-> "Workflow Benutzer verabschieden"</li>
+</ul>
+
+
+
+<h3>Workflow Benutzer verabschieden:</h3>
+
+<ul>
+    <li>Negativbetrag kontrollieren</li>
+    <li>Nachzahlen wenn nötig</li>
+</ul>
+
+
+
+<h3>Preise</h3>
+ <table  style="width:100%">
+  <tr>
+    <th>   Was       </th>  <th> Erwachsene </th>    <th> Kinder < 16 </th>   <th> Kommerziell </th>
+  </tr>
+  <tr>
+    <td> Tagespreis  </td>  <td>   10€/Tag      </td>    <td> Kostenslos  </td>   <td>     20€     </td>
+  </tr>
+  <tr>
+    <td> Monatspreis </td>  <td>   33€/Monat      </td>    <td> Kostenslos  </td>   <td>     66€     </td>
+  </tr>
+  <tr>
+    <td> 3D-Drucker  </td>  <td> 1€/Stunde  </td>    <td> Kostenslos  </td>   <td>     66€     </td>
+  </tr>
+</table>
+<br>
+<br>
+	Tagepreis:
+		Erwachsene: 10 Euro
+		Kinder unter 16: Umsonst
+		Kommerziell: 20 Euro
+	Monatspreis:
+		Erwachsene: 32 Euro
+		Kinder unter 17: Umsonst
+		Kommerziell: 60 Euro pro Karte
+
+
+Lasercutter 10 Euro stunde
+3d Drucker 1 Euro Pro stunde
+Fräse
+Drehmaschine
+
+
+
+
+
+Wie kann man zahlen?
+Nur ein Tag: Bar an der Kasse
+Daueruser:
+    Bar an kasse
+    dauerauftrag
+    überweisung
+    sepa einzugsermächtigung
+
+
+
+
+{% endblock %}

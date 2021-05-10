@@ -11,19 +11,19 @@ def machine__tutor_required(request):
     tutor_profile, error = get_profile_from_post(request)
     if tutor_profile is not None:
         if machine.user_can_tutor(tutor_profile.user):
-            machine.currentSession.tutor = tutor_profile.user
-            machine.currentSession.save()
+            machine.current_session.tutor = tutor_profile.user
+            machine.current_session.save()
             return find_session_redirect(machine)
         else:
             error = "tutor_not_allowed"
 
-    machine_usage_count = machine.count_usages(machine.currentSession.user)
+    machine_usage_count = machine.count_usages(machine.current_session.user)
 
     return HttpResponse(loader.get_template('machine/tutor_required.html').render({
         "machine": machine,
         "machine_usage_count": machine_usage_count,
-        "tutor_required": machine.user_requires_tutor(machine.currentSession.user),
-        "tutor_required_once": machine.user_requires_tutor_once(machine.currentSession.user),
+        "tutor_required": machine.user_requires_tutor(machine.current_session.user),
+        "tutor_required_once": machine.user_requires_tutor_once(machine.current_session.user),
         "last_error": error,
     }, request))
 

@@ -9,10 +9,12 @@
 
     <div class="row">
         <div class="col-xs-9">
-            <div style="font-size:3em;text-align:center;padding-top:1px;"><h2> {{machine.currentSession.user.profile}}</h2> </div>
+            <div style="font-size:3em;text-align:center;padding-top:1px;"><h2> {{machine.current_session.user.profile}}</h2> </div>
         </div>
         <div class="col-xs-3">
-            <img style="width:110px" src = "{{ machine.currentSession.user.profile.profile_picture.url }}"/>
+            {% if machine.current_session.user.profile.profile_picture %}
+                <img style="width:110px" src = "{{ machine.current_session.user.profile.profile_picture.url }}"/>
+            {% endif %}
         </div>
     </div>
 
@@ -40,13 +42,13 @@
                 </a>
             </div>
         </div>
-        {% if machine.currentSession.autologout_at != None %}
+        {% if machine.current_session.autologout_at != None %}
             <p id="auto_logout" style="text-align:center">
                 Automatisch abmelden in
-                {% if machine.currentSession.autologout_timediff.1 > 0 %}
-                    <b>{{machine.currentSession.autologout_timediff.1}}</b> Stunde und
+                {% if machine.current_session.autologout_timediff.1 > 0 %}
+                    <b>{{machine.current_session.autologout_timediff.1}}</b> Stunde und
                 {% endif %}
-                <b>{{machine.currentSession.autologout_timediff.2}}</b> Minuten.
+                <b>{{machine.current_session.autologout_timediff.2}}</b> Minuten.
             </p>
             <script>
                 setTimeout(function(){location.reload();}, 30000);

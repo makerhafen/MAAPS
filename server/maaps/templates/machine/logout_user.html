@@ -11,16 +11,23 @@
     Von: {{ last_machine_session.start}}<br>
     Bis: {{ last_machine_session.end}}<br>
     {% if last_payment_session %}
-        <h3> Kosten: {{ last_payment_session.totalpayment |floatformat:2}} Euro<br></h3>
+        <h3> Kosten: {{ last_payment_session.value |floatformat:2}} Euro<br></h3>
     {% else %}
         <h3> Kosten: 0.00 Euro<br></h3>
     {% endif %}
     <br>
 
     <a href="{% url 'machine__login' %}">
-        <button class="btn btn-lg btn-success" style="width:100%">Ok</button>
+        <button id="ok_btn" class="btn btn-lg btn-success" style="width:100%">Ok</button>
     </a>
 
     <iframe  style="display:none" src="http://127.0.0.1:8080/relay/all/off"> </iframe>
 
+
+    <script>
+        // automatically continue if user does nothing 1 minute
+        setTimeout(function(){
+            document.getElementById("ok_btn").click();
+        }, 1*60*1000)
+    </script>
 {% endblock %}

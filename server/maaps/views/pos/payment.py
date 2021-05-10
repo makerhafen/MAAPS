@@ -21,7 +21,7 @@ def pos__payment(request):
                 paying_user_profile = user_profile
                 if user_profile.paying_user is not None:  # read user via card, his paying user pays
                     paying_user_profile = user_profile.paying_user
-                payment, transaction = create_material_payment(payment_value, paying_user_profile, user_profile)
+                payment, transaction = create_material_payment(payment_value, paying_user_profile, user_profile, None)
 
     template = loader.get_template('pos/payment.html')
     return HttpResponse(template.render({

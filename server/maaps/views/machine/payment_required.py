@@ -9,9 +9,9 @@ def machine__payment_required(request):
     if machine is None:
         return find_session_redirect(machine)
 
-    paying_user_profile = machine.currentSession.user.profile
-    if machine.currentSession.user.profile.paying_user is not None:
-        paying_user_profile = machine.currentSession.user.profile.paying_user
+    paying_user_profile = machine.current_session.user.profile
+    if machine.current_session.user.profile.paying_user is not None:
+        paying_user_profile = machine.current_session.user.profile.paying_user
     _user_can_pay, error = user_can_pay(paying_user_profile)
     if _user_can_pay is True:
         confirm_payment = request.POST.get("confirm_payment", None)

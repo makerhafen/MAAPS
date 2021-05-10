@@ -15,15 +15,15 @@ def machine__auto_logout(request):
     if autologout_in_minutes is not None:
         autologout_in_minutes = int(autologout_in_minutes)
         if autologout_in_minutes > 0:
-            machine.currentSession.autologout_at = timezone.now() + timedelta(minutes=autologout_in_minutes)
+            machine.current_session.autologout_at = timezone.now() + timedelta(minutes=autologout_in_minutes)
         else:
-            machine.currentSession.autologout_at = None
-        machine.currentSession.save()
+            machine.current_session.autologout_at = None
+        machine.current_session.save()
         return redirect('machine__show_session')
 
     timediff_total_minutes = None
-    if machine.currentSession.autologout_at is not None:
-        timediff_total_minutes = (machine.currentSession.autologout_at - timezone.now()).total_seconds() / 60
+    if machine.current_session.autologout_at is not None:
+        timediff_total_minutes = (machine.current_session.autologout_at - timezone.now()).total_seconds() / 60
 
     return HttpResponse(loader.get_template('machine/auto_logout.html').render({
         "machine": machine,

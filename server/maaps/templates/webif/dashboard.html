@@ -1,15 +1,90 @@
 {% extends "webif/base.html" %}
 
 {% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Aktive sitzungen</h3>
+        </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Maschine</th>
+                        <th scope="col">Startzeit</th>
+                        <th scope="col">Benutzer</th>
+                        <th scope="col">Tutor</th>
+                        <th scope="col">Jemand anderes zahlt</th>
+                        <th scope="col">Sauerkeit</th>
+                        <th scope="col">Automatisch abmelden</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for machineSession in machineSessions_active %}
+                    <tr>
+                        <td>{{ machineSession.machine }}</td>
+                        <td>{{ machineSession.start }}</td>
+                        <td>
+                            {{ machineSession.user.profile }}
+                            {% if machineSession.user.profile.profile_picture %}<img style="width:50px" src = "{{ machineSession.user.profile.profile_picture.url }}"/>{% endif %}
+                        </td>
+                        <td>
+                            {{ machineSession.tutor }}
+                            {% if machineSession.tutor.profile.profile_picture %}<img style="width:50px" src = "{{ machineSession.tutor.profile.profile_picture.url }}"/>{% endif %}
+                        </td>
+                        <td>
+                            {% if machineSession.paymentsession.user != machineSession.user %}
+                                {{ machineSession.paymentsession.user.profile }}
+                                {% if machineSession.paymentsession.user.profile.profile_picture %}<img style="width:50px" src = "{{ machineSession.paymentsession.user.profile.profile_picture.url }}"/>{% endif %}
+                            {% endif %}
+                        </td>
+                        <td>{{ machineSession.rating_clean }}</td>
+                        <td>{{ machineSession.autologout_at }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Kürzliche beendet Sitzungen</h3>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Maschine</th>
+                    <th scope="col">Startzeit</th>
+                    <th scope="col">Endzeit</th>
+                    <th scope="col">Benutzer</th>
+                    <th scope="col">Tutor</th>
+                    <th scope="col">Jemand anderes zahlt</th>
+                    <th scope="col">Sauberkeit</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for machineSession in machineSessions_ended %}
+                <tr>
+                    <td>{{ machineSession.machine }}</td>
+                    <td>{{ machineSession.start }}</td>
+                    <td>{{ machineSession.end }}</td>
+                    <td>
+                        {{ machineSession.user.profile }}
+                        {% if machineSession.user.profile.profile_picture %}<img style="width:50px" src = "{{ machineSession.user.profile.profile_picture.url }}"/>{% endif %}
+                    </td>
+                    <td>
+                        {{ machineSession.tutor }}
+                        {% if machineSession.tutor.profile.profile_picture %}<img style="width:50px" src = "{{ machineSession.tutor.profile.profile_picture.url }}"/>{% endif %}
+                    </td>
+                    <td>
+                        {% if machineSession.paymentsession.user != machineSession.user %}
+                            {{ machineSession.paymentsession.user.profile }}
+                            {% if machineSession.paymentsession.user.profile.profile_picture %}<img style="width:50px" src = "{{ machineSession.paymentsession.user.profile.profile_picture.url }}"/>{% endif %}
+                        {% endif %}
+                    </td>
+                    <td>{{ machineSession.rating_clean }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
 
-    <h3>Aktive sitzungen</h3>
-    {% for machineSession in machineSessions_active %}
-        {{ machineSession }} <br>
-    {% endfor %}
-
-    <h3>Kürzliche beendet Sitzungen</h3>
-    {% for machineSession in machineSessions_ended %}
-        {{ machineSession }} <br>
-    {% endfor %}
+    </div>
 
 {% endblock %}

@@ -47,7 +47,7 @@ class TokenAdmin(admin.ModelAdmin):
 @admin.register(models.Machine)
 class MachineAdmin(admin.ModelAdmin):
     list_display = ("id", "name", "comment", "ask_clean", "ask_pay_material", "price_per_hour", "price_per_usage",
-                    "tutor_required_count", "tutor_required_once_after_month", "currentSession")
+                    "tutor_required_count", "tutor_required_once_after_month", "current_session")
 
 
 @admin.register(models.Transaction)
@@ -60,7 +60,7 @@ class TransactionAdmin(admin.ModelAdmin):
 
 @admin.register(models.MachineSessionPayment)
 class MachineSessionPaymentAdmin(admin.ModelAdmin):
-    list_display = ("id", "user", "machine", "machinesession", "start", "end", "totalpayment", "transaction", "invoice")
+    list_display = ("id", "user", "machine", "machinesession", "start", "end", "value", "transaction", "invoice")
     list_display_links = ["id", "machine", "machinesession"]
 
     def machine(self, obj):
@@ -87,5 +87,6 @@ class MaterialPaymentAdmin(admin.ModelAdmin):
 
 
 admin.site.register(models.Invoice)
+admin.site.register(models.SpaceRentPayment)
 admin.site.unregister(User)
 admin.site.register(User, ProfileAdmin)

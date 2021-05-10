@@ -7,7 +7,7 @@
             <div class="col-xs-9">
                 <b class="header_title">Material zahlen</b>
             </div>
-            <a href="{% url 'machine__show_session' %}">
+            <a id="abort" href="{% url 'machine__show_session' %}">
                 <div class="col-xs-3 header_link">
                     Abbrechen
                 </div>
@@ -35,8 +35,8 @@
         </div>
 
         <div class="row" style="text-align:center">
-            {% if machine.currentSession.user.profile.paying_user != None %}
-                <div class="col-xs-12"><h4><b>{{machine.currentSession.user.profile.paying_user}}</b> zahlt für Dich!</h4></div>
+            {% if machine.current_session.user.profile.paying_user != None %}
+                <div class="col-xs-12"><h4><b>{{machine.current_session.user.profile.paying_user}}</b> zahlt für Dich!</h4></div>
             {% endif %}
             <div class="col-xs-12"><h4>Tag einlesen zum bestätigen</h4></div>
         </div>
@@ -103,4 +103,10 @@
         </a>
 
     {% endif %}
+    <script>
+        // automatically continue if user does nothing for 2 minutes
+        setTimeout(function(){
+            document.getElementById("ok_btn").click();
+        }, 2*60*1000)
+    </script>
 {% endblock %}

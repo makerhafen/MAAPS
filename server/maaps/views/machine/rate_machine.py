@@ -13,8 +13,8 @@ def machine__rate_machine(request):
         try:
             clean_rating = int(clean_rating)
             if clean_rating > 0 and clean_rating < 6:
-                machine.currentSession.rating_clean = clean_rating
-                machine.currentSession.save()
+                machine.current_session.rating_clean = clean_rating
+                machine.current_session.save()
                 return find_session_redirect(machine)
         except Exception as e:
             print("Failed to save rating:", e)

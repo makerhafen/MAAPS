@@ -5,7 +5,7 @@
         <div class="col-xs-9">
             <b class="header_title">Zahlung bestätigen</b>
         </div>
-        <a href="{% url 'machine__logout_user' %}">
+        <a id="abort" href="{% url 'machine__logout_user' %}">
             <div class="col-xs-3 header_link">
                 Abbrechen
             </div>
@@ -22,18 +22,18 @@
         <div class="col-xs-12">
             <h3>
                 {% if user_can_pay == True %}
-                    {% if machine.currentSession.user.profile.paying_user != None %}
-                        <b>{{machine.currentSession.user.profile.paying_user}}</b> zahlt für Dich!
+                    {% if machine.current_session.user.profile.paying_user != None %}
+                        <b>{{machine.current_session.user.profile.paying_user}}</b> zahlt für Dich!
                     {% else %}
-                        {% if machine.currentSession.user.profile.allow_invoice == True %}
+                        {% if machine.current_session.user.profile.allow_invoice == True %}
                             Du kannst auf Rechnung zahlen
                         {% else %}
-                            Du hast {{machine.currentSession.user.profile.prepaid_deposit  |floatformat:2}} Euro Guthaben
+                            Du hast {{machine.current_session.user.profile.prepaid_deposit  |floatformat:2}} Euro Guthaben
                         {% endif %}
                     {% endif %}
                 {% else %}
-                    {% if machine.currentSession.user.profile.paying_user != None %}
-                        <b>{{machine.currentSession.user.profile.paying_user}}</b> zahlt für Dich, hat aber nicht genug Guthaben.
+                    {% if machine.current_session.user.profile.paying_user != None %}
+                        <b>{{machine.current_session.user.profile.paying_user}}</b> zahlt für Dich, hat aber nicht genug Guthaben.
                     {% else %}
                         Du hast nicht genug Guthaben.
                     {% endif %}
@@ -52,5 +52,12 @@
             <button class="btn btn-lg btn-success" style="width:100%" type="submit" name="confirm_payment"value="confirm_payment">Bestätigen</button>
         </form>
     {% endif %}
+
+<script>
+    // automatically abort if user does nothing for 3 minutes
+    setTimeout(function(){
+        document.getElementById("abort").click();
+    },  3*60*1000)
+</script>
 
 {% endblock %}

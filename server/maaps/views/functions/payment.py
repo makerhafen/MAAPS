@@ -18,14 +18,14 @@ def create_payment_session(machine, paying_user_profile):
     paymentsession.price_per_hour = machine.price_per_hour
     paymentsession.user = paying_user_profile.user
     paymentsession.start = timezone.now()
-    paymentsession.machinesession = machine.currentSession
+    paymentsession.machinesession = machine.current_session
     paymentsession.save()
-    machine.currentSession.paymentsession = paymentsession
-    machine.currentSession.save()
+    machine.current_session.paymentsession = paymentsession
+    machine.current_session.save()
     return None
 
 
-def create_material_payment(value, paying_user_profile, user_profile):
+def create_material_payment(value, paying_user_profile, user_profile, machine):
     transaction = None
     payment = models.MaterialPayment()
     payment.value = value
@@ -40,5 +40,8 @@ def create_material_payment(value, paying_user_profile, user_profile):
         payment.transaction = transaction
         paying_user_profile.prepaid_deposit -= value
         paying_user_profile.save()
+    if machine is not None:
+        if machine.current_session is not None:
+            payment.machinesession = machine.current_session
     payment.save()
     return payment, transaction

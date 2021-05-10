@@ -16,6 +16,12 @@ def webif__user__update(request, user_id):
         'last_name': profile.user.last_name,
         'company_name': profile.company_name,
         'allow_invoice': profile.allow_invoice,
+        'commercial_account': profile.commercial_account,
+        'monthly_payment': profile.monthly_payment,
+        'street': profile.street,
+        'postalcode': profile.postalcode,
+        'city': profile.city,
+        'birthdate': profile.birthdate,
         'paying_user': profile.paying_user,
     })
     error = None
