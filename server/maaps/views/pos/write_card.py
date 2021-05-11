@@ -20,7 +20,10 @@ def pos__write_card(request):
         token.can_write = False
         token.save()
 
-    tokens = models.Token.objects.filter(can_write=True, enabled=True)
+    try:
+        tokens = models.Token.objects.filter(can_write=True, enabled=True)
+    except:
+        tokens = []
     template = loader.get_template('pos/write_card.html')
     return HttpResponse(template.render({
         "tokens": tokens,
