@@ -16,11 +16,11 @@ def pos__write_card(request):
     rfid_token = request.POST.get("rfid_token", None)
     token = None
     if rfid_token is not None:
-        token = models.Token.objects.get(can_write=True, enabed=True, identifier=rfid_token)
+        token = models.Token.objects.get(can_write=True, enabled=True, identifier=rfid_token)
         token.can_write = False
         token.save()
 
-    tokens = models.Token.objects.filter(can_write=True, enabed=True)
+    tokens = models.Token.objects.filter(can_write=True, enabled=True)
     template = loader.get_template('pos/write_card.html')
     return HttpResponse(template.render({
         "tokens": tokens,
