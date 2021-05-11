@@ -49,9 +49,6 @@
                 {% endif %}
                 <b>{{machine.current_session.autologout_timediff.2}}</b> Minuten.
             </p>
-            <script>
-                setTimeout(function(){location.reload();}, 30000);
-            </script>
         {% endif %}
     {% else %}
         <a href="{% url 'machine__logout_user' %}">
@@ -62,6 +59,7 @@
     <iframe style="display:none" src="http://127.0.0.1:8080/relay/1/on"> </iframe>
 
     <script>
+        setTimeout(function(){location.reload();}, 30000);
         function ask_logout(){
             if (confirm("Wirklich abmelden?")) {
                 document.getElementById("logout_link").click();

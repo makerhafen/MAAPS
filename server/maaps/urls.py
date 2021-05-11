@@ -37,14 +37,15 @@ urlpatterns = [
     path(r'machine/M:<machine_token>'           , views.machine__login_machine    , name='machine__login_with_parameter'),
 
     # Webinterface
-    path('webif/'                         , views.webif__dashboard   , name='webif__dashboard'),
-    path('webif/info'                     , views.webif__info   , name='webif__info'),
-    path('webif/user/list'                , views.webif__user__list  , name='webif__user__list'),
-    path('webif/user/create'              , views.webif__user__create, name='webif__user__create'),
-    path('webif/user/show/<int:user_id>'  , views.webif__user__show  , name='webif__user__show'),
-    path('webif/user/update/<int:user_id>', views.webif__user__update, name='webif__user__update'),
-    path('webif/user/delete/<int:user_id>', views.webif__user__delete, name='webif__user__delete'),
-    path('webif/user/haft/<int:user_id>'  , views.webif__user__haftung, name='webif__user__haftung'),
+    path('webif/'                               , views.webif__dashboard   , name='webif__dashboard'),
+    path('webif/info'                           , views.webif__info        , name='webif__info'),
+    path('webif/session/end/<int:session_id>'   , views.webif__session_end , name='webif__session_end'),
+    path('webif/user/list'                      , views.webif__user__list  , name='webif__user__list'),
+    path('webif/user/create'                    , views.webif__user__create, name='webif__user__create'),
+    path('webif/user/show/<int:user_id>'        , views.webif__user__show  , name='webif__user__show'),
+    path('webif/user/update/<int:user_id>'      , views.webif__user__update, name='webif__user__update'),
+    path('webif/user/delete/<int:user_id>'      , views.webif__user__delete, name='webif__user__delete'),
+    path('webif/user/haft/<int:user_id>'        , views.webif__user__haftung, name='webif__user__haftung'),
     path('webif/user/create_new_card/<int:user_id>'  , views.webif__user__create_new_card, name='webif__user__create_new_card'),
 
     path('webif/invoice/list'                 , views.webif__invoice__list, name='webif__invoice__list'),

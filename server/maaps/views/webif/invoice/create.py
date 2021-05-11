@@ -8,6 +8,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 @staff_member_required
 def webif__invoice__create(request, user_id=""):
     invoice = None
+    profile = None
     if user_id != "":
         profile = models.Profile.objects.get(id=user_id)
 
@@ -20,5 +21,6 @@ def webif__invoice__create(request, user_id=""):
             invoice.save()
 
     return HttpResponse(loader.get_template('webif/invoice/create.html').render({
-        "invoice": invoice
+        "invoice": invoice,
+        "profile": profile
     }, request))

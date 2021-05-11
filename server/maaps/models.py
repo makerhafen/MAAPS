@@ -68,7 +68,7 @@ class Machine(models.Model):
     price_per_usage = models.FloatField(default=0)  # in Euro
     tutor_required_count = models.IntegerField(default=0)  # wir oft
     tutor_required_once_after_month = models.IntegerField(default=24)  # all
-    current_session = models.OneToOneField("MachineSession", on_delete=models.SET_NULL, related_name="_current_session", blank=True, null=True)
+    current_session = models.OneToOneField("MachineSession", on_delete=models.SET_NULL, related_name="current_session", blank=True, null=True)
     allowed_users = models.ManyToManyField(User, related_name="allowed_machines")
 
     def __str__(self):

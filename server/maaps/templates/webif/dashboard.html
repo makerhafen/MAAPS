@@ -15,6 +15,7 @@
                         <th scope="col">Jemand anderes zahlt</th>
                         <th scope="col">Sauerkeit</th>
                         <th scope="col">Automatisch abmelden</th>
+                        <th scope="col"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -38,6 +39,14 @@
                         </td>
                         <td>{{ machineSession.rating_clean }}</td>
                         <td>{{ machineSession.autologout_at }}</td>
+                        <td>
+                            {% if machineSession.current_session %}
+                                 <a href="/webif/session/end/{{machineSession.id}}">
+                                    <button class="btn btn-lg btn-warning" style="width:100%">Sitzung beenden</button>
+                                </a>
+                            {% endif %}
+
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>

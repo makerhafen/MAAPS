@@ -17,7 +17,7 @@ def machine__show_session(request):
 
     if machine.current_session.autologout_at is not None:
         if machine.current_session.autologout_timediff[0] <= 0:
-            current_session, current_payment_session = end_session(machine)
+            current_session, current_payment_session = end_session(machine.current_session)
             return find_session_redirect(machine)
 
     return HttpResponse(loader.get_template('machine/show_session.html').render({

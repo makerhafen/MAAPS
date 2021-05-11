@@ -103,13 +103,12 @@ def get_profile_from_url_token(token):
         return None, "unknown_token"
 
 
-def end_session(machine):
-    current_session = machine.current_session
+def end_session(session):
     current_payment_session = None
-    if current_session is not None:
-        if hasattr(current_session, "paymentsession"):
-
-            current_payment_session = current_session.paymentsession
+    if session is not None:
+        machine = session.machine
+        if hasattr(session, "paymentsession"):
+            current_payment_session = session.paymentsession
             current_payment_session.end = timezone.now()
 
             timediff_hours = (current_payment_session.end - current_payment_session.start).total_seconds() / 3600.0
@@ -128,9 +127,9 @@ def end_session(machine):
                 current_payment_session.user.profile.save()
 
             current_payment_session.save()
-
-        machine.current_session = None
-        machine.save()
-        current_session.end = timezone.now()
-        current_session.save()
-        return current_session, current_payment_session
+        if machine.current_session == session:
+            machine.current_session = None
+            machine.save()
+        session.end = timezone.now()
+        session.save()
+        return session, current_payment_session
