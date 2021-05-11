@@ -32,9 +32,8 @@
     {% if machine.show_autologout == True %}
         <div class="row">
             <div class="col-xs-6">
-                <a href="{% url 'machine__logout_user' %}">
-                    <button class="btn btn-lg btn-warning" style="width:100%">Abmelden</button>
-                </a>
+                <a id="logout_link" style="display:none" href="{% url 'machine__logout_user' %}"> </a>
+                <button onclick="ask_logout()" class="btn btn-lg btn-warning" style="width:100%">Abmelden</button>
             </div>
             <div class="col-xs-6">
                 <a href="{% url 'machine__auto_logout' %}">
@@ -62,4 +61,11 @@
 
     <iframe style="display:none" src="http://127.0.0.1:8080/relay/1/on"> </iframe>
 
+    <script>
+        function ask_logout(){
+            if (confirm("Wirklich abmelden?")) {
+                document.getElementById("logout_link").click();
+            }
+        }
+    </script>
 {% endblock %}
