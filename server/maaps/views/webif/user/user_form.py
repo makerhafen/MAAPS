@@ -20,7 +20,7 @@ class UserForm(forms.Form):
     monthly_payment = forms.BooleanField(label="Monatlich zahlen", required=False)
     birthdate = forms.DateField(label="Geburtsdatum (Pflicht bei Minderjährigen!)", required=False)
     paying_user = forms.ModelChoiceField(queryset=Profile.objects.all(), required=False, label="Ein anderer Benutzer zahlt für diesen Benutzer")
-
+    allowed_machines = []
     profile_picture = None
 
     class Meta:

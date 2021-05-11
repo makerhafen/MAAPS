@@ -3,6 +3,7 @@ from django.shortcuts import redirect
 from .user_form import UserForm
 import base64
 from django.contrib.admin.views.decorators import staff_member_required
+import maaps.models as models
 
 
 @staff_member_required
@@ -15,11 +16,14 @@ def webif__user__create(request):
             if image_data is not None and "," in image_data:
                 form.profile_picture = base64.b64decode(bytes(image_data.split(",")[-1], 'UTF-8'))
             try:
-                form.save()
-                return redirect('webif__user__list')
+                user = form.save()
+                return redirect('webif__user__show',user_id=user.profile.id)
             except Exception as e:
                 print("Failed to save form:", e)
                 error = "%s" % e
+        else:
+            print("form not valid")
     else:
         form = UserForm()
-    return render(request, 'webif/user/create.html', {'form': form, "last_error": error})
+    machines = models.Machine.objects.all()
+    return render(request, 'webif/user/create.html', {'form': form, "last_error": error, "machines": machines})

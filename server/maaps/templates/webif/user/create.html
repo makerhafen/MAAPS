@@ -15,6 +15,10 @@
             <form method="post">
                 {% csrf_token %}
                 {{form|crispy}}
+                <h4>Maschinen Zugriff</h4>
+                {% for machine in machines %}
+                    <input type="checkbox" name="allowed_machines" value="{{ machine.id }}"  {% if profile.user in machine.allowed_users.all %}checked{% endif %}> {{ machine }}<br>
+                {% endfor %}
                 {% include "webif/user/get_picture.html" %}
                 <br>
                 <br>

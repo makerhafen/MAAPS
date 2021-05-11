@@ -13,8 +13,7 @@ class MachineUsersInline(admin.TabularInline):
 
 
 class ProfileAdmin(BaseUserAdmin):
-    list_display = (
-        "first_name", "last_name", "company_name", "deposit", "email", "is_staff", "allow_invoice", "paying_user")
+    list_display = ("first_name", "last_name", "company_name", "deposit", "email", "is_staff", "allow_invoice", "paying_user")
     inlines = (ProfileInline, MachineUsersInline)
 
     def company_name(self, obj):
@@ -33,6 +32,7 @@ class ProfileAdmin(BaseUserAdmin):
 @admin.register(models.Token)
 class TokenAdmin(admin.ModelAdmin):
     list_display = ("id", "created", "enabled", "can_write", "assigned_to", "identifier")
+    list_filter = ( "created", "enabled", "can_write")
     list_display_links = ["id", "assigned_to"]
 
     def assigned_to(self, obj):
@@ -46,13 +46,12 @@ class TokenAdmin(admin.ModelAdmin):
 
 @admin.register(models.Machine)
 class MachineAdmin(admin.ModelAdmin):
-    list_display = ("id", "name", "comment", "ask_clean", "ask_pay_material", "price_per_hour", "price_per_usage",
-                    "tutor_required_count", "tutor_required_once_after_month", "current_session")
-
+    list_display = ("id", "name", "comment", "ask_clean", "ask_pay_material", "price_per_hour", "price_per_usage","tutor_required_count", "tutor_required_once_after_month", "current_session")
 
 @admin.register(models.Transaction)
 class TransactionAdmin(admin.ModelAdmin):
     list_display = ("id", "created", "user", "value", "type", "comment")
+    list_filter = ( "type",)
 
     def user(self, obj):
         return obj.profile.user
@@ -61,6 +60,7 @@ class TransactionAdmin(admin.ModelAdmin):
 @admin.register(models.MachineSessionPayment)
 class MachineSessionPaymentAdmin(admin.ModelAdmin):
     list_display = ("id", "user", "machine", "machinesession", "start", "end", "value", "transaction", "invoice")
+    list_filter = ("start", "end")
     list_display_links = ["id", "machine", "machinesession"]
 
     def machine(self, obj):
@@ -70,6 +70,7 @@ class MachineSessionPaymentAdmin(admin.ModelAdmin):
 @admin.register(models.MachineSession)
 class MachineSessionAdmin(admin.ModelAdmin):
     list_display = ("id", "machine", "user", "tutor", "paying_user", "start", "end", "rating_clean", "paymentsession")
+    list_filter = ( "machine", "start", "end", "rating_clean")
     list_display_links = ["id", "machine", "user", "tutor", "paying_user", "paymentsession"]
 
     def machine(self, obj):
@@ -84,6 +85,7 @@ class MachineSessionAdmin(admin.ModelAdmin):
 @admin.register(models.MaterialPayment)
 class MaterialPaymentAdmin(admin.ModelAdmin):
     list_display = ("id", "created", "user", "creator", "value", "transaction", "invoice")
+    list_filter = ( "created", )
 
 
 admin.site.register(models.Invoice)
