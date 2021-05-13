@@ -32,17 +32,23 @@ class Profile(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    # USER DATA
+    profile_picture = ResizedImageField(blank=True, null=True, upload_to=rename_file)
+    birthdate = models.DateField(blank=True, null=True, default=None)
+    company_name = models.CharField(max_length=200, blank=True, default="")
+
+    #PAYMENT
     paying_user = models.OneToOneField("Profile", on_delete=models.CASCADE, blank=True, null=True)
-    prepaid_deposit = models.FloatField(default=0)
     allow_invoice = models.BooleanField(default=False)
     commercial_account = models.BooleanField(default=False)  # == mit mwst
     monthly_payment = models.BooleanField(default=False)  # monatlich oder tagesaccount
-    profile_picture = ResizedImageField(blank=True, null=True, upload_to=rename_file)
-    company_name = models.CharField(max_length=200, blank=True, default="")
+    prepaid_deposit = models.FloatField(default=0)
+
+    # ADDRESS
     street = models.CharField(max_length=200, blank=True, default="")
     postalcode = models.CharField(max_length=200, default="", blank=True)
     city = models.CharField(max_length=200, blank=True, default="")
-    birthdate = models.DateField(blank=True, null=True, default=None)
 
     def __str__(self):
         if self.company_name != "":

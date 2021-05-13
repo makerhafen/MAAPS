@@ -1,6 +1,14 @@
 {% extends "webif/base.html" %}
 
 {% block content %}
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb" class="main-breadcrumb">
+<ol class="breadcrumb">
+  <li class="breadcrumb-item"><a href="/webif">Makerhafen</a></li>
+  <li class="breadcrumb-item"><a href="/webif/user/list">Benutzer</a></li>
+</ol>
+</nav>
+<!-- /Breadcrumb -->
     <br>
     <div class="row">
         <div class="col-md-8"><h4>Profile List</h4></div>
@@ -37,7 +45,6 @@
                             {% if profile.profile_picture %}<img style="width:50px" src = "{{ profile.profile_picture.url }}"/>{% endif %}
                         </td>
                         <td>
-                            <a type="button" class="btn btn-warning" href="/webif/user/update/{{ profile.id }}">Bearbeiten</a>
                             <a type="button" class="btn btn-success" href="/webif/user/show/{{ profile.id }}">Anzeigen</a>
                         </td>
                     </tr>
