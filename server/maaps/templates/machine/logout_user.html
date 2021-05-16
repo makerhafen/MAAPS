@@ -11,7 +11,7 @@
     Von: {{ last_machine_session.start}}<br>
     Bis: {{ last_machine_session.end}}<br>
     {% if last_payment_session %}
-        <h3> Kosten: {{ last_payment_session.value |floatformat:2}} Euro<br></h3>
+        <h3> Kosten: {{ last_payment_session.price |floatformat:2}} Euro<br></h3>
     {% else %}
         <h3> Kosten: 0.00 Euro<br></h3>
     {% endif %}

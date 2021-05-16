@@ -11,15 +11,18 @@ urlpatterns = [
 
     # Point of sale
     path(r'pos/'           , views.pos__index      , name='pos__index'),
-    path(r'pos/logout'     , views.pos__logout     , name='pos__logout'),
+    path(r'pos/login_user' , views.pos__login_user , name='pos__login_user'),
+    path(r'pos/logout', views.pos__logout_staff, name='pos__logout'),
     path(r'pos/deposit'    , views.pos__deposit    , name='pos__deposit'),
     path(r'pos/payment'    , views.pos__payment    , name='pos__payment'),
     path(r'pos/write_card' , views.pos__write_card , name='pos__write_card'),
     path(r'pos/info'       , views.pos__info       , name='pos__info'),
-    path(r'pos/staff_login', views.pos__staff_login, name='pos__staff_login'),
-    path(r'pos/staff_login/<user_token>', views.pos__staff_login, name='pos__staff_login_with_parameter'),
+    path(r'pos/login_staff', views.pos__login_staff, name='pos__login_staff'),
+    path(r'pos/login_staff/<user_token>', views.pos__login_staff, name='pos__login_staff_with_parameter'),
+    path(r'pos/login_user', views.pos__login_user, name='pos__login_user'),
+    path(r'pos/login_user/<user_token>', views.pos__login_user, name='pos__login_user_with_parameter'),
 
-    # Machine
+                  # Machine
     path(r'machine/'                            , views.machine__login_machine    , name='machine__login'),
     path(r'machine/logout'                      , views.machine__logout_machine   , name='machine__logout'),
     path(r'machine/show_session'                , views.machine__show_session     , name='machine__show_session'),
@@ -40,6 +43,7 @@ urlpatterns = [
     path('webif/'                               , views.webif__dashboard   , name='webif__dashboard'),
     path('webif/info'                           , views.webif__info        , name='webif__info'),
     path('webif/session/end/<int:session_id>'   , views.webif__session_end , name='webif__session_end'),
+    path('webif/spaceaccesstracking/end/<int:spaceaccesstracking_id>'   , views.webif__spaceaccesstracking_end , name='webif__spaceaccesstracking_end'),
     path('webif/user/list'                      , views.webif__user__list  , name='webif__user__list'),
     path('webif/user/create'                    , views.webif__user__create, name='webif__user__create'),
     path('webif/user/show/<int:user_id>'        , views.webif__user__show  , name='webif__user__show'),
@@ -50,7 +54,7 @@ urlpatterns = [
 
     path('webif/invoice/list'                 , views.webif__invoice__list, name='webif__invoice__list'),
     path('webif/invoice/show/<int:invoice_id>', views.webif__invoice__show, name='webif__invoice__show'),
-    path('webif/invoice/create_select/'              , views.webif__invoice__create_select, name='webif__invoice__create_select'),
+    path('webif/invoice/list_createable'              , views.webif__invoice__list_createable, name='webif__invoice__list_createable'),
     path('webif/invoice/create/<int:user_id>' , views.webif__invoice__create, name='webif__invoice__create'),
 
       ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

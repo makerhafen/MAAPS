@@ -1,7 +1,14 @@
 {% extends "webif/base.html" %}
 
 {% block content %}
-
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="main-breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/webif">Makerhafen</a></li>
+            <li class="breadcrumb-item"><a href="/webif/info">Info</a></li>
+        </ol>
+    </nav>
+    <!-- /Breadcrumb -->
 <h3>Neuen Benutzer registrieren</h3>
 <ul>
     <li>Webinterface Benutzer anlegen klicken</li>
@@ -35,6 +42,15 @@
             <li>-> "Prepaid Guthaben aufladen mit Bargeld" mindestens Tagespreis einzahlen</li>
         </ul>
     </li>
+</ul>
+
+<h3>Vorhandenen Benutzer begrüßen</h3>
+<ul>
+    <li></li>
+</ul>
+<h3>Vorhandenen Benutzer verabschieden</h3>
+<ul>
+    <li></li>
 </ul>
 
 <h3>Haftungsausschluss aktualisieren</h3>
@@ -120,6 +136,30 @@
     <li>Nachzahlen wenn nötig</li>
 </ul>
 
+<h3>Zahlungsflow:</h3>
+
+<ul>
+
+    <li>Neuer Benutzer</li>
+    <ul>
+        <li>-> Neuen Benutzer registrieren</li>
+        <li>
+            Neue Benutzer die NICHT "Bezahlung auf Rechnung" und NICHT "Ein anderer Benutzer zahlt für diesen Benutzer" haben müssen beim ersten mal
+            mindestens den Tagesbetrag einzahlen, egal ob sie Tagesbenutzer oder Monatsbenutzer sind.
+        </li>
+    </ul>
+    <li>Monatsnutzer</li>
+        <ul>
+            <li>Monatsnutzer meldet sich mit seiner Karte am POS an, es entstehen keine kosten</li>
+            <li>Anwesende Benutzer werden im Dashboard angezeigt, negatives Guthaben z.b durch Maschinenzeit in ROT, -> "Prepaid Guthaben aufladen"</li>
+        </ul>
+    <li>Tagesbenutzer</li>
+        <ul>
+            <li>Tagesbenutzer meldet sich mit seiner Karte am POS an, wenn NICHT "Bezahlung auf Rechnung" und
+                NICHT "Ein anderer Benutzer zahlt für diesen Benutzer", wird der Tagesbetrag automatisch vom Guthaben abgebucht</li>
+            <li>Anwesende Benutzer werden im Dashboard angezeigt, negatives Guthaben in ROT, -> "Prepaid Guthaben aufladen"</li>
+        </ul>
+</ul>
 
 
 <h3>Preise</h3>

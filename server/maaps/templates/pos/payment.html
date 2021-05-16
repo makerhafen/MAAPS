@@ -81,9 +81,9 @@
                 <h3>
                     {% if transaction == None %}
                         {% if payment.creator != payment.user %}
-                            {{payment.value |floatformat:2 }} Euro werden <b>{{payment.creator.profile.paying_user}}</b> in Rechnung gestellt!
+                            {{payment.price |floatformat:2 }} Euro werden <b>{{payment.creator.profile.paying_user}}</b> in Rechnung gestellt!
                         {% else %}
-                            {{payment.value |floatformat:2 }} Euro werden dir in Rechnung gestellt <b>{{payment.user.profile}}</b>
+                            {{payment.price |floatformat:2 }} Euro werden dir in Rechnung gestellt <b>{{payment.user.profile}}</b>
                         {% endif %}
                     {% else %}
                         {% if payment.creator != payment.user %}

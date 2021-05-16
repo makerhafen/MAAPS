@@ -2,6 +2,15 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="main-breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/webif">Makerhafen</a></li>
+            <li class="breadcrumb-item"><a href="/webif/user/list">Benutzer</a></li>
+            <li class="breadcrumb-item"><a href="/webif/user/create">Erstellen</a></li>
+        </ol>
+    </nav>
+    <!-- /Breadcrumb -->
     {% if last_error != None %}
         <div class="row">
             <div class="col-md-12 ">

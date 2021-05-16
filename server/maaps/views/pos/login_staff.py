@@ -4,7 +4,7 @@ from django.shortcuts import redirect
 from maaps.views.functions.session import get_profile_from_post, get_profile_from_session, get_profile_from_url_token
 
 
-def pos__staff_login(request, user_token=""):
+def pos__login_staff(request, user_token=""):
     admin_profile = get_profile_from_session(request)
     error = None
     if admin_profile is None:
@@ -21,7 +21,7 @@ def pos__staff_login(request, user_token=""):
     else:
         return redirect('pos__index')
 
-    template = loader.get_template('pos/staff_login.html')
+    template = loader.get_template('pos/login_staff.html')
     return HttpResponse(template.render({
         "admin_profile": admin_profile,
         "last_error": error

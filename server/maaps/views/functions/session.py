@@ -114,16 +114,16 @@ def end_session(session):
             timediff_hours = (current_payment_session.end - current_payment_session.start).total_seconds() / 3600.0
             total_price = round(machine.price_per_usage + timediff_hours * machine.price_per_hour, 2)
 
-            current_payment_session.value = total_price
+            current_payment_session.price = total_price
 
             if current_payment_session.user.profile.allow_invoice is False:
                 transaction = models.Transaction()
                 transaction.user = current_payment_session.user
-                transaction.value = current_payment_session.value
-                transaction.type = models.TransactionType.from_deposit_for_material
+                transaction.value = current_payment_session.price
+                transaction.type = models.TransactionType.from_deposit_for_machine
                 transaction.save()
                 current_payment_session.transaction = transaction
-                current_payment_session.user.profile.prepaid_deposit -= current_payment_session.value
+                current_payment_session.user.profile.prepaid_deposit -= current_payment_session.price
                 current_payment_session.user.profile.save()
 
             current_payment_session.save()

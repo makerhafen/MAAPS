@@ -22,6 +22,14 @@
         <br>
         <div class="row" style="text-align:center">
             <div class="col-xs-12">
+                <a href="{% url 'pos__login_user' %}">
+                    <button class="btn btn-lg btn-success" style="width:100%">Benutzer anmelden</button>
+                </a>
+            </div>
+        </div>
+        <br>
+        <div class="row" style="text-align:center">
+            <div class="col-xs-12">
                 <a href="{% url 'pos__payment' %}">
                     <button class="btn btn-lg btn-success" style="width:100%">Artikel Zahlen</button>
                 </a>
@@ -38,7 +46,7 @@
         <br>
         <div class="row" style="text-align:center">
             <div class="col-xs-12">
-                <a href="{% url 'pos__staff_login' %}">
+                <a href="{% url 'pos__login_staff' %}">
                     <button class="btn btn-lg btn-success" style="width:100%">Mitarbeiter login</button>
                 </a>
             </div>

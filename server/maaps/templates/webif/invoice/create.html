@@ -1,10 +1,42 @@
 {% extends "webif/base.html" %}
 
 {% block content %}
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="main-breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/webif">Makerhafen</a></li>
+            <li class="breadcrumb-item"><a href="/webif/invoice/list">Rechnungen</a></li>
+            <li class="breadcrumb-item"><a href="/webif/invoice/list_createable">Erstellen</a></li>
+            <li class="breadcrumb-item"><a href="/webif/invoice/create/{{profile.id}}"> {{profile}}</a></li>
+        </ol>
+    </nav>
+    <!-- /Breadcrumb -->
     <br>
     <div class="row">
         <div class="col-md-8"><h4>Rechnung für {{profile}} erstellen</h4></div>
         <div class="col-md-4" style="text-align:right"><a type="button" class="btn btn-success" href="/webif/invoice/create/">Neuen Rechnung erstellen stellen</a></div>
+    </div>
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <form method="post">
+                {% csrf_token %}
+                <h4>Maschinen Zugriffe</h4>
+                {% for unpayed_machine_session in unpayed_machine_sessions %}
+                    <input type="checkbox" name="unpayed_machine_sessions" value="{{ unpayed_machine_session.id }}" > {{ unpayed_machine_session }}<br>
+                {% endfor %}
+                <h4>Material</h4>
+                {% for unpayed_material in unpayed_materials %}
+                    <input type="checkbox" name="unpayed_materials" value="{{ unpayed_material.id }}" > {{ unpayed_material }}<br>
+                {% endfor %}
+                <h4>Space rent</h4>
+                {% for unpayed_spacerent in unpayed_spacerents %}
+                    <input type="checkbox" name="unpayed_spacerents" value="{{ unpayed_spacerent.id }}" > {{ unpayed_spacerent }}<br>
+                {% endfor %}
+
+                <a type="button" class="btn btn-danger" href="{%url 'webif__user__list' %}">Cancel</a>
+                <button type="submit" class="btn btn-success">Update</button>
+            </form>
+        </div>
     </div>
 
     <br>

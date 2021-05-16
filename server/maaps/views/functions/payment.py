@@ -28,7 +28,7 @@ def create_payment_session(machine, paying_user_profile):
 def create_material_payment(value, paying_user_profile, user_profile, machine):
     transaction = None
     payment = models.MaterialPayment()
-    payment.value = value
+    payment.price = value
     payment.user = paying_user_profile.user
     payment.creator = user_profile.user
     if paying_user_profile.allow_invoice is False:

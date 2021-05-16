@@ -4,30 +4,31 @@
 {% block content %}
 
 
-<nav aria-label="breadcrumb" class="main-breadcrumb">
-<ol class="breadcrumb">
-  <li class="breadcrumb-item"><a href="/webif">Makerhafen</a></li>
-  <li class="breadcrumb-item"><a href="/webif/user/list">Benutzer</a></li>
-  <li class="breadcrumb-item active" aria-current="page">Bearbeiten</li>
-</ol>
-</nav>
+    <nav aria-label="breadcrumb" class="main-breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/webif">Makerhafen</a></li>
+            <li class="breadcrumb-item"><a href="/webif/user/list">Benutzer</a></li>
+            <li class="breadcrumb-item"><a href="/webif/user/show/{{profile.id}}">{{profile}}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Bearbeiten</li>
+        </ol>
+    </nav>
 
     <div class="row">
         <div class="col-md-6 col-md-offset-2"><h4>Benutzer <b>{{profile}}</b> aktualisieren</h4></div>
         <div class="col-md-3 ">
             {% if profile.profile_picture %}
-                <img style="width:110px" src = "{{ profile.profile_picture.url }}"/>
+            <img style="width:110px" src = "{{ profile.profile_picture.url }}"/>
             {% endif %}
         </div>
     </div>
 
-        {% if last_error != None %}
-            <div class="row">
-                <div class="col-md-12 ">
-                    <b>Fehler:</b><br>
-                </div>
+    {% if last_error != None %}
+        <div class="row">
+            <div class="col-md-12 ">
+                <b>Fehler:</b><br>
             </div>
-        {% endif %}
+        </div>
+    {% endif %}
 
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
@@ -36,7 +37,7 @@
                 {{form|crispy}}
                 <h4>Maschinen Zugriff</h4>
                 {% for machine in machines %}
-                    <input type="checkbox" name="allowed_machines" value="{{ machine.id }}"  {% if profile.user in machine.allowed_users.all %}checked{% endif %}> {{ machine }}<br>
+                <input type="checkbox" name="allowed_machines" value="{{ machine.id }}"  {% if profile.user in machine.allowed_users.all %}checked{% endif %}> {{ machine }}<br>
                 {% endfor %}
                 <h4>Foto</h4>
                 {% include "webif/user/get_picture.html" %}
@@ -47,10 +48,10 @@
             </form>
         </div>
     </div>
-<script>
-      $( function() {
-    $( "#id_birthdate" ).datepicker();
-  } );
+    <script>
+          $( function() {
+        $( "#id_birthdate" ).datepicker();
+      } );
 
-</script>
+    </script>
 {% endblock %}

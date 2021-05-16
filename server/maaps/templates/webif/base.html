@@ -1,26 +1,26 @@
 {% extends "base_browser.html" %}
-    {% block style %}
-        {{ block.super }}
-        <link rel="stylesheet" href="/static/css/maaps.css">
-    {% endblock %}
+{% block style %}
+    {{ block.super }}
+    <link rel="stylesheet" href="/static/css/maaps.css">
+{% endblock %}
 
-    {% block navbar %}
-        <nav class="navbar navbar-inverse navbar-fixed-top">
-            <div class="container">
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="{% url 'webif__dashboard' %}">Makerhafen</a>
-                </div>
-                <div id="navbar" class="collapse navbar-collapse">
-                    <ul class="nav navbar-nav">
+{% block navbar %}
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="{% url 'webif__dashboard' %}">Makerhafen</a>
+            </div>
+            <div id="navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
                     <li class=""><a href="{% url 'webif__user__list' %}">Benutzer</a></li>
                     <li class=""><a href="{% url 'webif__invoice__list' %}">Rechnungen</a></li>
                     <li class=""><a href="{% url 'webif__info' %}">Info</a></li>
-                    </ul>
-                </div><!--/.nav-collapse -->
-            </div>
-        </nav>
-    {% endblock %}
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div>
+    </nav>
+{% endblock %}
 
-    {% block content %}  {% endblock %}
+{% block content %}  {% endblock %}
 
 

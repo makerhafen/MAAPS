@@ -1,10 +1,18 @@
 {% extends "webif/base.html" %}
 
 {% block content %}
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="main-breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/webif">Makerhafen</a></li>
+            <li class="breadcrumb-item"><a href="/webif/invoice/list">Rechnungen</a></li>
+            <li class="breadcrumb-item"><a href="/webif/invoice/list_createable">Erstellbare Rechnungen</a></li>
+        </ol>
+    </nav>
+    <!-- /Breadcrumb -->
     <br>
     <div class="row">
-        <div class="col-md-8"><h4>Rechnungen</h4></div>
-        <div class="col-md-4" style="text-align:right"><a type="button" class="btn btn-success" href="/webif/invoice/create/">Neuen Rechnung erstellen stellen</a></div>
+        <div class="col-md-8"><h4>Erstellbare Rechnungen</h4></div>
     </div>
 
     <br>

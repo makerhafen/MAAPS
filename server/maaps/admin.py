@@ -6,11 +6,12 @@ from . import models
 
 class ProfileInline(admin.StackedInline):
     model = models.Profile
+    fk_name = 'user'
 
 
 class MachineUsersInline(admin.TabularInline):
     model = models.Machine.allowed_users.through
-
+    fk_name = 'user'
 
 class ProfileAdmin(BaseUserAdmin):
     list_display = ("first_name", "last_name", "company_name", "deposit", "email", "is_staff", "allow_invoice", "paying_user")
@@ -59,36 +60,43 @@ class TransactionAdmin(admin.ModelAdmin):
 
 @admin.register(models.MachineSessionPayment)
 class MachineSessionPaymentAdmin(admin.ModelAdmin):
-    list_display = ("id", "user", "machine", "machinesession", "start", "end", "value", "transaction", "invoice")
+    list_display = ("id", "user", "machine", "machinesession", "start", "end", "price", "transaction", "invoice")
     list_filter = ("start", "end")
     list_display_links = ["id", "machine", "machinesession"]
 
     def machine(self, obj):
-        return obj.machinesession.machine
-
+        try:
+            return obj.machinesession.machine
+        except:
+            return None
 
 @admin.register(models.MachineSession)
 class MachineSessionAdmin(admin.ModelAdmin):
-    list_display = ("id", "machine", "user", "tutor", "paying_user", "start", "end", "rating_clean", "paymentsession")
+    list_display = ("id", "machine", "user", "tutor", "paying_user", "start", "end", "rating_clean", "machineSessionPayments")
     list_filter = ( "machine", "start", "end", "rating_clean")
-    list_display_links = ["id", "machine", "user", "tutor", "paying_user", "paymentsession"]
+    list_display_links = ["id", "machine", "user", "tutor", "paying_user", "machineSessionPayments"]
 
     def machine(self, obj):
         return obj.machine
 
     def paying_user(self, obj):
-        if obj.paymentsession is not None:
-            return obj.paymentsession.user
+        if obj.machineSessionPayments is not None:
+            return obj.machineSessionPayments.user
         return None
 
 
 @admin.register(models.MaterialPayment)
 class MaterialPaymentAdmin(admin.ModelAdmin):
-    list_display = ("id", "created", "user", "creator", "value", "transaction", "invoice")
+    list_display = ("id", "created", "user", "creator", "price", "transaction", "invoice")
+    list_filter = ( "created", )
+
+@admin.register(models.SpaceRentPayment)
+class SpaceRentPaymentAdmin(admin.ModelAdmin):
+    list_display = ("id", "user", "created", "start", "end", "price", "type","transaction", "invoice")
     list_filter = ( "created", )
 
 
 admin.site.register(models.Invoice)
-admin.site.register(models.SpaceRentPayment)
+admin.site.register(models.SpaceAccessTracking)
 admin.site.unregister(User)
 admin.site.register(User, ProfileAdmin)

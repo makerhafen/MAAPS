@@ -1,0 +1,40 @@
+{% extends "base_raspi.html" %}
+
+{% block content %}
+    <div class="row" id="header" style="background-color:lightgray;">
+        <div class="col-xs-9">
+            <b style="font-size:2em">Benutzer anmelden</b>
+        </div>
+        <a href="{% url 'pos__index' %}">
+            <div class="col-xs-3 header_link">
+                Zurück
+            </div>
+        </a>
+    </div>
+    {% if profile %}
+        <h3> Hi <b>{{profile}}</b> </h3>
+
+        {% if profile.paying_user != None %}
+            <b>{{profile.paying_user}}</b> zahlt für Dich!
+        {% else %}
+            {% if profile.allow_invoice == True %}
+                Du kannst auf Rechnung zahlen
+            {% else %}
+                Du hast {{profile.prepaid_deposit |floatformat:2}} Euro Guthaben
+            {% endif %}
+        {% endif %}
+        <a href="{% url 'pos__index' %}">
+            <button class="btn btn-lg btn-success" style="width:100%">OK</button>
+        </a>
+    {% else %}
+
+        <div class="row" style="text-align:center">
+            <div class="col-xs-12">
+                    <h3>RFID Karte auflegen</h3>
+            </div>
+        </div>
+        <br>
+        {% include "rfid/rfid_full.html" %}
+    {% endif %}
+
+{% endblock %}

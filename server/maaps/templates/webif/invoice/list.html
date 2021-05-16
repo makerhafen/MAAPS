@@ -1,10 +1,18 @@
 {% extends "webif/base.html" %}
 
 {% block content %}
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="main-breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/webif">Makerhafen</a></li>
+            <li class="breadcrumb-item"><a href="/webif/invoice/list">Rechnungen</a></li>
+        </ol>
+    </nav>
+    <!-- /Breadcrumb -->
     <br>
     <div class="row">
         <div class="col-md-8"><h4>Rechnungen</h4></div>
-        <div class="col-md-4" style="text-align:right"><a type="button" class="btn btn-success" href="/webif/invoice/create/">Neuen Rechnung erstellen stellen</a></div>
+        <div class="col-md-4" style="text-align:right"><a type="button" class="btn btn-success" href="/webif/invoice/list_createable">Neuen Rechnung erstellen stellen</a></div>
     </div>
 
     <br>
@@ -13,8 +21,7 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th scope="col">Vorname</th>
-                        <th scope="col">Nachname</th>
+                        <th scope="col">Benutzer</th>
                         <th scope="col">Firma</th>
                         <th scope="col">Email</th>
                         <th scope="col">Guthaben (Euro)</th>
@@ -26,19 +33,20 @@
                 <tbody>
                     {% for invoice in invoices %}
                     <tr>
-                        <td>{{ profile.user.first_name }}</td>
-                        <td>{{ profile.user.last_name }}</td>
-                        <td>{{ profile.company_name }}</td>
-                        <td>{{ profile.user.email }}</td>
+                        <td>
+                            <a href="/webif/user/show/{{ invoice.user.profile.id }}">{{ invoice.user.company_name }} {{ invoice.user.first_name }}, {{ invoice.user.last_name }}
+                            </a>
+                        </td>
+                        <td>{{ invoice.company_name }}</td>
+                        <td>{{ invoice.user.email }}</td>
                         <td {% if profile.prepaid_deposit < 0 %}style="color:red"{% endif %}>{{ profile.prepaid_deposit }}</td>
-                        <td>{{ profile.allow_invoice }}</td>
-                        <td>{{ profile.paying_user }}</td>
+                        <td>{{ invoice.allow_invoice }}</td>
+                        <td>{{ invoice.paying_user }}</td>
                         <td>
                             {% if profile.profile_picture %}<img style="width:50px" src = "{{ profile.profile_picture.url }}"/>{% endif %}
                         </td>
                         <td>
-                            <a type="button" class="btn btn-warning" href="/webif/user/update/{{ profile.id }}">Bearbeiten</a>
-                            <a type="button" class="btn btn-success" href="/webif/user/show/{{ profile.id }}">Anzeigen</a>
+                            <a type="button" class="btn btn-success" href="/webif/invoice/show/{{ invoice.id }}">Anzeigen</a>
                         </td>
                     </tr>
                     {% endfor %}
