@@ -7,6 +7,7 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/webif">Makerhafen</a></li>
             <li class="breadcrumb-item"><a href="/webif/invoice/list">Rechnungen</a></li>
+			<li class="breadcrumb-item"><a href="/webif/user/show/{{invoice.user.profile.id}}"> {{invoice.user.profile}}</a></li>
             <li class="breadcrumb-item"><a href="/webif/invoice/show/{{invoice.id}}">Anzeigen</a></li>
         </ol>
     </nav>
@@ -125,13 +126,13 @@ Rechung für {{invoice.user}}<br>
 						<table>
 							<tr>
 								<td class="title">
-									<img src="https://www.sparksuite.com/images/logo.png" style="width: 100%; max-width: 300px" />
+									<img src="https://raw.githubusercontent.com/makerhafen/Logos/master/makerhafen%20logo%201100x1100.png" style="width: 100%; max-width: 100px" />
+									<b>Makerhafen</b>
 								</td>
-
 								<td>
 									Rechnung #: 123<br />
-									Erstellt: {{ invoice.created }}<br />
-									Fällig: {{ invoice.due }}
+									Erstellt: {{ invoice.created |date:'d.m.Y' }}<br />
+									Fällig: {{ invoice.due |date:'d.m.Y' }}
 								</td>
 							</tr>
 						</table>
@@ -142,6 +143,7 @@ Rechung für {{invoice.user}}<br>
 					<td colspan="2">
 						<table>
 							<tr>
+
 								<td>
 									Makerhafen gemeinnützige GmbH<br />
 									Stahltwiete 21<br />
@@ -149,7 +151,6 @@ Rechung für {{invoice.user}}<br>
 									office@makerhafen.de<br />
 									UstID: DE-66666666
 								</td>
-
 								<td>
 									{% if invoice.user.profile.company_name %}
 										{{ invoice.user.profile.company_name}} <br />
@@ -179,6 +180,7 @@ Rechung für {{invoice.user}}<br>
                                 {% if invoice_item.machinesession.user != invoice_item.user %}
                                     ; {{invoice_item.machinesession.user.first_name}} {{invoice_item.machinesession.user.last_name}}
                                 {% endif %}
+								; {{invoice_item.created|date:'d.m.Y H:i'}}
                             {% elif invoice_item.creator %}
                                 Verbrauchsmaterial
                                 {% if invoice_item.machinesession  %}
@@ -187,14 +189,15 @@ Rechung für {{invoice.user}}<br>
                                 {% if invoice_item.creator != invoice_item.user %}
                                     ; {{invoice_item.creator.first_name}} {{invoice_item.creator.last_name}}
                                 {% endif %}
+								; {{invoice_item.created|date:'d.m.Y H:i'}}
                             {% elif invoice_item.type %}
                                 {% if invoice_item.type == "monthly" %}
-                            		Monatsmiete
+                            		Monatsmiete {{invoice_item.end|date:'d.m.Y'}} - {{invoice_item.end|date:'d.m.Y'}}
                                 {% else %}
-									Tagesmiete
+									Tagesmiete {{invoice_item.start|date:'d.m.Y'}}
                                 {% endif %}
                             {% endif %}
-                            ; {{invoice_item.created|date:'d.m.Y H:i'}}
+
                         </td>
                        <td>€{{invoice_item.price}}</td>
                     </tr>

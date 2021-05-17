@@ -2,7 +2,15 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-
+<style>
+    td {
+        text-align: center;
+        white-space: nowrap;
+    }
+    th {
+        text-align: center;
+    }
+</style>
     <nav aria-label="breadcrumb" class="main-breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/webif">Makerhafen</a></li>
@@ -85,15 +93,19 @@
                             <div class="col-sm-9 text-secondary">{{profile.user.email}}</div>
                         </div>
                         <hr>
-                        <div class="row">
-                            <div class="col-sm-3"><h6 class="mb-0">Address</h6></div>
-                            <div class="col-sm-9 text-secondary">{{profile.street}}, {{profile.postalcode}}, {{profile.city}}</div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-sm-3"><h6 class="mb-0">Geburtsdatum</h6></div>
-                            <div class="col-sm-9 text-secondary">{{profile.birthdate}}</div>
-                        </div>
+                        {% if profile.street %}
+                            <div class="row">
+                                <div class="col-sm-3"><h6 class="mb-0">Addresse</h6></div>
+                                <div class="col-sm-9 text-secondary">{{profile.street}}, {{profile.postalcode}}, {{profile.city}}</div>
+                            </div>
+                            <hr>
+                        {% endif %}
+                        {% if profile.birthdate %}
+                            <div class="row">
+                                <div class="col-sm-3"><h6 class="mb-0">Geburtsdatum</h6></div>
+                                <div class="col-sm-9 text-secondary">{{profile.birthdate  |date:'d.m.Y'}}</div>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="row gutters-sm">
@@ -133,6 +145,7 @@
                 </div>
             </div>
         </div>
+
         <h3>Anwesenheit / Maschinennutzung</h3>
         <div class="row gutters-sm">
             <div class="col-sm-4 mb-3">
@@ -187,8 +200,8 @@
                             {% for machineSession in latest_sessions %}
                             <tr>
                                 <td>{{ machineSession.machine }}</td>
-                                <td>{{ machineSession.start|date:'d.m.Y H:i' }}</td>
-                                <td>{{ machineSession.end |date:'d.m.Y H:i'}}</td>
+                                <td>{{ machineSession.start|date:'d.m.y H:i' }}</td>
+                                <td>{{ machineSession.end |date:'d.m.y H:i'}}</td>
                                 <td>
                                     {% if machineSession.tutor %}
                                         <a href="/webif/user/show/{{ machineSession.tutor.profile.id }}">{{ machineSession.tutor }}</a>
@@ -244,8 +257,8 @@
                                             </a>
                                         {% endif %}
                                     </td>
-                                    <td>{{ latest_spaceRentPayment.start|date:'d.m.Y H:i' }}</td>
-                                    <td>{{ latest_spaceRentPayment.end|date:'d.m.Y H:i' }}</td>
+                                    <td>{{ latest_spaceRentPayment.start|date:'d.m.y H:i' }}</td>
+                                    <td>{{ latest_spaceRentPayment.end|date:'d.m.y H:i' }}</td>
                                     <td>{{ latest_spaceRentPayment.type }}</td>
                                     <td>{{ latest_spaceRentPayment.price }} €</td>
                                     <td>
@@ -295,8 +308,8 @@
                                             <a href="/webif/user/show/{{latest_machine_payment.machinesession.user.profile.id}}">{{ latest_machine_payment.machinesession.user.profile }}</a>
                                         {% endif %}
                                     </td>
-                                    <td>{{ latest_machine_payment.start |date:'d.m.Y H:i'}}</td>
-                                    <td>{{ latest_machine_payment.end |date:'d.m.Y H:i'}}</td>
+                                    <td>{{ latest_machine_payment.start |date:'d.m.y H:i'}}</td>
+                                    <td>{{ latest_machine_payment.end |date:'d.m.y H:i'}}</td>
                                     <td>{{ latest_machine_payment.price }} €</td>
                                     <td>
                                         {% if latest_machine_payment.transaction %}
@@ -338,7 +351,7 @@
                             <tbody>
                                 {% for material_payment in latest_material_payments %}
                                 <tr>
-                                    <td>{{ material_payment.created }}</td>
+                                    <td>{{ material_payment.created  |date:'d.m.y H:i' }}</td>
                                     <td>
                                         {% if material_payment.creator != material_payment.user%}
                                             <a href="/webif/user/show/{{material_payment.creator.profile.id}}">{{ material_payment.creator.profile }}</a>
@@ -374,7 +387,9 @@
                     <div class="card-body">
                         <h6 class="d-flex align-items-center mb-3"><i class="material-icons text-info mr-2">
                             Rechnungen</i>
-                            <a href=/foo/" style="text-align:right;float:right;">alle anzeigen</a></h6>
+                            <a style="text-align:right;float:right;" href=/foo/"> Alle anzeigen </a>
+                            <a style="text-align:right;float:right;" href="/webif/invoice/create/{{profile.id}}"> Neue erstellen&nbsp&nbsp&nbsp</a>
+                        </h6>
                         </h6>
                          <table class="table">
                         <thead>
