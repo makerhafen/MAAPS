@@ -2,15 +2,15 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-<style>
-    td {
-        text-align: center;
-        white-space: nowrap;
-    }
-    th {
-        text-align: center;
-    }
-</style>
+    <style>
+        td {
+            text-align: center;
+            white-space: nowrap;
+        }
+        th {
+            text-align: center;
+        }
+    </style>
     <nav aria-label="breadcrumb" class="main-breadcrumb hidden-print">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/webif">Makerhafen</a></li>
@@ -63,32 +63,32 @@
                                 Zahlungsart
                             </h6>
                             <span class="text-secondary" style="text-align:center">
-                            {% if profile.paying_user %}
-                              <h6 class="mb-0"><i>
-                                  <a href="/webif/user/show/{{profile.paying_user.id}}">{{profile.paying_user}}</a>
-                                  </i>
-                                  zahlt</h6>
-                              <hr>
-                            {% else %}
-                                <h5>
-                                    <b style="color:{% if profile.commercial_account %}green{% else %}lightgray{% endif %}">Kommerziell</b> /
-                                    <b style="color:{% if profile.commercial_account %}lightgray{% else %}green{% endif %}">Privat</b>
-                                </h5>
-                                <h5>
-                                    <b style="color:{% if profile.allow_invoice %}green{% else %}lightgray{% endif %}">Rechnung</b> /
-                                    <b style="color:{% if profile.allow_invoice %}lightgray{% else %}green{% endif %}">Prepaid</b>
-                                </h5>
-                                <h5>
-                                    <b style="color:{% if profile.monthly_payment %}green{% else %}lightgray{% endif %}">Monatlich</b> /
-                                    <b style="color:{% if profile.monthly_payment %}lightgray{% else %}green{% endif %}">Tagesuser</b>
-                                </h5>
-                                <h5>
-                                    <b style="color:{% if profile.discount_account %}green{% else %}lightgray{% endif %}">Ermäßigt</b> /
-                                    <b style="color:{% if profile.discount_account %}lightgray{% else %}green{% endif %}">Normalzahler</b>
-                                </h5>
-                                <h5><a type="button" class="btn btn-primary" href="/webif/user/deposit/{{ profile.id }}">Einzahlung verbuchen</a></h5>
-                            {% endif %}
-                        </span>
+                                {% if profile.paying_user %}
+                                  <h6 class="mb-0"><i>
+                                      <a href="/webif/user/show/{{profile.paying_user.id}}">{{profile.paying_user}}</a>
+                                      </i>
+                                      zahlt</h6>
+                                  <hr>
+                                {% else %}
+                                    <h5>
+                                        <b style="color:{% if profile.commercial_account %}green{% else %}lightgray{% endif %}">Kommerziell</b> /
+                                        <b style="color:{% if profile.commercial_account %}lightgray{% else %}green{% endif %}">Privat</b>
+                                    </h5>
+                                    <h5>
+                                        <b style="color:{% if profile.allow_invoice %}green{% else %}lightgray{% endif %}">Rechnung</b> /
+                                        <b style="color:{% if profile.allow_invoice %}lightgray{% else %}green{% endif %}">Prepaid</b>
+                                    </h5>
+                                    <h5>
+                                        <b style="color:{% if profile.monthly_payment %}green{% else %}lightgray{% endif %}">Monatlich</b> /
+                                        <b style="color:{% if profile.monthly_payment %}lightgray{% else %}green{% endif %}">Tagesuser</b>
+                                    </h5>
+                                    <h5>
+                                        <b style="color:{% if profile.discount_account %}green{% else %}lightgray{% endif %}">Ermäßigt</b> /
+                                        <b style="color:{% if profile.discount_account %}lightgray{% else %}green{% endif %}">Normalzahler</b>
+                                    </h5>
+                                    <h5><a type="button" class="btn btn-primary" href="/webif/user/deposit/{{ profile.id }}">Einzahlung verbuchen</a></h5>
+                                {% endif %}
+                            </span>
                         </li>
                     </ul>
                 </div>
@@ -109,7 +109,6 @@
                             <hr>
                         {% endif %}
                         {% if profile.birthdate %}
-
                             <div class="row">
                                 <div class="col-sm-3"><h6 class="mb-0">Geburtsdatum</h6></div>
                                 <div class="col-sm-9 text-secondary">{{profile.birthdate  |date:'d.m.Y'}}  {% if profile.is_underage %}(Minderjährig){% endif %}</div>
@@ -123,18 +122,17 @@
                             <div class="card-body">
                                 <h6 class="d-flex align-items-center mb-3"><i class="material-icons text-info mr-2">Zahlungsinformationen</i></h6>
                                 {% if profile.paying_user %}
-                                <div class="row" style="text-align:center">
-                                    <div class="col-sm-12"><h6 class="mb-0"><i>
-                                        <a href="/webif/user/show/{{profile.paying_user.id}}">{{profile.paying_user}}</a></i> zahlt</h6></div>
-                                </div>
-                                <hr>
+                                    <div class="row" style="text-align:center">
+                                        <div class="col-sm-12"><h6 class="mb-0"><i>
+                                            <a href="/webif/user/show/{{profile.paying_user.id}}">{{profile.paying_user}}</a></i> zahlt</h6></div>
+                                    </div>
+                                    <hr>
                                 {% else %}
-
-                                <div class="row" style="text-align:center">
-                                    <div class="col-sm-3"><h6 class="mb-0">Guthaben</h6></div>
-                                    <div class="col-sm-9 text-secondary">{{profile.prepaid_deposit}} Euro</div>
-                                </div>
-                                <hr>
+                                    <div class="row" style="text-align:center">
+                                        <div class="col-sm-3"><h6 class="mb-0">Guthaben</h6></div>
+                                        <div class="col-sm-9 text-secondary">{{profile.prepaid_deposit}} Euro</div>
+                                    </div>
+                                    <hr>
                                 {% endif %}
                             </div>
                         </div>
@@ -161,26 +159,26 @@
             <div class="col-sm-4 mb-3">
                 <div class="card h-100">
                     <div class="card-body">
-                        <h6 class="d-flex align-items-center mb-3"><i class="material-icons text-info mr-2">
-                            Anwesenheit</i>
+                        <h6 class="d-flex align-items-center mb-3">
+                            <i class="material-icons text-info mr-2">Anwesenheit</i>
                             <a href=/foo/" style="text-align:right;float:right;">alle anzeigen</a>
                         </h6>
-                         <table class="table">
+                        <table class="table">
                             <thead>
-                                <tr>
-                                    <th scope="col">Anfang</th>
-                                    <th scope="col">Ende</th>
-                                    <th scope="col">Mietzahlung</th>
-                                </tr>
+                            <tr>
+                                <th scope="col">Anfang</th>
+                                <th scope="col">Ende</th>
+                                <th scope="col">Mietzahlung</th>
+                            </tr>
                             </thead>
                             <tbody>
-                                {% for latest_spaceAccessTracking in latest_spaceAccessTrackings %}
-                                    <tr>
-                                        <td>{{ latest_spaceAccessTracking.start }}</td>
-                                        <td>{{ latest_spaceAccessTracking.end }}</td>
-                                        <td>{{ latest_spaceAccessTracking.spaceRentPayment }}</td>
-                                    </tr>
-                                {% endfor %}
+                            {% for latest_spaceAccessTracking in latest_spaceAccessTrackings %}
+                                <tr>
+                                    <td>{{ latest_spaceAccessTracking.start }}</td>
+                                    <td>{{ latest_spaceAccessTracking.end }}</td>
+                                    <td>{{ latest_spaceAccessTracking.spaceRentPayment }}</td>
+                                </tr>
+                            {% endfor %}
                             </tbody>
                         </table>
                     </div>
@@ -189,12 +187,12 @@
             <div class="col-sm-8 mb-3">
                 <div class="card h-100">
                     <div class="card-body">
-                        <h6 class="d-flex align-items-center mb-3"><i class="material-icons text-info mr-2">
-                            Maschinennutzung</i>
+                        <h6 class="d-flex align-items-center mb-3">
+                            <i class="material-icons text-info mr-2">Maschinennutzung</i>
                             <a href=/foo/" style="text-align:right;float:right;">alle anzeigen</a></h6>
                         </h6>
-                     <table class="table">
-                        <thead>
+                        <table class="table">
+                            <thead>
                             <tr>
                                 <th scope="col">Maschine</th>
                                 <th scope="col">Anfang</th>
@@ -205,8 +203,8 @@
                                 <th scope="col">Kosten</th>
                                 <th scope="col">Transaktion/Rechnung</th>
                             </tr>
-                        </thead>
-                        <tbody>
+                            </thead>
+                            <tbody>
                             {% for machineSession in latest_sessions %}
                             <tr>
                                 <td>{{ machineSession.machine }}</td>
@@ -215,13 +213,17 @@
                                 <td>
                                     {% if machineSession.tutor %}
                                         <a href="/webif/user/show/{{ machineSession.tutor.profile.id }}">{{ machineSession.tutor }}</a>
-                                        {% if machineSession.tutor.profile.profile_picture %}<img style="width:50px" src = "{{ machineSession.tutor.profile.profile_picture.url }}"/>{% endif %}
+                                        {% if machineSession.tutor.profile.profile_picture %}
+                                            <img style="width:50px" src = "{{ machineSession.tutor.profile.profile_picture.url }}"/>
+                                        {% endif %}
                                     {% endif %}
                                 </td>
                                 <td>
                                     {% if machineSession.paymentsession.user != machineSession.user %}
                                         {{ machineSession.paymentsession.user.profile }}
-                                        {% if machineSession.paymentsession.user.profile.profile_picture %}<img style="width:50px" src = "{{ machineSession.paymentsession.user.profile.profile_picture.url }}"/>{% endif %}
+                                        {% if machineSession.paymentsession.user.profile.profile_picture %}
+                                            <img style="width:50px" src = "{{ machineSession.paymentsession.user.profile.profile_picture.url }}"/>
+                                        {% endif %}
                                     {% endif %}
                                 </td>
                                 <td>{{ machineSession.rating_clean }}</td>
@@ -229,8 +231,8 @@
                                 <td>{{ machineSession.machineSessionPayments.transaction }}{{ machineSession.machineSessionPayments.price }}</td>
                             </tr>
                             {% endfor %}
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -241,12 +243,12 @@
             <div class="col-sm-12 mb-3">
                 <div class="card h-100">
                     <div class="card-body">
-                        <h6 class="d-flex align-items-center mb-3"><i class="material-icons text-info mr-2">
-                            Werkstattnutzung</i>
+                        <h6 class="d-flex align-items-center mb-3">
+                            <i class="material-icons text-info mr-2">Werkstattnutzung</i>
                             <a href=/foo/" style="text-align:right;float:right;">alle anzeigen</a>
                         </h6>
-                         <table class="table">
-                        <thead>
+                        <table class="table">
+                            <thead>
                             <tr>
                                 <th scope="col">Für Benutzer</th>
                                 <th scope="col">Von</th>
@@ -256,15 +258,15 @@
                                 <th scope="col">Zahlungsweise</th>
                                 <th scope="col">Rechnung</th>
                             </tr>
-                        </thead>
-                        <tbody>
+                            </thead>
+                            <tbody>
                             {% for latest_spaceRentPayment in latest_spaceRentPayments %}
                                 <tr>
                                     <td>
                                         {% if latest_spaceRentPayment.for_user %}
-                                            <a href="/webif/user/show/{{ latest_spaceRentPayment.for_user.profile.id }}">
-                                                {{ latest_spaceRentPayment.for_user }}
-                                            </a>
+                                        <a href="/webif/user/show/{{ latest_spaceRentPayment.for_user.profile.id }}">
+                                            {{ latest_spaceRentPayment.for_user }}
+                                        </a>
                                         {% endif %}
                                     </td>
                                     <td>{{ latest_spaceRentPayment.start|date:'d.m.y H:i' }}</td>
@@ -276,7 +278,7 @@
                                             {% if latest_spaceRentPayment.transaction.type == "from_deposit_for_rent" %}
                                                 Abgebucht von Guthaben
                                             {% else %}
-                                                {{ latest_spaceRentPayment.transaction.type }}
+                                            {   { latest_spaceRentPayment.transaction.type }}
                                             {% endif %}
                                         {% else %}
                                             Rechnung
@@ -285,20 +287,20 @@
                                     <td>{{ latest_spaceRentPayment.invoice }}</td>
                                 </tr>
                             {% endfor %}
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
             <div class="col-sm-12 mb-3">
                 <div class="card h-100">
                     <div class="card-body">
-                        <h6 class="d-flex align-items-center mb-3"><i class="material-icons text-info mr-2">
-                            Machinennutzung</i>
+                        <h6 class="d-flex align-items-center mb-3">
+                            <i class="material-icons text-info mr-2">Machinennutzung</i>
                             <a href=/foo/" style="text-align:right;float:right;">alle anzeigen</a>
                         </h6>
-                         <table class="table">
-                        <thead>
+                        <table class="table">
+                            <thead>
                             <tr>
                                 <th scope="col">Maschine</th>
                                 <th scope="col">Für Benutzer</th>
@@ -308,63 +310,67 @@
                                 <th scope="col">Zahlungsweise</th>
                                 <th scope="col">Rechnung</th>
                             </tr>
-                        </thead>
-                        <tbody>
+                            </thead>
+                            <tbody>
                             {% for latest_machine_payment in latest_machine_payments %}
-                                <tr>
-                                    <td>{{ latest_machine_payment.machinesession.machine }}</td>
-                                    <td>
-                                        {% if latest_machine_payment.machinesession.user != latest_machine_payment.user%}
-                                            <a href="/webif/user/show/{{latest_machine_payment.machinesession.user.profile.id}}">{{ latest_machine_payment.machinesession.user.profile }}</a>
-                                        {% endif %}
-                                    </td>
-                                    <td>{{ latest_machine_payment.start |date:'d.m.y H:i'}}</td>
-                                    <td>{{ latest_machine_payment.end |date:'d.m.y H:i'}}</td>
-                                    <td>{{ latest_machine_payment.price }} €</td>
-                                    <td>
-                                        {% if latest_machine_payment.transaction %}
-                                            {% if latest_machine_payment.transaction.type == "from_deposit_for_machine" %}
-                                                Abgebucht von Guthaben
-                                            {% else %}
-                                                {{ latest_machine_payment.transaction.type }}
-                                            {% endif %}
+                            <tr>
+                                <td>{{ latest_machine_payment.machinesession.machine }}</td>
+                                <td>
+                                    {% if latest_machine_payment.machinesession.user != latest_machine_payment.user%}
+                                        <a href="/webif/user/show/{{latest_machine_payment.machinesession.user.profile.id}}">
+                                            {{ latest_machine_payment.machinesession.user.profile }}
+                                        </a>
+                                    {% endif %}
+                                </td>
+                                <td>{{ latest_machine_payment.start |date:'d.m.y H:i'}}</td>
+                                <td>{{ latest_machine_payment.end |date:'d.m.y H:i'}}</td>
+                                <td>{{ latest_machine_payment.price }} €</td>
+                                <td>
+                                    {% if latest_machine_payment.transaction %}
+                                        {% if latest_machine_payment.transaction.type == "from_deposit_for_machine" %}
+                                            Abgebucht von Guthaben
                                         {% else %}
-                                            Rechnung
+                                            {{ latest_machine_payment.transaction.type }}
                                         {% endif %}
-                                    </td>
-                                    <td>{{ latest_machine_payment.invoice }}</td>
-                                </tr>
+                                    {% else %}
+                                        Rechnung
+                                    {% endif %}
+                                </td>
+                                <td>{{ latest_machine_payment.invoice }}</td>
+                            </tr>
                             {% endfor %}
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
             <div class="col-sm-12 mb-3">
                 <div class="card h-100">
                     <div class="card-body">
-                        <h6 class="d-flex align-items-center mb-3"><i class="material-icons text-info mr-2">
-                            Material</i>
+                        <h6 class="d-flex align-items-center mb-3">
+                            <i class="material-icons text-info mr-2">Material</i>
                             <a href=/foo/" style="text-align:right;float:right;">alle anzeigen</a></h6>
                         </h6>
                         <table class="table">
                             <thead>
-                                <tr>
-                                    <th scope="col">Datum</th>
-                                    <th scope="col">Für Benutzer</th>
-                                    <th scope="col">Maschinen Sitzung</th>
-                                    <th scope="col">Preis </th>
-                                    <th scope="col">Zahlungsweise</th>
-                                    <th scope="col">Rechnung</th>
-                                </tr>
+                            <tr>
+                                <th scope="col">Datum</th>
+                                <th scope="col">Für Benutzer</th>
+                                <th scope="col">Maschinen Sitzung</th>
+                                <th scope="col">Preis </th>
+                                <th scope="col">Zahlungsweise</th>
+                                <th scope="col">Rechnung</th>
+                            </tr>
                             </thead>
                             <tbody>
-                                {% for material_payment in latest_material_payments %}
+                            {% for material_payment in latest_material_payments %}
                                 <tr>
                                     <td>{{ material_payment.created  |date:'d.m.y H:i' }}</td>
                                     <td>
                                         {% if material_payment.creator != material_payment.user%}
-                                            <a href="/webif/user/show/{{material_payment.creator.profile.id}}">{{ material_payment.creator.profile }}</a>
+                                            <a href="/webif/user/show/{{material_payment.creator.profile.id}}">
+                                                {{ material_payment.creator.profile }}
+                                            </a>
                                         {% endif %}
                                     </td>
                                     <td>{{ material_payment.machinesession }}</td>
@@ -382,7 +388,7 @@
                                     </td>
                                     <td>{{ material_payment.invoice }}</td>
                                 </tr>
-                                {% endfor %}
+                            {% endfor %}
                             </tbody>
                         </table>
                     </div>
@@ -395,14 +401,14 @@
             <div class="col-sm-6 mb-3">
                 <div class="card h-100">
                     <div class="card-body">
-                        <h6 class="d-flex align-items-center mb-3"><i class="material-icons text-info mr-2">
-                            Rechnungen</i>
+                        <h6 class="d-flex align-items-center mb-3">
+                            <i class="material-icons text-info mr-2">Rechnungen</i>
                             <a style="text-align:right;float:right;" href=/foo/"> Alle anzeigen </a>
                             <a style="text-align:right;float:right;" href="/webif/invoice/create/{{profile.id}}"> Neue erstellen&nbsp&nbsp&nbsp</a>
                         </h6>
                         </h6>
-                         <table class="table">
-                        <thead>
+                        <table class="table">
+                            <thead>
                             <tr>
                                 <th scope="col">Datum</th>
                                 <th scope="col">Kosten</th>
@@ -410,8 +416,8 @@
                                 <th scope="col">transaction</th>
                                 <th scope="col">Aktion</th>
                             </tr>
-                        </thead>
-                        <tbody>
+                            </thead>
+                            <tbody>
                             {% for latest_invoice in latest_invoices %}
                                 <tr>
                                     <td>{{ latest_invoice.created }}</td>
@@ -421,37 +427,39 @@
                                     <td><a href="/webif/invoice/show/{{ latest_invoice.id }}">Anzeigen</a></td>
                                 </tr>
                             {% endfor %}
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
             <div class="col-sm-6 mb-3">
                 <div class="card h-100">
                     <div class="card-body">
-                        <h6 class="d-flex align-items-center mb-3"><i class="material-icons text-info mr-2">
-                            Transaktionen</i>
+                        <h6 class="d-flex align-items-center mb-3">
+                            <i class="material-icons text-info mr-2">Transaktionen</i>
                             <a href=/foo/" style="text-align:right;float:right;">alle anzeigen</a></h6>
                         </h6>
                         <table class="table">
                             <thead>
-                                <tr>
-                                    <th scope="col">Art</th>
-                                    <th scope="col">Wert</th>
-                                    <th scope="col">Autorisiert durch</th>
-                                    <th scope="col">Kommentar</th>
-                                    <th scope="col">Für</th>
+                            <tr>
+                                <th scope="col">Art</th>
+                                <th scope="col">Wert</th>
+                                <th scope="col">Autorisiert durch</th>
+                                <th scope="col">Kommentar</th>
+                                <th scope="col">Für</th>
 
-                                </tr>
+                            </tr>
                             </thead>
                             <tbody>
-                                {% for latest_transaction in latest_transactions %}
+                            {% for latest_transaction in latest_transactions %}
                                 <tr>
                                     <td>{{ latest_transaction.type }}</td>
                                     <td>{{ latest_transaction.value }}</td>
                                     <td>
                                         {% if latest_transaction.authorized_by %}
-                                            <a href="/webif/user/show/{{latest_transaction.authorized_by.profile.id}}">{{latest_transaction.authorized_by.profile }}</a>
+                                            <a href="/webif/user/show/{{latest_transaction.authorized_by.profile.id}}">
+                                                {{latest_transaction.authorized_by.profile }}
+                                            </a>
                                         {% endif %}
                                     </td>
                                     <td>{{ latest_transaction.comment }}</td>
@@ -461,10 +469,9 @@
                                         {{ latest_transaction.spaceRentPayments.all }}
                                         {{ latest_transaction.spaceAccessTrackings.all }}
                                         {{ latest_transaction.invoice.all }}
-
                                     </td>
                                 </tr>
-                                {% endfor %}
+                            {% endfor %}
                             </tbody>
                         </table>
 
