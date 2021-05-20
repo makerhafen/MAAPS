@@ -5,9 +5,6 @@ from django.contrib.admin.views.decorators import staff_member_required
 
 
 @staff_member_required
-def webif__user__haftung(request, user_id):
-    profile = models.Profile.objects.get(id=user_id)
-
-    return HttpResponse(loader.get_template('webif/user/show_haftung.html').render({
-        "profile": profile
+def webif__agb(request):
+    return HttpResponse(loader.get_template('webif/agb.html').render({
     }, request))

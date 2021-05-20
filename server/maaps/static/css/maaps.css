@@ -1,4 +1,51 @@
 
+@media print and (max-width: 767px) {
+    body {
+      padding-top: 0px;
+      margin-top: 0px;
+    }
+  .row{
+    display: flex;
+    flex-direction: row;
+  }
+  .col-md-1{
+    flex-basis: 8.33%;
+  }
+  .col-md-2{
+    flex-basis: 16.66%;
+  }
+  .col-md-3{
+    flex-basis: 25%;
+  }
+  .col-md-4{
+    flex-basis: 33.33%;
+  }
+  .col-md-5{
+    flex-basis: 41.65%;
+  }
+  .col-md-6{
+    flex-basis: 50%;
+  }
+  .col-md-7{
+    flex-basis: 58.31%;
+  }
+  .col-md-8{
+    flex-basis: 66.67%;
+  }
+  .col-md-9{
+    flex-basis: 75%;
+  }
+  .col-md-10{
+    flex-basis: 83.33%;
+  }
+  .col-md-11{
+    flex-basis: 91.63%;
+  }
+  .col-md-12{
+    flex-basis: 100%;
+  }
+}
+
     body{
         margin-top:20px;
         color: #1a202c;

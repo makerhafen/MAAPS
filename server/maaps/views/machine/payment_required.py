@@ -19,10 +19,13 @@ def machine__payment_required(request):
             error = create_payment_session(machine, paying_user_profile)
             if error is None:
                 return find_session_redirect(machine)
+    price_per_usage, price_per_hour = machine.get_price(paying_user_profile)
 
     return HttpResponse(loader.get_template('machine/payment_required.html').render({
         "machine": machine,
         "last_error": error,
         "paying_user": paying_user_profile.user,
         "user_can_pay": _user_can_pay,
+        "price_per_usage": price_per_usage,
+        "price_per_hour": price_per_hour,
     }, request))

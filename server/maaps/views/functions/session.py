@@ -14,8 +14,10 @@ def find_session_redirect(machine):
         return redirect('machine__tutor_required')
     if machine.current_session.rating_clean == -1 and machine.ask_clean is True:
         return redirect('machine__rate_machine')
-    if (machine.price_per_hour > 0 or machine.current_session.machine.price_per_usage > 0) and hasattr(
-            machine.current_session, "paymentsession") == False:
+    paying_user_profile = machine.current_session.user.profile
+    if paying_user_profile.paying_user is not None:
+        paying_user_profile = paying_user_profile.paying_user.profile
+    if machine.requires_payment(paying_user_profile) and hasattr( machine.current_session, "machineSessionPayment") == False:
         return redirect('machine__payment_required')
     return redirect('machine__show_session')
 
@@ -104,16 +106,21 @@ def get_profile_from_url_token(token):
 
 
 def end_session(session):
+    print("end session")
     current_payment_session = None
     if session is not None:
+        print("foo")
         machine = session.machine
-        if hasattr(session, "paymentsession"):
-            current_payment_session = session.paymentsession
+        if hasattr(session, "machineSessionPayment"):
+            print("foo1")
+            current_payment_session = session.machineSessionPayment
             current_payment_session.end = timezone.now()
 
             timediff_hours = (current_payment_session.end - current_payment_session.start).total_seconds() / 3600.0
-            total_price = round(machine.price_per_usage + timediff_hours * machine.price_per_hour, 2)
-
+            total_price = round(current_payment_session.price_per_usage + timediff_hours * current_payment_session.price_per_hour, 2)
+            print("HERHER")
+            print(current_payment_session.price_per_usage)
+            print(current_payment_session.price_per_hour)
             current_payment_session.price = total_price
 
             if current_payment_session.user.profile.allow_invoice is False:

@@ -72,16 +72,16 @@ class MachineSessionPaymentAdmin(admin.ModelAdmin):
 
 @admin.register(models.MachineSession)
 class MachineSessionAdmin(admin.ModelAdmin):
-    list_display = ("id", "machine", "user", "tutor", "paying_user", "start", "end", "rating_clean", "machineSessionPayments")
+    list_display = ("id", "machine", "user", "tutor", "paying_user", "start", "end", "rating_clean", "machineSessionPayment")
     list_filter = ( "machine", "start", "end", "rating_clean")
-    list_display_links = ["id", "machine", "user", "tutor", "paying_user", "machineSessionPayments"]
+    list_display_links = ["id", "machine", "user", "tutor", "paying_user", "machineSessionPayment"]
 
     def machine(self, obj):
         return obj.machine
 
     def paying_user(self, obj):
-        if obj.machineSessionPayments is not None:
-            return obj.machineSessionPayments.user
+        if obj.machineSessionPayment is not None:
+            return obj.machineSessionPayment.user
         return None
 
 
@@ -92,11 +92,16 @@ class MaterialPaymentAdmin(admin.ModelAdmin):
 
 @admin.register(models.SpaceRentPayment)
 class SpaceRentPaymentAdmin(admin.ModelAdmin):
-    list_display = ("id", "user", "created", "start", "end", "price", "type","transaction", "invoice")
+    list_display = ("id", "user", "for_user", "created", "start", "end", "price", "type","transaction", "invoice")
     list_filter = ( "created", )
 
+@admin.register(models.SpaceAccessTracking)
+class SpaceAccessTrackingAdmin(admin.ModelAdmin):
+    list_display = ("id", "user", "created", "start", "end", "spaceRentPayment")
+    list_filter = ("created", "start", "end")
 
+
+admin.site.register(models.Price)
 admin.site.register(models.Invoice)
-admin.site.register(models.SpaceAccessTracking)
 admin.site.unregister(User)
 admin.site.register(User, ProfileAdmin)

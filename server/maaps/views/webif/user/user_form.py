@@ -19,7 +19,8 @@ class UserForm(forms.Form):
     postalcode = forms.CharField(label="PLZ", required=False)
     city = forms.CharField(label="Stadt", required=False)
     allow_invoice = forms.BooleanField(label="Bezahlung auf Rechnung", required=False)
-    commercial_account = forms.BooleanField(label="Kommerzieller Account", required=False)
+    commercial_account = forms.BooleanField(label="Kommerzieller Benutzer", required=False)
+    discount_account = forms.BooleanField(label="Ermäßigter Benutzer", required=False)
     monthly_payment = forms.BooleanField(label="Monatlich zahlen", required=False)
     birthdate = forms.DateField(label="Geburtsdatum (Pflicht bei Minderjährigen!)", required=False)
     paying_user = forms.ModelChoiceField(queryset=Profile.objects.all(), required=False, label="Ein anderer Benutzer zahlt für diesen Benutzer")
@@ -28,7 +29,7 @@ class UserForm(forms.Form):
 
     class Meta:
         model = Profile
-        fields = ("email", "first_name", "last_name", "company_name", "allow_invoice", "commercial_account", "paying_user", "city")
+        fields = ("email", "first_name", "last_name", "company_name", "allow_invoice", "commercial_account", "paying_user", "city", "discount_account")
 
     def save(self, commit=True):
         is_new_user = False
@@ -52,6 +53,7 @@ class UserForm(forms.Form):
         user.profile.company_name = self.cleaned_data["company_name"]
         user.profile.paying_user = self.cleaned_data["paying_user"]
         user.profile.commercial_account = self.cleaned_data["commercial_account"]
+        user.profile.discount_account = self.cleaned_data["discount_account"]
         user.profile.monthly_payment = self.cleaned_data["monthly_payment"]
         user.profile.street = self.cleaned_data["street"]
         user.profile.postalcode = self.cleaned_data["postalcode"]

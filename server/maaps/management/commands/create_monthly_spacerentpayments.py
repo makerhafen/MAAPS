@@ -18,10 +18,21 @@ class Command(BaseCommand):
             except: # for users that have no current spacerentpayment, for example during migration
                 spaceRentPayment = maaps.models.SpaceRentPayment()
                 spaceRentPayment.type = maaps.models.SpaceRentPaymentType.monthly
-                spaceRentPayment.price = 23 # TODO
+                price = maaps.models.Price.get(identifier="spaceRentPayment.monthly")
+                paying_user_profile = profile
+                if profile.paying_user is not None:
+                    paying_user_profile = profile.paying_user.profile
+
+                if paying_user_profile.commercial_account:
+                    spaceRentPayment.price = price.commercial
+                elif paying_user_profile.discount_account:
+                    spaceRentPayment.price = price.discount
+                else:
+                    spaceRentPayment.price = price.default
                 spaceRentPayment.start = timezone.now()
                 spaceRentPayment.end = timezone.now()+timedelta(days=31)
                 spaceRentPayment.user = profile.user
+                spaceRentPayment.for_user = profile.user
                 spaceRentPayment.save()
                 continue
             print(last_spaceRentPayment.end )

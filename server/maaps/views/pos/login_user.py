@@ -8,6 +8,17 @@ import maaps.models as models
 from django.utils import timezone
 from django.db.models import Q
 
+def _get_price(profile, identifier ):
+    price = models.Price.get(identifier = identifier)
+    paying_user_profile = profile
+    if profile.paying_user is not None:
+        paying_user_profile = profile.paying_user.profile
+    if paying_user_profile.commercial_account:
+        return price.commercial
+    elif paying_user_profile.commercial_account:  # TODO
+        return price.discount
+    else:
+        return price.default
 
 def pos__login_user(request, user_token=""):
     profile, error = get_profile_from_post(request)
@@ -49,9 +60,9 @@ def pos__login_user(request, user_token=""):
                 spaceRentPayment.end = spaceAccessTracking.start + timedelta(hours=24)
                 spaceRentPayment.user = paying_user
                 spaceRentPayment.for_user = profile.user
-                spaceRentPayment.price = 23 # TODO
+                spaceRentPayment.price = _get_price(paying_user.profile, identifier="spaceRentPayment.daily")
                 spaceRentPayment.type = models.SpaceRentPaymentType.daily
-                if profile.allow_invoice is False:
+                if paying_user.profile.allow_invoice is False:
                     transaction = models.Transaction()
                     transaction.user = paying_user
                     transaction.value = spaceRentPayment.price

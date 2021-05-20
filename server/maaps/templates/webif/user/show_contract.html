@@ -1,0 +1,269 @@
+{% extends "webif/base.html" %}
+
+{% block content %}
+
+  <nav aria-label="breadcrumb" class="main-breadcrumb hidden-print">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/webif">Makerhafen</a></li>
+      <li class="breadcrumb-item"><a href="/webif/user/list">Benutzer</a></li>
+      <li class="breadcrumb-item"><a href="/webif/user/show/{{profile.id}}">{{profile}}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Nutzungsvereinbarung</li>
+    </ol>
+  </nav>
+
+  <div class="row ">
+    <div class="col-xs-8">
+       <div class="row ">
+         <div class="col-xs-3">
+           <img src="https://raw.githubusercontent.com/makerhafen/Logos/master/makerhafen%20logo%201100x1100.png" style="width: 100%; max-width: 100%" />
+         </div>
+         <div class="col-xs-8">
+           <h1 style="font-size: 4em;font-weight: bold;"> Makerhafen  </h1>
+         </div>
+       </div>
+    </div>
+    <div class="col-xs-4" style="padding-top: 1em">
+      Makerhafen gGmbH<br>
+      Stahltwiete 21<br>
+      22761 Hamburg<br>
+      office@makerhafen.de
+    </div>
+  </div>
+
+  <div class="row" style="text-align:center">
+      <div class="col-xs-12  ">
+      <h3>Nutzungsvereinbarung</h3>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-8 col-xs-offset-2">
+      <table class="table">
+        <tbody>
+        {% if profile.company_name %}
+          <tr>
+            <td>Firma</td>
+            <td>{{profile.company_name}} </td>
+          </tr>
+        {% endif %}
+        <tr>
+          <td>Name, Vorname</td>
+          <td>{{profile.user.last_name}}, {{profile.user.first_name}} </td>
+        </tr>
+        <tr>
+          <td>Strasse</td>
+          <td>{{profile.street}}</td>
+        </tr>
+        <tr>
+          <td>Plz, Stadt</td>
+          <td>{{profile.postalcode}}, {{profile.city}}  </td>
+        </tr>
+        <tr>
+          <td>Email</td>
+          <td>{{profile.user.email}}  </td>
+        </tr>
+        {% if profile.birthdate %}
+          <tr>
+            <td>Geburtsdatum</td>
+            <td>{{profile.birthdate}}  </td>
+          </tr>
+        {% endif %}
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <br>
+
+
+  {% if profile.paying_user %}
+    {{ profile.paying_user  }} übernimmt die Kosten für diesen Account<br>
+    <div class="row">
+      <div class="col-xs-12  ">
+        <i style="{% if  profile.paying_user.monthly_payment == True %}text-decoration: line-through;{% else %}font-weight:bold{% endif %}">Tagespass</i> /
+        <i style="{% if  profile.paying_user.monthly_payment == False  %}text-decoration: line-through;{% else %}font-weight:bold{% endif %}">Monatsabo</i>
+          <br>
+          {% if  profile.paying_user.monthly_payment == True %}
+        - <b>{{profile.paying_user}}</b> zahlst für immer einen Monat im vorraus.
+          {% else %}
+            Du erhälst Tagespass und {{profile.paying_user}} zahlt Werkstattbenutzung pro Tag
+          {% endif %}
+      </div>
+    </div>
+    <br>
+
+    <div class="row">
+      <div class="col-xs-12  ">
+        {% if  profile.paying_user.monthly_payment == False %}
+          Ein Tagesticket ermöglicht den zugang zum Makerhafen für einen Tags und kostet für
+          ermässigte benutzer 23 Euro ,kommerzielle benutzer 23 Euro ,23 Euro
+          pro Tag. Sollten sich dieser Preis ändern kannst den aktuellen preis der Preisliste entnehmen.
+        {% else %}
+          Ein Monatsabo für ermässigte benutzer kostet 23 Euro / Monat, kommerzielle benutzer kostet 23 Euro / Monat, kostet 23 Euro / Monat.
+          Wenn du uns eine SEPA Einzugsermächtigung gibst buchen wir diesen Betrag jeweils anfang des Monats von deinem Konto ab.
+          Alternativ kannst du ihn auf unser Konto Makerhafen gGmbH, BLZ DFG12312314, BIC 232131 überweisen.
+        {%  endif %}
+
+      </div>
+    </div>
+    <br>
+  {% else %}
+    {% if profile.commercial_account == True %}
+      <div class="row">
+        <div class="col-xs-12  ">
+          <i style="{% if profile.commercial_account == False %}text-decoration: line-through;{% else %}font-weight:bold{% endif %}">Firma</i> /
+          <i style="{% if profile.commercial_account == True  %}text-decoration: line-through;{% else %}font-weight:bold{% endif %}">Privat</i>
+            <br>
+              Du bist eine Firma, du zahlt einen erhöhten Beitrag und erhälst automatisch eine Rechnung mit ausgewiesener Mehrwertsteuer.
+        </div>
+      </div>
+      <br>
+    {% endif %}
+    {% if profile.allow_invoice == True  %}
+      <div class="row">
+        <div class="col-xs-12  ">
+        <i style="{% if profile.allow_invoice == False %}text-decoration: line-through;{% else %}font-weight:bold{% endif %}">Rechnung</i> /
+        <i style="{% if profile.allow_invoice == True  %}text-decoration: line-through;{% else %}font-weight:bold{% endif %}">Prepaid</i>
+          <br>
+          Du erhälst monatlich eine Rechung über deinen Benutze Maschinenzeit und Verbrauchsmaterial. Du benötigst kein Prepaid Guthaben.
+        </div>
+      </div>
+      <br>
+    {% endif %}
+    {% if profile.discount_account == True %}
+      <div class="row">
+        <div class="col-xs-12  ">
+          <input type="checkbox" {% if profile.discount_account == True %}checked{% endif %}>Du bist <16 Jahre und erhälst ermässigte Preise auf Mitgliedsbeitrag und Maschinenzeit.
+        </div>
+      </div>
+      <br>
+    {% endif %}
+
+    <div class="row">
+      <div class="col-xs-12  ">
+        <i style="{% if profile.monthly_payment == True %}text-decoration: line-through;{% else %}font-weight:bold{% endif %}">Tagespass</i> /
+        <i style="{% if profile.monthly_payment == False  %}text-decoration: line-through;{% else %}font-weight:bold{% endif %}">Monatsabo</i>
+          <br>
+          {% if profile.monthly_payment == True %}
+            - Du zahlst für immer einen Monat im vorraus.
+          {% else %}
+            Du erhälst Tagespass und zahlst Werkstattbenutzung pro Tag
+          {% endif %}
+      </div>
+    </div>
+    <br>
+
+    <div class="row">
+      <div class="col-xs-12  ">
+        {% if profile.monthly_payment == False %}
+          Ein Tagesticket ermöglicht den zugang zum Makerhafen für einen Tags und kostet für
+          ermässigte benutzer 23 Euro ,kommerzielle benutzer 23 Euro ,23 Euro
+          pro Tag. Sollten sich dieser Preis ändern kannst den aktuellen preis der Preisliste entnehmen.
+        {% else %}
+          Ein Monatsabo für ermässigte benutzer kostet 23 Euro / Monat, kommerzielle benutzer kostet 23 Euro / Monat, kostet 23 Euro / Monat.
+          Wenn du uns eine SEPA Einzugsermächtigung gibst buchen wir diesen Betrag jeweils anfang des Monats von deinem Konto ab.
+          Alternativ kannst du ihn auf unser Konto Makerhafen gGmbH, BLZ DFG12312314, BIC 232131 überweisen.
+        {%  endif %}
+
+      </div>
+    </div>
+    <br>
+  {% endif %}
+
+
+  <div class="row">
+    <div class="col-xs-12  ">
+      <input type="checkbox" >Ich habe die allgemeinen Geschäftsbedingungen ausgehändigt bekommen und zur Kenntniss genommen.
+    </div>
+  </div>
+  <br>
+
+  {% if profile.is_underage == False %}
+    <div class="row">
+      <div class="col-xs-12">
+        <h3>Unterschrift<br><br></h3>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-5" style="text-align: right;color:gray !important;">
+        Hamburg, 23.05.2023
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-5" style="border-top: 1px solid gray">
+        Unterschrift
+      </div>
+    </div>
+    <br><br><br>
+  {% else %}
+    <div class="row">
+      <div class="col-xs-12">
+        <h3>
+          Unterschrift Erziehungsberechtigte
+        </h3>
+        <br>
+      </div>
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-xs-6">
+        <div class="row">
+          <div class="col-xs-10" style="border-top: 1px solid gray">
+            Vorname, Nachname
+            <br>
+            <br>
+            <br>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-10" style="border-top: 1px solid gray">
+            Datum, Unterschrift
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-6">
+        <div class="row">
+          <div class="col-xs-10" style="border-top: 1px solid gray">
+            Vorname, Nachname
+            <br>
+            <br>
+            <br>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-10" style="border-top: 1px solid gray">
+            Datum, Unterschrift
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  {% if profile.paying_user %}
+    <div class="row">
+      <div class="col-xs-12">
+        <h3>Unterschrift Kostenübernahme</h3>
+        Hiermit bestätige ich, <b>{{profile.paying_user}}</b> das ich die Kosten für <b>{{profile}}</b> übernehme.
+        <br><br><br>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-5" style="text-align: right;color:gray !important;">
+        Hamburg, 23.05.2023
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-5" style="border-top: 1px solid gray">
+        Unterschrift
+      </div>
+    </div>
+    <br><br><br>
+  {% endif %}
+
+  <br>
+  <br>
+  <br>
+
+
+{% endblock %}

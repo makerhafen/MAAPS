@@ -10,7 +10,19 @@ from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from django.utils.timezone import now
 from django_resized import ResizedImageField
+from django.utils import timezone
 
+
+class Price (models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    identifier = models.CharField(max_length=100, blank=True)
+    discount = models.FloatField(default=0)
+    default = models.FloatField(default=0)
+    commercial = models.FloatField(default=0)
+
+    def __str__(self):
+        return "%s: %s, %s, %s" % (self.identifier, self.discount, self.default, self.commercial)
 
 class Token(models.Model):
     created = models.DateTimeField(auto_now_add=True)
@@ -42,6 +54,7 @@ class Profile(models.Model):
     paying_user = models.ForeignKey("Profile", on_delete=models.CASCADE, blank=True, null=True)
     allow_invoice = models.BooleanField(default=False)
     commercial_account = models.BooleanField(default=False)  # == mit mwst
+    discount_account = models.BooleanField(default=False)  # z.b. < 16 Jahre
     monthly_payment = models.BooleanField(default=False)  # monatlich oder tagesaccount
     prepaid_deposit = models.FloatField(default=0)
 
@@ -61,6 +74,10 @@ class Profile(models.Model):
             return None
         return tokens[0]
 
+    def is_underage(self):
+        if self.birthdate is None:
+            return False
+        return timezone.now().date() - self.birthdate < timedelta(days=365*18)
 
 class Machine(models.Model):
     created = models.DateTimeField(auto_now_add=True)
@@ -70,8 +87,8 @@ class Machine(models.Model):
     ask_clean = models.BooleanField(default=False)
     ask_pay_material = models.BooleanField(default=False)
     show_autologout = models.BooleanField(default=False)
-    price_per_hour = models.FloatField(default=0)  # in Euro
-    price_per_usage = models.FloatField(default=0)  # in Euro
+    price_per_hour = models.OneToOneField(Price, on_delete=models.SET_NULL, related_name="machinePerHour", blank=True, null=True)  # in Euro
+    price_per_usage = models.OneToOneField(Price, on_delete=models.SET_NULL, related_name="machinePerUsage", blank=True, null=True)  # in Euro
     tutor_required_count = models.IntegerField(default=0)  # wir oft
     tutor_required_once_after_month = models.IntegerField(default=24)  # all
     current_session = models.OneToOneField("MachineSession", on_delete=models.SET_NULL, related_name="current_session", blank=True, null=True)
@@ -103,6 +120,23 @@ class Machine(models.Model):
         return MachineSession.objects.filter(~Q(start=None), ~Q(end=None), machine=self, user=user).count()
 
 
+    def get_price(self, paying_user_profile):
+        price_per_usage, price_per_hour = 0, 0
+        if paying_user_profile.commercial_account:
+            if self.price_per_hour  is not None : price_per_hour = self.price_per_hour.commercial
+            if self.price_per_usage is not None : price_per_usage = self.price_per_usage.commercial
+        elif paying_user_profile.commercial_account:  # discount account
+            if self.price_per_hour  is not None: price_per_hour = self.price_per_hour.discount
+            if self.price_per_usage is not None: price_per_usage = self.price_per_usage.discount
+        else:
+            if self.price_per_hour  is not None: price_per_hour = self.price_per_hour.default
+            if self.price_per_usage is not None: price_per_usage = self.price_per_usage.default
+        return price_per_usage, price_per_hour
+
+    def requires_payment(self, paying_user_profile):
+        price_per_usage, price_per_hour = self.get_price(paying_user_profile)
+        return price_per_usage > 0 or price_per_hour > 0
+
 class MachineSession(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -130,7 +164,7 @@ class MachineSessionPayment(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    machinesession = models.OneToOneField(MachineSession, on_delete=models.CASCADE, related_name="machineSessionPayments", blank=True, null=True)
+    machinesession = models.OneToOneField(MachineSession, on_delete=models.CASCADE, related_name="machineSessionPayment", blank=True, null=True)
     price_per_hour = models.FloatField(default=0)  # in euro
     price_per_usage = models.FloatField(default=0)  # in euro
     start = models.DateTimeField(blank=True, null=True, default=None)
@@ -166,6 +200,13 @@ class SpaceRentPayment(models.Model):
     type = models.CharField(max_length=100, default=SpaceRentPaymentType.monthly, blank=True, null=True)
     transaction = models.ForeignKey("Transaction", on_delete=models.CASCADE, blank=True, null=True, related_name="spaceRentPayments")
     invoice = models.ForeignKey("Invoice", on_delete=models.SET_NULL, blank=True, null=True, related_name="spaceRentPayments")
+
+    def __str__(self):
+        if self.type == SpaceRentPaymentType.monthly:
+            s = "Monatsmiete"
+        else:
+            s = "Tagesmiete"
+        return "%s für %s" % (s, self.for_user)
 
 
 class SpaceAccessTracking(models.Model):

@@ -14,13 +14,14 @@ def create_payment_session(machine, paying_user_profile):
     if r is False:
         return error
     paymentsession = models.MachineSessionPayment()
-    paymentsession.price_per_usage = machine.price_per_usage
-    paymentsession.price_per_hour = machine.price_per_hour
+    price_per_usage, price_per_hour = machine.get_price(paying_user_profile)
+    paymentsession.price_per_usage = price_per_usage
+    paymentsession.price_per_hour = price_per_hour
     paymentsession.user = paying_user_profile.user
     paymentsession.start = timezone.now()
     paymentsession.machinesession = machine.current_session
     paymentsession.save()
-    machine.current_session.paymentsession = paymentsession
+    machine.current_session.machineSessionPayment = paymentsession
     machine.current_session.save()
     return None
 

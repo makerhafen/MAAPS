@@ -42,6 +42,8 @@ urlpatterns = [
     # Webinterface
     path('webif/'                               , views.webif__dashboard   , name='webif__dashboard'),
     path('webif/info'                           , views.webif__info        , name='webif__info'),
+    path('webif/prices'                         , views.webif__prices        , name='webif__prices'),
+    path('webif/agb'                         , views.webif__agb        , name='webif__agb'),
     path('webif/session/end/<int:session_id>'   , views.webif__session_end , name='webif__session_end'),
     path('webif/spaceaccesstracking/end/<int:spaceaccesstracking_id>'   , views.webif__spaceaccesstracking_end , name='webif__spaceaccesstracking_end'),
     path('webif/user/list'                      , views.webif__user__list  , name='webif__user__list'),
@@ -49,12 +51,12 @@ urlpatterns = [
     path('webif/user/show/<int:user_id>'        , views.webif__user__show  , name='webif__user__show'),
     path('webif/user/update/<int:user_id>'      , views.webif__user__update, name='webif__user__update'),
     path('webif/user/delete/<int:user_id>'      , views.webif__user__delete, name='webif__user__delete'),
-    path('webif/user/haft/<int:user_id>'        , views.webif__user__haftung, name='webif__user__haftung'),
+    path('webif/user/contract/<int:user_id>'        , views.webif__user__contract, name='webif__user__contract'),
     path('webif/user/create_new_card/<int:user_id>'  , views.webif__user__create_new_card, name='webif__user__create_new_card'),
 
     path('webif/invoice/list'                 , views.webif__invoice__list, name='webif__invoice__list'),
     path('webif/invoice/show/<int:invoice_id>', views.webif__invoice__show, name='webif__invoice__show'),
-    path('webif/invoice/list_createable'              , views.webif__invoice__list_createable, name='webif__invoice__list_createable'),
+    path('webif/invoice/list_createable'      , views.webif__invoice__list_createable, name='webif__invoice__list_createable'),
     path('webif/invoice/create/<int:user_id>' , views.webif__invoice__create, name='webif__invoice__create'),
 
       ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,0 +1,78 @@
+{% extends "webif/base.html" %}
+
+{% block content %}
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="main-breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/webif">Makerhafen</a></li>
+            <li class="breadcrumb-item"><a href="/webif/prices">Preise</a></li>
+        </ol>
+    </nav>
+    <!-- /Breadcrumb -->
+
+   <div class="row">
+       <h3> Werkstattnutzung</h3>
+        <div class="col-md-8">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Zahlungsweise</th>
+                        <th scope="col">Ermäßigt</th>
+                        <th scope="col">Standard</th>
+                        <th scope="col">Kommerziel</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Monatsabo</td>
+                        <td>{{spaceRentPayment_monthly.discount}} €/Monat</td>
+                        <td>{{spaceRentPayment_monthly.default}} €/Monat</td>
+                        <td>{{spaceRentPayment_monthly.commercial}} €/Monat</td>
+                    </tr>
+                    <tr>
+                        <td>Tagespass</td>
+                        <td>{{spaceRentPayment_daily.discount}} €/Tag</td>
+                        <td>{{spaceRentPayment_daily.default}} €/Tag</td>
+                        <td>{{spaceRentPayment_daily.commercial}} €/Tag</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+   <div class="row">
+        <h3> Maschinen</h3>
+        <div class="col-md-8">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Maschine</th>
+                        <th scope="col">Rabat</th>
+                        <th scope="col">Standard</th>
+                        <th scope="col">Kommerziel</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for machine in machines %}
+                    <tr>
+                        <td>{{ machine }}</td>
+                        <td>
+                            {{ machine.price_per_hour.discount }} €/Stunde<br>
+                            {% if machine.price_per_usage %}{{ machine.price_per_usage.discount }} €/Benutzung{% endif %}
+                        </td>
+                        <td>
+                            {{ machine.price_per_hour.default }} €/Stunde<br>
+                            {% if machine.price_per_usage %}{{ machine.price_per_usage.default }} €/Benutzung{% endif %}
+                        </td>
+                        <td>
+                            {{ machine.price_per_hour.commercial }} €/Stunde<br>
+                            {% if machine.price_per_usage %}{{ machine.price_per_usage.commercial }} €/Benutzung{% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+{% endblock %}
