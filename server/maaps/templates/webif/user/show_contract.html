@@ -90,12 +90,18 @@
     <div class="row">
         <div class="col-xs-12  ">
             <i style="{% if profile.get_paying_user.allow_invoice == False %}text-decoration: line-through;{% else %}font-weight:bold{% endif %}">Rechnung</i> /
-            <i style="{% if profile.get_paying_user.allow_invoice == True  %}text-decoration: line-through;{% else %}font-weight:bold{% endif %}">Prepaid</i>
+            <i style="{% if profile.get_paying_user.allow_invoice == True  %}text-decoration: line-through;{% else %}font-weight:bold{% endif %}">Direkt</i>
             <br>
             {% if profile.get_paying_user.allow_invoice == True  %}
-                Du erhälst monatlich eine Rechung über deinen Benutze Maschinenzeit und Verbrauchsmaterial. Du benötigst kein Prepaid Guthaben.
+                {% if profile.get_paying_user  ==  profile %}
+                    Du erhälst
+                {% else %}
+                    <b>{{ profile.get_paying_user }}</b> erhält
+                {% endif %}
+                monatlich eine Rechung über deinen Benutze Maschinenzeit und Verbrauchsmaterial. Du benötigst kein Prepaid Guthaben.
             {% else %}
-                Du kannst deine Mitgliedskarte mit Guthaben aufladen das du für Verbrauchsmaterial und Maschinenzeit verwenden kannst.
+                Du kannst deine Mitgliedskarte verwenden um Verbrauchsmaterial und Maschinenzeit zu bezahlen. <br>
+                Ausstehende Beträge kannst du vor verlassen des Makerhafen an der Theke zahlen.
             {% endif %}
         </div>
     </div>
@@ -121,13 +127,12 @@
     </div>
     <div class="row">
         <div class="col-xs-12  ">
-
             {% if profile.get_paying_user.monthly_payment == False %}
-                Ein Tagespass ermöglicht den tageweise Zugang zum Makerhafen kostet für
+                Ein Tagespass ermöglicht den tageweise Zugang zum Makerhafen und kostet
                 {% if profile.get_paying_user.commercial_account %}
-                    <i> kommerzielle Benutzer </i> <b> {{ price_daily.commercial }}€ </b>
+                    für <i> kommerzielle Benutzer </i> <b> {{ price_daily.commercial }}€ </b>
                 {% elif profile.get_paying_user.discount_account %}
-                    <i> ermässigte benutzer </i> <b> {{ price_daily.discount }}€ </b>
+                    für <i> ermässigte benutzer </i> <b> {{ price_daily.discount }}€ </b>
                 {% else %}
                     <b> {{ price_daily.default }}€ </b>
                 {% endif %}
@@ -142,8 +147,13 @@
                     kostet <b> {{ price_monthly.default }}€ </b>
                 {% endif %}
                 pro Monat.<br>
-                Wenn du uns eine SEPA Einzugsermächtigung gibst buchen wir diesen Betrag jeweils anfang des Monats von deinem Konto ab.
-                Alternativ kannst du ihn auf unser Konto Makerhafen gGmbH, BLZ DFG12312314, BIC 232131 überweisen.
+                {% if profile.get_paying_user  ==  profile %}
+                    Wenn du uns eine Einzugsermächtigung gibst buchen wir diesen Betrag jeweils anfang des Monats von deinem Konto ab.
+                    Alternativ kannst du ihn auf unser Konto Makerhafen gGmbH, BLZ DFG12312314, BIC 232131 überweisen.
+                {% else %}
+                    <b>{{ profile.get_paying_user }}</b> übernimmt diesen Betrag für dich.
+                {% endif %}
+
             {%  endif %}
         </div>
     </div>
