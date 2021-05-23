@@ -79,6 +79,11 @@ class Profile(models.Model):
             return False
         return timezone.now().date() - self.birthdate < timedelta(days=365*18)
 
+    def get_paying_user(self):
+        if self.paying_user is None:
+            return self
+        return self.paying_user
+
 class Machine(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

@@ -28,6 +28,7 @@
                     <th scope="col">Guthaben (Euro)</th>
                     <th scope="col">Auf Rechnung</th>
                     <th scope="col">Kommerziell</th>
+                    <th scope="col">Ermäßigt</th>
                     <th scope="col">Jemand anderes zahlt</th>
                     <th scope="col">Tages/Monats Benutzer</th>
                     <th scope="col">Bild</th>
@@ -58,6 +59,13 @@
                                 {% if profile.commercial_account %}{{ profile.paying_user }}, Ja{% else %}{% endif %}
                             {% else %}
                                 {% if profile.commercial_account %}Ja{% else %}{% endif %}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if profile.paying_user %}
+                                {% if profile.discount_account %}{{ profile.discount_account }}, Ja{% else %}{% endif %}
+                            {% else %}
+                                {% if profile.discount_account %}Ja{% else %}{% endif %}
                             {% endif %}
                         </td>
                         <td>{% if profile.paying_user %}{{profile.paying_user }}{% else %}{% endif %}</td>
