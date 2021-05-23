@@ -92,8 +92,8 @@ class Machine(models.Model):
     ask_clean = models.BooleanField(default=False)
     ask_pay_material = models.BooleanField(default=False)
     show_autologout = models.BooleanField(default=False)
-    price_per_hour = models.OneToOneField(Price, on_delete=models.SET_NULL, related_name="machinePerHour", blank=True, null=True)  # in Euro
-    price_per_usage = models.OneToOneField(Price, on_delete=models.SET_NULL, related_name="machinePerUsage", blank=True, null=True)  # in Euro
+    price_per_hour = models.ForeignKey(Price, on_delete=models.SET_NULL, related_name="machinePerHour", blank=True, null=True)  # in Euro
+    price_per_usage = models.ForeignKey(Price, on_delete=models.SET_NULL, related_name="machinePerUsage", blank=True, null=True)  # in Euro
     tutor_required_count = models.IntegerField(default=0)  # wir oft
     tutor_required_once_after_month = models.IntegerField(default=24)  # all
     current_session = models.OneToOneField("MachineSession", on_delete=models.SET_NULL, related_name="current_session", blank=True, null=True)
