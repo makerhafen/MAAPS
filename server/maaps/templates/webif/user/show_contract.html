@@ -98,9 +98,13 @@
                 {% else %}
                     <b>{{ profile.get_paying_user }}</b> erhält
                 {% endif %}
-                monatlich eine Rechung über deinen benutzte Maschinenzeit und Verbrauchsmaterial. Du benötigst kein Prepaid Guthaben.
+                eine Rechung über deinen benutzte Maschinenzeit und Verbrauchsmaterial. Du benötigst kein Prepaid Guthaben.
             {% else %}
-                Du kannst deine Mitgliedskarte verwenden um Verbrauchsmaterial und Maschinenzeit zu bezahlen. <br>
+                Du kannst deine Mitgliedskarte verwenden um
+                {% if profile.get_paying_user.monthly_payment == False  %}
+                    für deinen Tagespass,
+                {% endif %}
+                Verbrauchsmaterial und Maschinenzeit zu bezahlen. <br>
                 Ausstehende Beträge kannst du vor verlassen des Makerhafen an der Theke zahlen.
             {% endif %}
         </div>
