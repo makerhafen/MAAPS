@@ -9,13 +9,10 @@ from django.utils import timezone
 from django.db.models import Q
 
 def _get_price(profile, identifier ):
-    price = models.Price.get(identifier = identifier)
-    paying_user_profile = profile
-    if profile.paying_user is not None:
-        paying_user_profile = profile.paying_user.profile
-    if paying_user_profile.commercial_account:
+    price = models.Price.objects.get(identifier = identifier)
+    if profile.get_paying_user().commercial_account:
         return price.commercial
-    elif paying_user_profile.commercial_account:  # TODO
+    elif profile.get_paying_user().discount_account:  # TODO
         return price.discount
     else:
         return price.default
@@ -42,8 +39,6 @@ def pos__login_user(request, user_token=""):
         if paying_user.profile.monthly_payment is True:
             # get current SpaceRentPayment
             current_spaceRentPayment = models.SpaceRentPayment.objects.filter(for_user=profile.user, user=paying_user, start__lt = timezone.now(), end__gt = timezone.now())[0]
-            print("FOOBAR")
-            print(current_spaceRentPayment)
             spaceAccessTracking.spaceRentPayment = current_spaceRentPayment
             spaceAccessTracking.save()
         else:
