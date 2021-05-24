@@ -98,7 +98,7 @@
                 {% else %}
                     <b>{{ profile.get_paying_user }}</b> erhält
                 {% endif %}
-                monatlich eine Rechung über deinen Benutze Maschinenzeit und Verbrauchsmaterial. Du benötigst kein Prepaid Guthaben.
+                monatlich eine Rechung über deinen benutzte Maschinenzeit und Verbrauchsmaterial. Du benötigst kein Prepaid Guthaben.
             {% else %}
                 Du kannst deine Mitgliedskarte verwenden um Verbrauchsmaterial und Maschinenzeit zu bezahlen. <br>
                 Ausstehende Beträge kannst du vor verlassen des Makerhafen an der Theke zahlen.
@@ -148,8 +148,12 @@
                 {% endif %}
                 pro Monat.<br>
                 {% if profile.get_paying_user  ==  profile %}
-                    Wenn du uns eine Einzugsermächtigung gibst buchen wir diesen Betrag jeweils anfang des Monats von deinem Konto ab.
-                    Alternativ kannst du ihn auf unser Konto Makerhafen gGmbH, BLZ DFG12312314, BIC 232131 überweisen.
+                    {% if profile.commercial_account %}
+                        Als Kommerzieller Benutzer bekommst du Regelmässig eine Rechnung über diesen Betrag.
+                    {% else %}
+                        Wenn du uns eine Einzugsermächtigung gibst buchen wir diesen Betrag jeweils anfang des Monats von deinem Konto ab.
+                        Alternativ kannst du ihn regelmässig auf unser Konto Makerhafen gGmbH, BLZ DFG12312314, BIC 232131 überweisen.
+                    {% endif %}
                 {% else %}
                     <b>{{ profile.get_paying_user }}</b> übernimmt diesen Betrag für dich.
                 {% endif %}
