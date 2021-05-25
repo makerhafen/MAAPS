@@ -37,11 +37,14 @@
             },
             function(error_msg) {
                 error_txt = error_msg;
-                //if(error_msg == "no_token_read")            { error_txt = "No rfid token read";}
-                if(error_msg == "hardware_response_unknown"){ error_txt = "Unknown hardware response";}
-                if(error_msg == "hardware_response_failed") { error_txt = "Failed to reach hardware";}
-                document.getElementById("last_error").innerHTML = error_txt;
-                document.getElementById("last_error").style.display = "block";
+                if(error_msg == "no_token_read"){
+                    //error_txt = "No rfid token read";
+                }else{
+                    if(error_msg == "hardware_response_unknown"){ error_txt = "Unknown hardware response";}
+                    if(error_msg == "hardware_response_failed") { error_txt = "Failed to reach hardware";}
+                    document.getElementById("last_error").innerHTML = error_txt;
+                    document.getElementById("last_error").style.display = "block";
+                }
             }
         );
     }
