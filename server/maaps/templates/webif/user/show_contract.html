@@ -74,7 +74,6 @@
     </div>
     <br>
 
-
     {% if profile.get_paying_user.commercial_account == True %}
         <div class="row">
             <div class="col-xs-12  ">
@@ -129,6 +128,7 @@
             <i style="{% if  profile.get_paying_user.monthly_payment == False  %}text-decoration: line-through;{% else %}font-weight:bold{% endif %}">Monatsabo</i>
         </div>
     </div>
+
     <div class="row">
         <div class="col-xs-12  ">
             {% if profile.get_paying_user.monthly_payment == False %}
@@ -174,7 +174,6 @@
         </div>
     </div>
     <br>
-
 
     <div class="row">
         <div class="col-xs-12">
@@ -247,6 +246,5 @@
     <br>
     <br>
     <br>
-
 
 {% endblock %}

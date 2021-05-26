@@ -112,22 +112,22 @@ class RFID:
 
     def read(self):
         token_id, text = None, None
-        for i in range(5):
+        for i in range(3):
             token_id, text = self.rfid_reader.read_no_block()
             if token_id is not None:
                 text = text.strip()
                 print("successful read", text)
                 break
-            time.sleep(0.1)
+            time.sleep(0.075)
         return token_id, text
 
     def write(self, text):
         token_id, output = None, None
-        for i in range(5):
+        for i in range(3):
             token_id, output = self.rfid_reader.write_no_block(text)
             if token_id is not None:
                 break
-            time.sleep(0.1)
+            time.sleep(0.075)
         return token_id, output
 
 
