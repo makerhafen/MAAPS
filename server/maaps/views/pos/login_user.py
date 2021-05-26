@@ -57,6 +57,7 @@ def pos__login_user(request, user_token=""):
                 spaceRentPayment.for_user = profile.user
                 spaceRentPayment.price = _get_price(paying_user.profile, identifier="spaceRentPayment.daily")
                 spaceRentPayment.type = models.SpaceRentPaymentType.daily
+                spaceRentPayment.save()
                 if paying_user.profile.allow_invoice is False:
                     transaction = models.Transaction()
                     transaction.user = paying_user

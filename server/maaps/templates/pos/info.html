@@ -16,6 +16,7 @@
         <div class="col-xs-12" style="text-align:center">
             <h3>Karte einlesen</h3>
         </div>
+        {% include "rfid/rfid_full.html" %}
     {% else %}
         <div class="row">
             <div class="col-xs-9">
@@ -41,6 +42,5 @@
         </div>
     {% endif %}
 
-    {% include "rfid/rfid_full.html" %}
 
 {% endblock %}
