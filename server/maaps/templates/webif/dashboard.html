@@ -9,6 +9,7 @@
         </ol>
     </nav>
     <!-- /Breadcrumb -->
+
     <div class="row">
         <div class="col-md-12">
             <h3>Anwesende Benutzer</h3>
@@ -17,27 +18,25 @@
             <thead>
                 <tr>
                     <th scope="col">Benutzer</th>
-                    <th scope="col">Startzeit</th>
-                    <th scope="col">Endzeit</th>
+                    <th scope="col">Ankunft</th>
                     <th scope="col">Guthaben</th>
                     <th scope="col">Bild</th>
                     <th scope="col">Aktion</th>
                 </tr>
             </thead>
             <tbody>
-                {% for spaceAccessTracking_latest in spaceAccessTrackings_latest %}
+                {% for spaceAccessTracking_active in spaceAccessTrackings_active %}
                 <tr>
-                    <td><a href="/webif/user/show/{{spaceAccessTracking_latest.user.profile.id}}"> {{ spaceAccessTracking_latest.user }}</a></td>
-                    <td>{{ spaceAccessTracking_latest.start }}</td>
-                    <td>{{ spaceAccessTracking_latest.end }}</td>
-                    <td>{{ spaceAccessTracking_latest.user.profile.prepaid_deposit }}</td>
+                    <td><a href="/webif/user/show/{{spaceAccessTracking_active.user.profile.id}}"> {{ spaceAccessTracking_active.user }}</a></td>
+                    <td>{{ spaceAccessTracking_active.start }}</td>
+                    <td>{{ spaceAccessTracking_active.user.profile.prepaid_deposit }}</td>
                     <td>
                         {{ machineSession.user.profile }}
                         {% if machineSession.user.profile.profile_picture %}<img style="width:50px" src = "{{ machineSession.user.profile.profile_picture.url }}"/>{% endif %}
                     </td>
                     <td>
-                        {% if spaceAccessTracking_latest.end == None%}
-                             <a href="/webif/spaceaccesstracking/end/{{spaceAccessTracking_latest.id}}">
+                        {% if spaceAccessTracking_active.end == None%}
+                             <a href="/webif/spaceaccesstracking/end/{{spaceAccessTracking_active.id}}">
                                 Abmelden
                             </a>
                         {% endif %}
@@ -46,14 +45,44 @@
                 {% endfor %}
             </tbody>
         </table>
+    </div>
 
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Kürzlich abgemeldete Benutzer</h3>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Benutzer</th>
+                    <th scope="col">Ankunft</th>
+                    <th scope="col">Abgemeldet</th>
+                    <th scope="col">Guthaben</th>
+                    <th scope="col">Bild</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for spaceAccessTracking_ended in spaceAccessTrackings_ended %}
+                <tr>
+                    <td><a href="/webif/user/show/{{spaceAccessTracking_ended.user.profile.id}}"> {{ spaceAccessTracking_ended.user }}</a></td>
+                    <td>{{ spaceAccessTracking_ended.start }}</td>
+                    <td>{{ spaceAccessTracking_ended.end }}</td>
+                    <td>{{ spaceAccessTracking_ended.user.profile.prepaid_deposit }}</td>
+                    <td>
+                        {{ machineSession.user.profile }}
+                        {% if machineSession.user.profile.profile_picture %}<img style="width:50px" src = "{{ machineSession.user.profile.profile_picture.url }}"/>{% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 
 
 
     <div class="row">
         <div class="col-md-12">
-            <h3>Aktive sitzungen</h3>
+            <h3>Aktive Maschinensitzungen</h3>
         </div>
             <table class="table">
                 <thead>
@@ -107,7 +136,7 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <h3>Kürzliche beendet Sitzungen</h3>
+            <h3>Kürzliche beendet Maschinensitzungen</h3>
         </div>
         <table class="table">
             <thead>

@@ -10,11 +10,13 @@ from django.db.models import Q
 def webif__dashboard(request):
     machinesessions_active = models.MachineSession.objects.filter(end=None)
     machinesessions_ended = models.MachineSession.objects.filter(end__gt=timezone.now() - timedelta(hours=1))
-    spaceAccessTrackings_latest = models.SpaceAccessTracking.objects.filter(Q(end=None) | Q(end__gt=timezone.now() - timedelta(hours=1)))
+    spaceAccessTrackings_active = models.SpaceAccessTracking.objects.filter(end=None)
+    spaceAccessTrackings_ended = models.SpaceAccessTracking.objects.filter( Q(end__gt=timezone.now() - timedelta(hours=1)))
     template = loader.get_template('webif/dashboard.html')
     return HttpResponse(template.render({
         "machineSessions_active": machinesessions_active,
         "machineSessions_ended": machinesessions_ended,
-        "spaceAccessTrackings_latest": spaceAccessTrackings_latest,
+        "spaceAccessTrackings_active": spaceAccessTrackings_active,
+        "spaceAccessTrackings_ended": spaceAccessTrackings_ended,
     }, request))
 

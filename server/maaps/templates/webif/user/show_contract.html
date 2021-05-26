@@ -155,8 +155,9 @@
                     {% if profile.commercial_account %}
                         Als Kommerzieller Benutzer bekommst du Regelmässig eine Rechnung über diesen Betrag.
                     {% else %}
-                        Wenn du uns eine Einzugsermächtigung gibst buchen wir diesen Betrag jeweils anfang des Monats von deinem Konto ab.
-                        Alternativ kannst du ihn regelmässig auf unser Konto Makerhafen gGmbH, BLZ DFG12312314, BIC 232131 überweisen.
+                        <p style="display:none">Wenn du uns eine Einzugsermächtigung gibst buchen wir diesen Betrag jeweils anfang des Monats von deinem Konto ab.
+                        </p>
+                        Bitte überweise diesen Betrag regelmässig auf unser Konto Makerhafen gGmbH, BIC/SWIFT: DEUTDEDBHAM, IBAN: DE06200700240914441100.
                     {% endif %}
                 {% else %}
                     <b>{{ profile.get_paying_user }}</b> übernimmt diesen Betrag für dich.
