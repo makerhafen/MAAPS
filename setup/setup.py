@@ -4,6 +4,9 @@ import pexpect
 import time
 import sys
 from datetime import datetime
+from multiprocessing import Pool
+import logging
+logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 
 SSH_OPTIONS = '-q -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -oPubkeyAuthentication=no'
 
@@ -93,8 +96,8 @@ class Raspberry(System):
     def _install_autostart_chromium(self, server):
         self._ssh('''
             cat /etc/xdg/lxsession/LXDE-pi/autostart | grep -v chromium-browser > 1 ; sudo mv 1 /etc/xdg/lxsession/LXDE-pi/autostart ;
-            echo "chromium-browser --disable-restore-session-state --kiosk '%s:8001/%s/%s'" | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart ;
-        ''' % (server.ip, self.system_type, self.token.replace(";", "\;")))
+            echo 'chromium-browser --disable-restore-session-state --kiosk %s:8001/%s/%s' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart ;
+        ''' % (server.ip, self.system_type, self.token.replace(" ", "%20")))
 
 
 class Server(System):
@@ -183,23 +186,44 @@ class SiteSetup:
         self._read_data()
 
     def scan_network(self, network):
-        import scapy.all as scapy
+        def chunks(lst, n):
+            for i in range(0, len(lst), n):
+                yield lst[i:i + n]
         partialip = ".".join(network.split(".")[0:-1])
-        for i in range(0, 256):
-            curr_ip = partialip + "." + str(i)
-            arp_request = scapy.ARP(pdst=curr_ip)
+        ips_chunks = [c for c in chunks([partialip + "." + str(i) for i in range(0, 256)], 16)]
+        with Pool(16) as p:
+            p.map(self._scan_network, ips_chunks)
+
+    def _scan_network(self, ips):
+        import scapy.all as scapy
+        for ip in ips:
+            arp_request = scapy.ARP(pdst=ip)
             broadcast = scapy.Ether(dst="ff:ff:ff:ff:ff:ff")
             arp_request_broadcast = broadcast / arp_request
             answered_list = scapy.srp(arp_request_broadcast, timeout=0.3, verbose=False)[0]
             for element in answered_list:
-                ip = element[1].psrc
-                mac = element[1].hwsrc
+                ip = element[1].psrc.strip()
+                mac = element[1].hwsrc.strip()
                 status = ""
                 for PI_MAC in PI_MACS:
                     if mac.startswith(PI_MAC):
-                        status = "THIS IS A PI"
+                        status = "THIS IS AN UNKNOWN PI"
+                        m = self._get_known_by_mac(mac)
+                        if m is not None:
+                            status = "THIS IS A %s , Token: %s" % (m.system_type, m.token)
                 print(ip + "\t\t" + mac + "\t" + status)
                 break
+
+    def _get_known_by_mac(self, mac):
+        if self.server.mac_address == mac:
+            return self.server
+        m = [m for m in self.machines if m.mac_address == mac]
+        if len(m) > 0:
+            return m[0]
+        p = [p for p in self.poss if p.mac_address == mac]
+        if len(p) > 0:
+            return p[0]
+        return None
 
     def _read_data(self):
         for l in open("devices.csv", "r").read().split("\n")[1:]:
@@ -218,7 +242,7 @@ class SiteSetup:
 helptxt = '''
     setup.py
     setup.py configcard <dir> # enable ssh and wlan on SD card mounted to <dir>
-    setup.py search <network>  # search /24 (256 ips) in <network> for raspberry PIs
+    setup.py scan <network>  # search /24 (256 ips) in <network> for raspberry PIs
     setup.py serversetup  # install/upgrade server
     setup.py backup  # backup server
     setup.py restore <source>  # restore server from source folder backup

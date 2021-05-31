@@ -1,4 +1,8 @@
 type   , ip            , mac_address       , username , password  , lcd_rotation , token
-server , 192.168.43.105, dc:a6:32:0b:d9:9b , pi       , raspberry , 0            ,
-pos    , 192.168.43.105, dc:a6:32:0b:d9:9b , pi       , raspberry , 180          ,
+server , 192.168.43.105, dc:a6:32:0b:d9:9d , pi       , raspberry , 0            ,
+pos    , 192.168.43.105, dc:a6:32:0b:d9:9d , pi       , raspberry , 180          ,
 machine, 192.168.43.115, dc:a6:32:0b:da:2e , pi       , raspberry , 180          , M:Lasercutter;4ca09c53a3ac422d5a23
+machine, 192.168.43.49 , dc:a6:32:17:dc:b7 , pi       , raspberry , 180          , M:Prusa Mini 1;49059a8f8d5cc5cf1e9f
+machine, 192.168.43.124, dc:a6:32:0b:de:25 , pi       , raspberry , 180          , M:Prusa Mini 2;4dff8d93a5bf4b37ef77
+machine, 192.168.43.125, dc:a6:32:0b:d0:91 , pi       , raspberry , 180          , M:Prusa Mini 3;4bb5b566e2fd1357d941
+machine, 192.168.43.126, dc:a6:32:0b:de:7c , pi       , raspberry , 180          , M:Prusa Mini 4;4004a971a0f2e60ce59f

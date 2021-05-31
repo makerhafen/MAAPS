@@ -1,26 +1,57 @@
 {% extends "webif/base.html" %}
 
 {% block content %}
-<style>
-    @media print {
-  ah2 {
-    page-break-before: always;
-  }
-  ah3, ah4 {
-    page-break-after: avoid;
-  }
-  apre, ablockquote {
-    page-break-inside: avoid;
-  }
-  .column {
-     page-break-inside: avoid;
-  }
-  p {
-    page-break-inside: avoid;
-  }
-}
 
-</style>
+    <style>
+        @media screen {
+            div.footer {
+                display: none;
+            }
+        }
+        @media print {
+            html, body {
+                width: 210mm;
+                height: 297mm;
+            }
+            .column {
+                page-break-inside: avoid;
+            }
+            p {
+                page-break-inside: avoid;
+            }
+            div.footer {
+                position: fixed;
+                bottom: 0;
+            }
+        }
+    </style>
+
+<div class="footer" style="text-align:center;width:100%;color:red;border-top:1px solid gray;">
+    <div style="width:23%;float:left">
+        Makerhafen gGmbH <br>
+        Stahltwiete 21   <br>
+        22761 Hamburg
+    </div>
+    <div style="width:23%;float:left">
+        +49 40 53050911         <br>
+        office@makerhafen.de    <br>
+        https://makerhafen.de
+    </div>
+    <div style="width:30%;float:left">
+        BIC:   DEUTDEDBHAM  <br>
+        IBAN:  DE06200700240914441100   <br>
+        UstID: DE337879639 <br>
+        SteuerNr: 17/451/10661
+    </div>
+    <div style="width:23%;float:left" >
+        Sitz: Hamburg       <br>
+        Gf: Susanne Theelen <br>
+        Amtsgericht Hamburg <br>
+        HRB 164690
+    </div>
+</div>
+
+
     <nav aria-label="breadcrumb" class="main-breadcrumb hidden-print">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/webif">Makerhafen</a></li>
@@ -53,10 +84,10 @@
                     <p><br>    <h1><strong>Allgemeine Geschäftsbedingungen</strong></h1><br></p>
                     <h2>1 Vertragsgegenstand</h2>
                     <p>1.1 Die Makerhafen gemeinnützige GmbH, (kurz MAKERHAFEN), Stahltwiete 21, 22761 Hamburg, im Folgenden kurz “Vermieter” genannt,
-                       stellt dem Nutzer* Räumlichkeiten, Werkzeug und Maschinen zur entgeltlichen Nutzung zur Verfügung. Mit Unterschrift des Haftungsausschluss bzw.
+                       stellt dem Nutzer* Räumlichkeiten, Werkzeug und Maschinen zur entgeltlichen Nutzung zur Verfügung. Mit Unterschrift des Haftungsausschlusses bzw.
                        bereits mit Betreten der Werkstatt erkennt der Mieter im Folgenden kurz “Nutzer” genannt, die Geltung dieser AGB an.</p>
                     <p>1.2 Der Nutzer ist innerhalb der Vertragsdauer berechtigt, während der Öffnungszeiten und entsprechend der allgemeinen Nutzungsbedingungen sowie der
-                       ausgehängten Werkstatt-Regeln die zur Verfügung stehenden Einrichtungen des MAKERHAFEN zu nutzen.</p>
+                       ausgehängten Werkstatt-Regeln, die zur Verfügung stehenden Einrichtungen des MAKERHAFEN zu nutzen.</p>
                     <h2>2 Geltung der Vertragsbedingungen</h2>
                     <p>2.1 Sämtliche Angebote und Leistungen gegenüber dem Nutzer erfolgen ausschließlich aufgrund dieser allgemeinen Geschäftsbedingungen.</p>
                     <p>2.2 Es gelten ferner die Werkstatt-Regeln, die an der Theke vom MAKERHAFEN zur Einsicht und Mitnahme ausliegen.</p>
@@ -70,20 +101,21 @@
                     <p>3.2 Für Leistungen, die nach einer gewissen Zeit oder in regelmäßigen Abständen erfolgen, ist der Vermieter im Falle jeder mangels Kontodeckung oder
                        unberechtigten Widerrufs nicht eingelösten oder zurückgereichten Abbuchung, berechtigt, die für die Bankrücklast und die Bearbeitung entstehenden Kosten,
                        mindestens aber eine Pauschale von 3,00 € je Fall, zu berechnen und diese mit der nächsten Lastschrift einzuziehen.</p>
-                </div>
-            </div>
-        </div>
-        <div class="page" title="Page 2">
-            <div class="layoutArea">
-                <div class="column">
                     <p>3.3 Die Voraussetzungen für gewährte Ermäßigungen (Kinder, Schüler, Auszubildende, Studenten, u.ä.) sind durch geeignete Unterlagen nachzuweisen.
                        Der Nutzer hat den Vermieter unverzüglich darüber zu informieren, wenn die Voraussetzungen für die gewährte Ermäßigung nicht mehr vorliegen.
                        Der Vermieter behält sich vor, in diesem Fall den Beitrag auf den entsprechend günstigsten Normaltarif zu erhöhen.
                        Der Nutzer hat ferner alle 12 Monate Nachweis zu erbringen, dass die weitere Gewährung der Ermäßigung gerechtfertigt ist. Erfolgt dies nicht,
                        wird eine vereinbarte Ermäßigung außer Kraft gesetzt und der monatliche Beitrag wiederum auf den entsprechend günstigsten Normaltarif erhöht.
                        Eine rückwirkende Ermäßigung bei verspäteter Vorlage des Nachweises erfolgt nicht.</p>
+
+                </div>
+            </div>
+        </div>
+        <div class="page" title="Page 2">
+            <div class="layoutArea">
+                <div class="column">
                     <p>3.4 Änderungen der Anschrift und Kontoänderungen sind dem Vermieter unverzüglich schriftlich mitzuteilen. Unterlässt oder verzögert der Nutzer die
-                       Mitteilung, hat es die hieraus entstehenden Kosten zu tragen.</p>
+                       Mitteilung, hat er die hieraus entstehenden Kosten zu tragen.</p>
                     <h2>4 Kündigung</h2>
                     <p>4.1 Verträge können von beiden Vertragsparteien mit einer Kündigungsfrist von 1 Monat zum Ende der Vertragsfestlaufzeit bzw.
                        bei unbestimmter Vertragslaufzeit von 1 Monat zum Monatsende gekündigt werden.</p>
@@ -119,6 +151,12 @@
                        oder Einrichtungsgegenstände zu bedienen (bspw. durch Einfluss von Alkohol oder anderen Sucht- und Betäubungsmitteln) hat keinen Anspruch
                        auf die Nutzung und kann unter entsprechenden Umständen der Werkstatt verwiesen werden. Menschen mit eingeschränkten Fähigkeiten aufgrund von Alter,
                        Behinderung oder Krankheit müssen dies dem Vermieter bei Vertragsschluss offenlegen und dürfen entsprechende Maschinen nur unter Aufsicht bedienen.</p>
+                </div>
+            </div>
+        </div>
+        <div class="page" title="Page 3">
+            <div class="layoutArea">
+                <div class="column">
                     <p>7.4 <strong>Sauberkeit</strong> – Der Arbeitsplatz und die Werkzeuge sind in einwandfreiem Zustand und gereinigt nach Mietende an den Vermieter zu
                        übergeben. Muss vom Vermieter eine Reinigung oder Entsorgung vorgenommen werden, so werden diese Kosten dem Nutzer in Rechnung gestellt und sind vor
                        Verlassen der Mieträume sofort zu begleichen.</p>
@@ -134,12 +172,6 @@
                        Jeder Diebstahl oder Versuch eines Diebstahls wird sofort zur Anzeige gebracht und mit unverzüglichem Hausverbot belegt.</p>
                     <p>8.5 Der Mieter hat keinen Anspruch darauf, dass alle Werkzeuge, Maschinen sowie Einrichtungen zu jeder Zeit nutzbar sind.
                        Dies ist beispielsweise bei einem Defekt, Reparaturvorgang oder Nutzung durch andere Mieter der Fall.</p>
-                </div>
-            </div>
-        </div>
-        <div class="page" title="Page 3">
-            <div class="layoutArea">
-                <div class="column">
                     <h2>9 Sicherheit</h2>
                     <p>9.1 <strong>Arbeitsschutz</strong> – Für ausreichenden Arbeitsschutz und Arbeitskleidung ist der Nutzer selbst verantwortlich.
                        Der Vermieter ist nicht verpflichtet, dies zu kontrollieren und kann bei Arbeitsunfällen nicht haftbar gemacht werden.</p>
@@ -159,6 +191,12 @@
                     <p>10.3 Mitgebrachte Werkstoffe, Abschnittreste und sonstiger Abfall sind vom Mieter vollständig mitzunehmen oder in einer entsprechenden angemieteten
                        Mietbox/Lagerfläche unterzubringen. Nach vorheriger Absprache können bestimmte Teile und Materialien (bspw. Holz und Metallreste) an den
                        dafür vorgesehenen Plätzen deponiert werden. Andere Mieter können diese dann gegen Spende oder Entgelt zur Weiterverarbeitung entnehmen.</p>
+                </div>
+            </div>
+        </div>
+        <div class="page" title="Page 4">
+            <div class="layoutArea">
+                <div class="column">
                     <h2>11 Beratung</h2>
                     <p>11.1 Der Vermieter kann nach seinem Dafürhalten oder auf Wunsch des Nutzers, fachliche und sachkundige Beratung vornehmen.
                        Einen Anspruch oder ein Recht darauf hat der Mieter jedoch nicht.</p>
@@ -173,12 +211,6 @@
                        erforderlich sind und auf deren Einhaltung der Nutzer vertrauen darf.</p>
                     <p>12.2 Für mitgebrachte Gegenstände, insbesondere eigener Werkzeuge aber auch Wertgegenstände und Geld, wird keine Haftung übernommen.</p>
 
-                </div>
-            </div>
-        </div>
-        <div class="page" title="Page 4">
-            <div class="layoutArea">
-                <div class="column">
                     <h2>13 Daten des Nutzers</h2>
                     <p>13.1 Der Vermieter erhebt, speichert, verarbeitet und nutzt personenbezogene Daten, die er unmittelbar von Nutzern direkt oder über die Nutzung
                        seiner Einrichtungen wie auch seiner Internetseiten erhält.</p>
@@ -199,12 +231,10 @@
                        Leistungen gegenüber dem Nutzer erforderlich ist. Dazu gehören bspw. buchhalterische und/oder steuerrechtliche Gründe (Steuerberater, Finanzamt).</p>
                     <p>13.6 Die Einwilligung zur Verwendung persönlicher Daten kann selbstverständlich jederzeit mit Wirkung für die Zukunft widerrufen werden.</p>
                     <p>13.7 Alle E-Mails, die direkt vom Vermieter oder einem der ehrenamtlichen Mitmacher über dessen MAKERHAFEN-Email an Nutzer etwa für
-                       Terminabsprachen gesendet werden, werden über unseren Webhoster hetzner.de versandt. das gilt auch für eingehende Mail mit direkten Anfragen
-                       an bspw office [ät] makerhafen.de</p>
-                    <p>13.8 Newsletter werden ausschliesslich an Interessierte Personen versandt, die sich mittels Double-Opt-In Verfahren auf unserer Website dazu
-                       registriert haben. Dafür nutzen wir den Service des WordPress Plugins „Alo EasyMail Newsletter“.</p>
-                    <p>13.9 Weitere Informationen zum Datenschutz i.S.d. Art. 13 DSGVO können unseren Datenschutzhinweisen entnommen werden.
-                       Diese findet man auf unserer Website unter https://makerhafen.de/impressum/</p>
+                       Terminabsprachen gesendet werden, werden über unseren Webhoster hetzner.de versandt. Das gilt auch für eingehende Mail mit direkten Anfragen
+                       an bspw office@makerhafen.de</p>
+                    <p>13.8 Newsletter werden ausschliesslich an interessierte Personen versandt, die sich mittels Double-Opt-In Verfahren auf unserer Website dazu
+                       registriert haben.</p>
                 </div>
             </div>
         </div>
@@ -229,6 +259,9 @@
                        aus und im Zusammenhang mit diesem Vertrag Hamburg als vereinbart.</p>
                     <p>*Es sind stets Personen männlichen und weiblichen Geschlechts gleichermaßen gemeint; aus Gründen der einfacheren
                        Lesbarkeit wird im Folgenden nur die männliche Form verwendet.</p>
+                    <p>13.9 Weitere Informationen zum Datenschutz i.S.d. Art. 13 DSGVO können unseren Datenschutzhinweisen entnommen werden.
+                       Diese findet man auf unserer Website unter https://makerhafen.de/impressum/</p>
+
                 </div>
             </div>
         </div>

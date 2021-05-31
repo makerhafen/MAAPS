@@ -47,7 +47,7 @@ class TokenAdmin(admin.ModelAdmin):
 
 @admin.register(models.Machine)
 class MachineAdmin(admin.ModelAdmin):
-    list_display = ("id", "name", "comment", "ask_clean", "ask_pay_material", "price_per_hour", "price_per_usage","tutor_required_count", "tutor_required_once_after_month", "current_session")
+    list_display = ("id", "name", "comment", "ask_clean", "ask_pay_material", "show_autologout", "price_per_hour", "price_per_usage","tutor_required_count", "tutor_required_once_after_month", "current_session")
 
 @admin.register(models.Transaction)
 class TransactionAdmin(admin.ModelAdmin):

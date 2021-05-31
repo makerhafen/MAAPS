@@ -2,6 +2,46 @@
 
 {% block content %}
 
+<style>
+    @media screen {
+      div.footer {
+        display: none;
+      }
+    }
+    @media print {
+      div.footer {
+        position: fixed;
+        bottom: 0;
+      }
+    }
+
+</style>
+
+    <div class="footer" style="text-align:center;width:100%;color:red;border-top:1px solid gray;">
+        <div style="width:23%;float:left">
+            Makerhafen gGmbH <br>
+            Stahltwiete 21   <br>
+            22761 Hamburg
+        </div>
+        <div style="width:23%;float:left">
+            +49 40 53050911         <br>
+            office@makerhafen.de    <br>
+            https://makerhafen.de
+        </div>
+        <div style="width:30%;float:left">
+            BIC:   DEUTDEDBHAM  <br>
+            IBAN:  DE06200700240914441100   <br>
+            UstID: DE337879639 <br>
+            SteuerNr: 17/451/10661
+        </div>
+        <div style="width:23%;float:left" >
+            Sitz: Hamburg       <br>
+            Gf: Susanne Theelen <br>
+            Amtsgericht Hamburg <br>
+            HRB 164690
+        </div>
+    </div>
+
     <nav aria-label="breadcrumb" class="main-breadcrumb hidden-print">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/webif">Makerhafen</a></li>
@@ -18,21 +58,9 @@
                     <img src="https://raw.githubusercontent.com/makerhafen/Logos/master/makerhafen%20logo%201100x1100.png" style="width: 100%; max-width: 100%" />
                 </div>
                 <div class="col-xs-8">
-                    <h1 style="font-size: 4em;font-weight: bold;"> Makerhafen  </h1>
+                    <h1 style="font-size: 3em;font-weight: bold;"> Nutzungsvereinbarung  </h1>
                 </div>
             </div>
-        </div>
-        <div class="col-xs-4" style="padding-top: 1em">
-            Makerhafen gGmbH<br>
-            Stahltwiete 21<br>
-            22761 Hamburg<br>
-            office@makerhafen.de
-        </div>
-    </div>
-
-    <div class="row" style="text-align:center">
-        <div class="col-xs-12  ">
-            <h3>Nutzungsvereinbarung</h3>
         </div>
     </div>
 
@@ -77,10 +105,10 @@
     {% if profile.get_paying_user.commercial_account == True %}
         <div class="row">
             <div class="col-xs-12  ">
-                <i style="{% if profile.get_paying_user.commercial_account == False %}text-decoration: line-through;{% else %}font-weight:bold{% endif %}">Kommerziel</i> /
+                <i style="{% if profile.get_paying_user.commercial_account == False %}text-decoration: line-through;{% else %}font-weight:bold{% endif %}">Kommerziell</i> /
                 <i style="{% if profile.get_paying_user.commercial_account == True  %}text-decoration: line-through;{% else %}font-weight:bold{% endif %}">Privat</i>
                 <br>
-                Du bist eine Firma, du zahlt einen erhöhten Beitrag und erhälst eine Rechnung mit ausgewiesener Mehrwertsteuer.
+                Du bist eine Firma, du zahlt einen erhöhten Beitrag und erhältst eine Rechnung mit ausgewiesener Mehrwertsteuer.
             </div>
         </div>
         <br>
@@ -93,18 +121,18 @@
             <br>
             {% if profile.get_paying_user.allow_invoice == True  %}
                 {% if profile.get_paying_user  ==  profile %}
-                    Du erhälst
+                    Du erhältst
                 {% else %}
                     <b>{{ profile.get_paying_user }}</b> erhält
                 {% endif %}
-                eine Rechung über deinen benutzte Maschinenzeit und Verbrauchsmaterial. Du benötigst kein Prepaid Guthaben.
+                eine Rechung über deine benutzte Maschinenzeit und Verbrauchsmaterial. Du benötigst kein Prepaid-Guthaben.
             {% else %}
-                Du kannst deine Mitgliedskarte verwenden um
+                Du kannst deine Mitgliedskarte verwenden, um
                 {% if profile.get_paying_user.monthly_payment == False  %}
                     für deinen Tagespass,
                 {% endif %}
                 Verbrauchsmaterial und Maschinenzeit zu bezahlen. <br>
-                Ausstehende Beträge kannst du vor verlassen des Makerhafen an der Theke zahlen.
+                Ausstehende Beträge kannst du vor Verlassen des Makerhafen an der Theke zahlen.
             {% endif %}
         </div>
     </div>
@@ -116,7 +144,7 @@
                 <i style="{% if profile.get_paying_user.discount_account == True %}text-decoration: line-through;{% else %}font-weight:bold{% endif %}">Standart</i> /
                 <i style="{% if profile.get_paying_user.discount_account == False  %}text-decoration: line-through;{% else %}font-weight:bold{% endif %}">Ermäßigt</i>
                 <br>
-                Du erhälst ermässigte Preise auf Mitgliedsbeitrag und Maschinenzeit.
+                Du erhältst ermässigte Preise auf Mitgliedsbeitrag und Maschinenzeit.
             </div>
         </div>
         <br>
@@ -140,7 +168,7 @@
                 {% else %}
                     <b> {{ price_daily.default }}€ </b>
                 {% endif %}
-                pro Tag. Sollten sich dieser Preis ändern kannst den aktuellen Preis der Preisliste entnehmen die an der Theke ausliegt.
+                pro Tag. Sollte sich dieser Preis ändern kannst den aktuellen Preis der Preisliste entnehmen, die an der Theke ausliegt.
             {% else %}
                 Ein Monatsabo
                 {% if profile.get_paying_user.commercial_account %}
@@ -153,7 +181,7 @@
                 pro Monat.<br>
                 {% if profile.get_paying_user  ==  profile %}
                     {% if profile.commercial_account %}
-                        Als Kommerzieller Benutzer bekommst du Regelmässig eine Rechnung über diesen Betrag.
+                        Als kommerzieller Benutzer bekommst du regelmässig eine Rechnung über diesen Betrag.
                     {% else %}
                         <p style="display:none">Wenn du uns eine Einzugsermächtigung gibst buchen wir diesen Betrag jeweils anfang des Monats von deinem Konto ab.
                         </p>
@@ -162,7 +190,6 @@
                 {% else %}
                     <b>{{ profile.get_paying_user }}</b> übernimmt diesen Betrag für dich.
                 {% endif %}
-
             {%  endif %}
         </div>
     </div>
