@@ -170,21 +170,21 @@
             {% if profile.get_paying_user.monthly_payment == False %}
                 Ein Tagespass ermöglicht den tageweise Zugang zum Makerhafen und kostet
                 {% if profile.get_paying_user.commercial_account %}
-                    für <i> kommerzielle Benutzer </i> <b> {{ price_daily.commercial }}€ </b>
+                    für <i> kommerzielle Benutzer </i> <b> {{ price_daily.commercial |floatformat:2 }}€ </b>
                 {% elif profile.get_paying_user.discount_account %}
-                    für <i> ermässigte benutzer </i> <b> {{ price_daily.discount }}€ </b>
+                    für <i> ermässigte benutzer </i> <b> {{ price_daily.discount |floatformat:2 }}€ </b>
                 {% else %}
-                    <b> {{ price_daily.default }}€ </b>
+                    <b> {{ price_daily.default |floatformat:2 }}€ </b>
                 {% endif %}
                 pro Tag. Sollte sich dieser Preis ändern kannst den aktuellen Preis der Preisliste entnehmen, die an der Theke ausliegt.
             {% else %}
                 Ein Monatsabo
                 {% if profile.get_paying_user.commercial_account %}
-                    für <i> kommerzielle Benutzer </i> kostet <b> {{ price_monthly.commercial }}€ </b>
+                    für <i> kommerzielle Benutzer </i> kostet <b> {{ price_monthly.commercial |floatformat:2  }}€ </b>
                 {% elif profile.get_paying_user.discount_account %}
-                    für <i> ermässigte Benutzer </i> kostet <b> {{ price_monthly.discount }}€ </b>
+                    für <i> ermässigte Benutzer </i> kostet <b> {{ price_monthly.discount |floatformat:2 }}€ </b>
                 {% else %}
-                    kostet <b> {{ price_monthly.default }}€ </b>
+                    kostet <b> {{ price_monthly.default |floatformat:2 }}€ </b>
                 {% endif %}
                 pro Monat.<br>
                 {% if profile.get_paying_user  ==  profile %}
