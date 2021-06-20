@@ -66,7 +66,13 @@ class Raspberry(System):
     def _update_raspberry(self):
         self._ssh('sudo apt-get -y update', timeout=600)
         self._ssh('sudo apt-get -y upgrade', timeout=600)
-        self._ssh('sudo apt-get -y remove lxplug-ptbatt pulseaudio cups-browsed piwiz', timeout=600)
+        self._ssh('sudo apt-get -y remove --purge lxplug-ptbatt pulseaudio cups-browsed piwiz ', timeout=600)
+        self._ssh('sudo apt-get -y remove --purge wolfram-engine triggerhappy anacron logrotate dphys-swapfile', timeout=600)
+        self._ssh('sudo systemctl disable bootlogs', timeout=600)
+        self._ssh('sudo systemctl disable console-setup', timeout=600)
+        self._ssh('sudo apt-get install busybox-syslogd', timeout=600)
+        self._ssh('sudo dpkg --purge rsyslog', timeout=600)
+
         self._ssh('''
             cat /boot/config.txt | grep -v avoid_warnings > 1 ; sudo mv 1 /boot/config.txt ;
             echo 'avoid_warnings=1' | sudo tee -a  /boot/config.txt ;
@@ -74,10 +80,6 @@ class Raspberry(System):
         self._ssh('''
             cat /etc/xdg/lxsession/LXDE-pi/autostart | grep -v 'xset s ' > 1 ; sudo mv 1 /etc/xdg/lxsession/LXDE-pi/autostart ;
             echo 'export DISPLAY=:0;xset s 180;xset s +dpms' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart ;
-        ''')
-        self._ssh('''
-            sudo mkdir /var/log/MAAPS/  ;
-            sudo chmod -R 777 /var/log/MAAPS/ ;
         ''')
 
     def _install_lcd(self):
@@ -146,7 +148,7 @@ class Server(System):
             cd  /home/%s/MAAPS/server/ ; 
             python3 manage.py migrate ; 
             cat /etc/xdg/lxsession/LXDE-pi/autostart | grep -v manage.py > 1 ; sudo mv 1 /etc/xdg/lxsession/LXDE-pi/autostart ; 
-            echo "python3 /home/%s/MAAPS/server/manage.py runserver 0.0.0.0:8001 1>/var/log/MAAPS/server.out.log 2>/var/log/MAAPS/server.err.log" | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart ;
+            echo "python3 /home/%s/MAAPS/server/manage.py runserver 0.0.0.0:8001" | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart ;
         ''' % (self.username, self.username))
 
     def backup(self):
