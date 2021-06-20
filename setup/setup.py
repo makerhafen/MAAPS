@@ -3,14 +3,15 @@ import tempfile
 import pexpect
 import time
 import sys
+import random
 from datetime import datetime
-from multiprocessing import Pool
+from multiprocessing.dummy import Pool as ThreadPool
 import logging
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 
 SSH_OPTIONS = '-q -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -oPubkeyAuthentication=no'
 
-PI_MACS = ["dc:a6:32:", ]
+PI_MACS = ["dc:a6:32:", "b8:27:eb", "e4:5f:01"  ]
 
 
 class System:
@@ -61,6 +62,7 @@ class Raspberry(System):
         self._install_spi()
         self._install_hardwarepy()
         self._install_autostart_chromium(server)
+        self._install_wlan_restarter()
         self.reboot()
 
     def _update_raspberry(self):
@@ -105,6 +107,28 @@ class Raspberry(System):
             echo 'chromium-browser --disable-restore-session-state --kiosk %s:8001/%s/%s' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart ;
         ''' % (server.ip, self.system_type, self.token.replace(" ", "%20")))
 
+    def _install_wlan_restarter(self):
+        open("/tmp/wlan_check.sh", "w").write('''
+            #!/bin/bash
+            /bin/ping -W 2 -c 1 -I 'wlan0' '192.168.42.1' > /dev/null 2> /dev/null
+            if [ $? -ge 1 ] ; then
+                /bin/sleep 10
+                /bin/ping -W 2 -c 2 -I 'wlan0' '192.168.42.1' > /dev/null 2> /dev/null
+                if [ $? -ge 1 ] ; then
+                    /sbin/ifdown 'wlan0'
+                    /bin/sleep 10
+                    /sbin/ifup --force 'wlan0'
+                fi
+            fi
+            exit 0
+        ''')
+        self._ssh_exec('scp %s /tmp/wlan_check.sh %s@%s:/tmp/wlan_check.sh' % (SSH_OPTIONS, self.username, self.ip), 120)
+        self._ssh('sudo mv /tmp/wlan_check.sh /usr/local/sbin/wlan_check.sh')
+        self._ssh('sudo chmod +x /usr/local/sbin/wlan_check.sh')
+        self._ssh('''
+            cat /etc/crontab | grep -v wlan_check > 1 ; sudo mv 1 /etc/crontab ;
+            echo '*/2 * * * * /usr/local/sbin/wlan_check.sh' | sudo tee -a /etc/crontab ;
+        ''')
 
 class Server(System):
     def __init__(self, system_type, ip, mac_address, username, password):
@@ -116,6 +140,8 @@ class Server(System):
         self.reboot()
 
     def _install_stunnel(self):
+        self._ssh('sudo apt-get -y update')
+        self._ssh('sudo apt-get -y install stunnel')
         open("/tmp/stunnel_conf", "w").write('''
             pid=
             cert = /etc/stunnel/stunnel.pem
@@ -130,7 +156,6 @@ class Server(System):
             options = NO_SSLv2
         ''')
         self._ssh_exec('scp %s /tmp/stunnel_conf %s@%s:/tmp/stunnel.conf' % (SSH_OPTIONS, self.username, self.ip), 120)
-        self._ssh('sudo apt-get install stunnel')
         self._ssh('''
             cd /etc/stunnel/;
             sudo rm stunnel.key stunnel.cert stunnel.pem ;
@@ -190,15 +215,34 @@ class SiteSetup:
         self.poss = []
         self.machines = []
         self._read_data()
+        self._scan_network_data = []
+        self._scan_network_ip = ""
+        self._scan_network_progress_current = 0
+        self._scan_network_progress_target = 0
 
     def scan_network(self, network):
+        self._scan_network_data = []
+        self._scan_network_progress_current = 0
+        self._scan_network_progress_target = 256
+
         def chunks(lst, n):
             for i in range(0, len(lst), n):
                 yield lst[i:i + n]
         partialip = ".".join(network.split(".")[0:-1])
-        ips_chunks = [c for c in chunks([partialip + "." + str(i) for i in range(0, 256)], 16)]
-        with Pool(16) as p:
+        ips_chunks = [c for c in chunks([partialip + "." + str(i) for i in range(0, 256)], 4)]
+        random.shuffle(ips_chunks)
+
+        print("\nScanning %s to %s.256" % (network, partialip))
+        with ThreadPool(16) as p:
             p.map(self._scan_network, ips_chunks)
+        print(" Scan done       ")
+        print(" %s IPs active" % len(self._scan_network_data))
+        print(" %s unknown Raspberry PI found" % len([x for x in self._scan_network_data if x.find("UNKNOWN PI") != -1] ))
+        print(" %s MAAPS devices found" % len([x for x in self._scan_network_data if x.find("MAAPS")!= -1] ))
+        print("\nResults:")
+        self._scan_network_data.sort(key=lambda item: tuple(int(part) for part in item.split("\t")[0].split('.')))
+        for nd in self._scan_network_data:
+            print(nd)
 
     def _scan_network(self, ips):
         import scapy.all as scapy
@@ -207,6 +251,8 @@ class SiteSetup:
             broadcast = scapy.Ether(dst="ff:ff:ff:ff:ff:ff")
             arp_request_broadcast = broadcast / arp_request
             answered_list = scapy.srp(arp_request_broadcast, timeout=0.3, verbose=False)[0]
+            self._scan_network_progress_current += 1
+            print(" Scan: %s%%\r" % round(100 / self._scan_network_progress_target * self._scan_network_progress_current), end="")
             for element in answered_list:
                 ip = element[1].psrc.strip()
                 mac = element[1].hwsrc.strip()
@@ -216,9 +262,11 @@ class SiteSetup:
                         status = "THIS IS AN UNKNOWN PI"
                         m = self._get_known_by_mac(mac)
                         if m is not None:
-                            status = "THIS IS A %s , Token: %s" % (m.system_type, m.token)
-                print(ip + "\t\t" + mac + "\t" + status)
-                break
+                            status = "MAAPS device: %s" % m.system_type
+                            if m.token != "":
+                                status += ", Token: %s" % m.token
+                self._scan_network_data.append(ip + "\t\t" + mac + "\t" + status)
+                #break
 
     def _get_known_by_mac(self, mac):
         if self.server.mac_address == mac:
@@ -244,20 +292,24 @@ class SiteSetup:
             elif system_type == "machine":
                 self.machines.append(Machine(system_type, ip, mac_address, username, password, lcd_rotation, token))
 
+    def show(self):
+        print("Machines:")
+        print(open("devices.csv", "r").read())
 
 helptxt = '''
-    setup.py
-    setup.py configcard <dir> # enable ssh and wlan on SD card mounted to <dir>
-    setup.py scan <network>  # search /24 (256 ips) in <network> for raspberry PIs
-    setup.py serversetup  # install/upgrade server
-    setup.py backup  # backup server
-    setup.py restore <source>  # restore server from source folder backup
+    setup.py help               # show this help
+    setup.py configcard <dir>   # enable ssh and wlan on SD card mounted to <dir>
+    setup.py scan <network>     # search /24 (256 ips) in <network> for raspberry PIs
+    setup.py serversetup        # install/upgrade server
+    setup.py backup             # backup server
+    setup.py restore <source>   # restore server from source folder backup
     setup.py install <ip | all> # install/upgrade raspberry pi machine or PointOfSale
+    setup.py show               # Show devices
 '''
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("\n    Error: Missing Option\n%s" % helptxt)
+        print("\n    Error: Missing options\n%s" % helptxt)
         exit(1)
 
     option = sys.argv[1]
@@ -276,6 +328,9 @@ if __name__ == "__main__":
     elif option == "scan":
         if len(sys.argv) < 3:
             print("\n    Error: Missing target network to scan\n%s" % helptxt)
+            exit(1)
+        if os.geteuid() != 0:
+            print("\n    Error: Network scan requires ROOT privileges\n")
             exit(1)
         siteSetup.scan_network(sys.argv[2])
 
@@ -297,6 +352,12 @@ if __name__ == "__main__":
     elif option == "backup":
         siteSetup.server.backup()
 
+    elif option == "show":
+        siteSetup.show()
+
+    elif option == "help":
+        print(helptxt)
+
     elif option == "restore":
         if len(sys.argv) < 3:
             print("\n    Error: Missing source folder\n%s" % helptxt)
@@ -304,4 +365,4 @@ if __name__ == "__main__":
         siteSetup.server.restore(sys.argv[2])
 
     else:
-        print("unknown option '%s'" % sys.argv[1])
+        print("\n    Error: Unknown option '%s'\n%s" % (sys.argv[1], helptxt))
