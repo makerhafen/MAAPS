@@ -221,10 +221,6 @@ class SiteSetup:
         self._scan_network_progress_target = 0
 
     def scan_network(self, network):
-        self._scan_network_data = []
-        self._scan_network_progress_current = 0
-        self._scan_network_progress_target = 256
-
         def chunks(lst, n):
             for i in range(0, len(lst), n):
                 yield lst[i:i + n]
@@ -233,8 +229,12 @@ class SiteSetup:
         random.shuffle(ips_chunks)
 
         print("\nScanning %s to %s.256" % (network, partialip))
+        self._scan_network_data = []
+        self._scan_network_progress_current = 0
+        self._scan_network_progress_target = 256
         with ThreadPool(16) as p:
             p.map(self._scan_network, ips_chunks)
+
         print(" Scan done       ")
         print(" %s IPs active" % len(self._scan_network_data))
         print(" %s unknown Raspberry PI found" % len([x for x in self._scan_network_data if x.find("UNKNOWN PI") != -1] ))
