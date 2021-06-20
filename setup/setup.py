@@ -75,6 +75,10 @@ class Raspberry(System):
             cat /etc/xdg/lxsession/LXDE-pi/autostart | grep -v 'xset s ' > 1 ; sudo mv 1 /etc/xdg/lxsession/LXDE-pi/autostart ;
             echo 'export DISPLAY=:0;xset s 180;xset s +dpms' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart ;
         ''')
+        self._ssh('''
+            sudo mkdir /var/log/MAAPS/  ;
+            sudo chmod -R 777 /var/log/MAAPS/ ;
+        ''')
 
     def _install_lcd(self):
         self._ssh('cd /tmp/ && git clone https://github.com/waveshare/LCD-show.git;')
@@ -142,7 +146,7 @@ class Server(System):
             cd  /home/%s/MAAPS/server/ ; 
             python3 manage.py migrate ; 
             cat /etc/xdg/lxsession/LXDE-pi/autostart | grep -v manage.py > 1 ; sudo mv 1 /etc/xdg/lxsession/LXDE-pi/autostart ; 
-            echo "python3 /home/%s/MAAPS/server/manage.py runserver 0.0.0.0:8001" | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart ;  
+            echo "python3 /home/%s/MAAPS/server/manage.py runserver 0.0.0.0:8001 1>/var/log/MAAPS/server.out.log 2>/var/log/MAAPS/server.err.log" | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart ;
         ''' % (self.username, self.username))
 
     def backup(self):
