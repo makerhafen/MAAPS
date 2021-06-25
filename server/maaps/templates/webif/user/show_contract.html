@@ -180,7 +180,7 @@
             {% else %}
                 Ein Monatsabo
                 {% if profile.get_paying_user.commercial_account %}
-                    für <i> kommerzielle Benutzer </i> kostet <b> {{ price_monthly.commercial |floatformat:2  }}€ </b>
+                    für <i> kommerzielle Benutzer </i> kostet <b> {{ price_monthly.commercial |floatformat:2  }}€ + MwSt. </b>
                 {% elif profile.get_paying_user.discount_account %}
                     für <i> ermässigte Benutzer </i> kostet <b> {{ price_monthly.discount |floatformat:2 }}€ </b>
                 {% else %}

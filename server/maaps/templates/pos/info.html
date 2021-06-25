@@ -23,7 +23,9 @@
                 <div style="font-size:3em;text-align:center;padding-top:1px;"><h2> {{user_profile}}</h2></div>
             </div>
             <div class="col-xs-3">
-                <img style="width:110px" src="{{ user_profile.profile_picture.url }}"/>
+                {% if user_profile.profile_picture %}
+                    <img style="width:110px" src="{{ user_profile.profile_picture.url }}"/>
+                {% endif %}
             </div>
         </div>
         <br>
