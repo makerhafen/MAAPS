@@ -72,7 +72,7 @@ class Raspberry(System):
         self._ssh('sudo apt-get -y remove --purge wolfram-engine triggerhappy anacron logrotate dphys-swapfile', timeout=600)
         self._ssh('sudo systemctl disable bootlogs', timeout=600)
         self._ssh('sudo systemctl disable console-setup', timeout=600)
-        self._ssh('sudo apt-get install busybox-syslogd', timeout=600)
+        self._ssh('sudo apt-get -y install busybox-syslogd', timeout=600)
         self._ssh('sudo dpkg --purge rsyslog', timeout=600)
 
         self._ssh('''
@@ -232,7 +232,7 @@ class SiteSetup:
         self._scan_network_data = []
         self._scan_network_progress_current = 0
         self._scan_network_progress_target = 256
-        with ThreadPool(16) as p:
+        with ThreadPool(8) as p:
             p.map(self._scan_network, ips_chunks)
 
         print(" Scan done       ")
