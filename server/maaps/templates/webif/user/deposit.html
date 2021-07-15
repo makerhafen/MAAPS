@@ -1,0 +1,78 @@
+{% extends "webif/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <style>
+        td {
+            text-align: center;
+            white-space: nowrap;
+        }
+        th {
+            text-align: center;
+        }
+    </style>
+    <nav aria-label="breadcrumb" class="main-breadcrumb hidden-print">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/webif">Makerhafen</a></li>
+            <li class="breadcrumb-item"><a href="/webif/user/list">Benutzer</a></li>
+            <li class="breadcrumb-item"><a href="/webif/user/show/{{profile.id}}">{{profile}}</a></li>
+            <li class="breadcrumb-item"><a href="/webif/user/show/{{profile.id}}">Einzahlung Buchen</a></li>
+        </ol>
+    </nav>
+    <br>
+    <br>
+    <div class="row">
+        <div class="col-12" style="text-align:center">
+            <form id="form" method="post">
+                {% csrf_token %}
+                <label>
+                    Betrag
+                    <input id="deposit_value" name="deposit_value" type="number">
+                </label>
+                <br>
+                <br>
+                <div>
+                  <input type="radio" id="type_1"  name="type" value="from_cash_for_deposit" checked>
+                  <label for="type_1">Bargeld Einzahlung für Prepaid Guthaben </label>
+                </div>
+
+                {% if profile.monthly_payment %}
+                    <div>
+                      <input type="radio" id="type_2" name="type" value="from_cash_for_rent">
+                      <label for="type_2">Bargeld Einzahlung für Monatsbeitrag</label>
+                    </div>
+
+                    <div>
+                      <input type="radio" id="type_3" name="type" value="from_bank_for_rent">
+                      <label for="type_3">Überweisung für Monatsbeitrag</label>
+                    </div>
+                {% endif %}
+
+                <div>
+                  <input type="radio" id="type_4" name="type" value="from_bank_for_deposit">
+                  <label for="type_4">Überweisung für Prepaid Guthaben</label>
+                </div>
+
+                <button class="btn" type="submit">Buchen</button>
+            </form>
+        </div>
+
+
+
+    </div>
+
+    <br>
+    <br>
+
+
+    {% if last_error != None %}
+        <div class="row">
+            <div class="col-xs-12 ">
+                <b>Fehler:</b><br>
+            </div>
+        </div>
+    {% endif %}
+
+
+
+{% endblock %}

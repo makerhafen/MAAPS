@@ -12,7 +12,7 @@ def _get_price(profile, identifier ):
     price = models.Price.objects.get(identifier = identifier)
     if profile.get_paying_user().commercial_account:
         return price.commercial
-    elif profile.get_paying_user().discount_account:  # TODO
+    elif profile.get_paying_user().discount_account:
         return price.discount
     else:
         return price.default
@@ -58,7 +58,7 @@ def pos__login_user(request, user_token=""):
                 spaceRentPayment.price = _get_price(paying_user.profile, identifier="spaceRentPayment.daily")
                 spaceRentPayment.type = models.SpaceRentPaymentType.daily
                 spaceRentPayment.save()
-                if paying_user.profile.allow_invoice is False:
+                if paying_user.profile.allow_postpaid is False:
                     transaction = models.Transaction()
                     transaction.user = paying_user
                     transaction.value = spaceRentPayment.price

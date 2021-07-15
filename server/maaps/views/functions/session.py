@@ -106,24 +106,18 @@ def get_profile_from_url_token(token):
 
 
 def end_session(session):
-    print("end session")
     current_payment_session = None
     if session is not None:
-        print("foo")
         machine = session.machine
         if hasattr(session, "machineSessionPayment"):
-            print("foo1")
             current_payment_session = session.machineSessionPayment
             current_payment_session.end = timezone.now()
 
             timediff_hours = (current_payment_session.end - current_payment_session.start).total_seconds() / 3600.0
             total_price = round(current_payment_session.price_per_usage + timediff_hours * current_payment_session.price_per_hour, 2)
-            print("HERHER")
-            print(current_payment_session.price_per_usage)
-            print(current_payment_session.price_per_hour)
             current_payment_session.price = total_price
 
-            if current_payment_session.user.profile.allow_invoice is False:
+            if current_payment_session.user.profile.allow_postpaid is False:
                 transaction = models.Transaction()
                 transaction.user = current_payment_session.user
                 transaction.value = current_payment_session.price

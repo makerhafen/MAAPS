@@ -39,7 +39,7 @@
                         <td>{{ profile.company_name }}</td>
                         <td>{{ profile.user.email }}</td>
                         <td {% if profile.prepaid_deposit < 0 %}style="color:red"{% endif %}>{{ profile.prepaid_deposit }}</td>
-                        <td>{{ profile.allow_invoice }}</td>
+                        <td>{{ profile.allow_postpaid }}</td>
                         <td>{{ profile.paying_user }}</td>
                         <td>
                             {% if profile.profile_picture %}<img style="width:50px" src = "{{ profile.profile_picture.url }}"/>{% endif %}

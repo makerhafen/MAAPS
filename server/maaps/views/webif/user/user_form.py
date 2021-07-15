@@ -18,7 +18,7 @@ class UserForm(forms.Form):
     street = forms.CharField(label="Strasse und Hausnummer", required=False)
     postalcode = forms.CharField(label="PLZ", required=False)
     city = forms.CharField(label="Stadt", required=False)
-    allow_invoice = forms.BooleanField(label="Bezahlung auf Rechnung", required=False)
+    allow_postpaid = forms.BooleanField(label="Bezahlung auf Rechnung", required=False)
     commercial_account = forms.BooleanField(label="Kommerzieller Benutzer", required=False)
     discount_account = forms.BooleanField(label="Ermäßigter Benutzer", required=False)
     monthly_payment = forms.BooleanField(label="Monatlich zahlen", required=False)
@@ -29,7 +29,7 @@ class UserForm(forms.Form):
 
     class Meta:
         model = Profile
-        fields = ("email", "first_name", "last_name", "company_name", "allow_invoice", "commercial_account", "paying_user", "city", "discount_account")
+        fields = ("email", "first_name", "last_name", "company_name", "allow_postpaid", "commercial_account", "paying_user", "city", "discount_account")
 
     def save(self, commit=True):
         is_new_user = False
@@ -49,7 +49,7 @@ class UserForm(forms.Form):
         if self.profile_picture is not None:
             img_io = io.BytesIO(self.profile_picture)
             user.profile.profile_picture.save("image.jpg", File(img_io))
-        user.profile.allow_invoice = self.cleaned_data["allow_invoice"]
+        user.profile.allow_postpaid = self.cleaned_data["allow_postpaid"]
         user.profile.company_name = self.cleaned_data["company_name"]
         user.profile.paying_user = self.cleaned_data["paying_user"]
         user.profile.commercial_account = self.cleaned_data["commercial_account"]

@@ -3,7 +3,7 @@ from django.template import loader
 from django.shortcuts import redirect
 import maaps.models as models
 from maaps.views.functions.session import get_profile_from_post, get_profile_from_session
-
+from maaps.views.functions.payment import pay_prepaid_deposit
 
 def pos__deposit(request):
     admin_profile = get_profile_from_session(request)
@@ -24,15 +24,8 @@ def pos__deposit(request):
         else:
             user_profile, error = get_profile_from_post(request)
             if user_profile is not None:
-                transaction = models.Transaction()
-                transaction.user = user_profile.user
-                transaction.value = deposit_value
-                transaction.type = models.TransactionType.from_cash_for_deposit
-                transaction.authorized_by = admin_profile.user
-                transaction.save()
                 value_before_payment = user_profile.prepaid_deposit
-                user_profile.prepaid_deposit += deposit_value
-                user_profile.save()
+                invoice = pay_prepaid_deposit(user_profile, deposit_value, models.TransactionType.from_cash_for_deposit)
 
     template = loader.get_template('pos/deposit.html')
     return HttpResponse(template.render({

@@ -179,13 +179,18 @@ class Server(System):
     def backup(self):
         date_time = datetime.now().strftime("%Y.%m.%d_%H:%M:%S")
         destination = "backups/%s/" % date_time
+        print("Creating new backup dir '%s'" % destination)
         os.system("mkdir -p '%s'" % destination)
-        ssh_cmd = 'scp -r %s %s@%s:/home/%s/MAAPS/server/media/ %s' % (
-            SSH_OPTIONS, self.username, self.ip, self.username, destination)
+
+        ssh_cmd = 'scp -r %s %s@%s:/home/%s/MAAPS/server/media/ %s' % (SSH_OPTIONS, self.username, self.ip, self.username, destination)
+        print("Backing up media, please wait")
         self._ssh_exec(ssh_cmd, 120)
-        ssh_cmd = 'scp %s %s@%s:/home/%s/MAAPS/server/db.sqlite3 %s' % (
-            SSH_OPTIONS, self.username, self.ip, self.username, destination)
+
+        ssh_cmd = 'scp %s %s@%s:/home/%s/MAAPS/server/db.sqlite3 %s' % (SSH_OPTIONS, self.username, self.ip, self.username, destination)
+        print("Backing up database, please wait")
         self._ssh_exec(ssh_cmd, 120)
+
+        os.system("du -sh '%s'" % destination)
         print("Backup done to '%s'" % destination)
 
     def restore(self, source_dir):

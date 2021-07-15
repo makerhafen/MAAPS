@@ -75,8 +75,8 @@
                                         <b style="color:{% if profile.commercial_account %}lightgray{% else %}green{% endif %}">Privat</b>
                                     </h5>
                                     <h5>
-                                        <b style="color:{% if profile.allow_invoice %}green{% else %}lightgray{% endif %}">Rechnung</b> /
-                                        <b style="color:{% if profile.allow_invoice %}lightgray{% else %}green{% endif %}">Prepaid</b>
+                                        <b style="color:{% if profile.allow_postpaid %}green{% else %}lightgray{% endif %}">Rechnung</b> /
+                                        <b style="color:{% if profile.allow_postpaid %}lightgray{% else %}green{% endif %}">Prepaid</b>
                                     </h5>
                                     <h5>
                                         <b style="color:{% if profile.monthly_payment %}green{% else %}lightgray{% endif %}">Monatlich</b> /
@@ -86,7 +86,11 @@
                                         <b style="color:{% if profile.discount_account %}green{% else %}lightgray{% endif %}">Ermäßigt</b> /
                                         <b style="color:{% if profile.discount_account %}lightgray{% else %}green{% endif %}">Normalzahler</b>
                                     </h5>
-                                    <h5><a type="button" class="btn btn-primary" href="/webif/user/deposit/{{ profile.id }}">Einzahlung verbuchen</a></h5>
+                                    {% if profile.allow_postpaid is True %}
+                                        <h5><a type="button" class="btn btn-primary" href="/webif/invoice/create/{{ profile.id }}">Rechnung Erstellen</a></h5>
+                                    {% else %}
+                                        <h5><a type="button" class="btn btn-primary" href="/webif/user/deposit/{{ profile.id }}">Einzahlung verbuchen</a></h5>
+                                    {% endif %}
                                 {% endif %}
                             </span>
                         </li>
@@ -254,7 +258,7 @@
                                 <th scope="col">Von</th>
                                 <th scope="col">Bis</th>
                                 <th scope="col">Art</th>
-                                <th scope="col">Preis</th>
+                                <th scope="col">Kosten</th>
                                 <th scope="col">Zahlungsweise</th>
                                 <th scope="col">Rechnung</th>
                             </tr>
@@ -306,7 +310,7 @@
                                 <th scope="col">Für Benutzer</th>
                                 <th scope="col">Anfang</th>
                                 <th scope="col">Ende</th>
-                                <th scope="col">Preis</th>
+                                <th scope="col">Kosten</th>
                                 <th scope="col">Zahlungsweise</th>
                                 <th scope="col">Rechnung</th>
                             </tr>
@@ -357,7 +361,7 @@
                                 <th scope="col">Datum</th>
                                 <th scope="col">Für Benutzer</th>
                                 <th scope="col">Maschinen Sitzung</th>
-                                <th scope="col">Preis </th>
+                                <th scope="col">Kosten </th>
                                 <th scope="col">Zahlungsweise</th>
                                 <th scope="col">Rechnung</th>
                             </tr>
@@ -396,9 +400,10 @@
             </div>
         </div>
 
-        <h3>Rechnungen / Transaktionen</h3>
         <div class="row gutters-sm">
-            <div class="col-sm-6 mb-3">
+
+            <h3>Rechnungen</h3>
+            <div class="col-sm-13 mb-3">
                 <div class="card h-100">
                     <div class="card-body">
                         <h6 class="d-flex align-items-center mb-3">
@@ -410,9 +415,11 @@
                         <table class="table">
                             <thead>
                             <tr>
-                                <th scope="col">Datum</th>
-                                <th scope="col">Kosten</th>
-                                <th scope="col">mit MwSt.</th>
+                                <th scope="col">Erstellt</th>
+                                <th scope="col">Fällig</th>
+                                <th scope="col">Art</th>
+                                <th scope="col">Kommperziel</th>
+                                <th scope="col">Wert</th>
                                 <th scope="col">transaction</th>
                                 <th scope="col">Aktion</th>
                             </tr>
@@ -421,9 +428,18 @@
                             {% for latest_invoice in latest_invoices %}
                                 <tr>
                                     <td>{{ latest_invoice.created }}</td>
-                                    <td>{{ latest_invoice.value }}</td>
+                                    <td>{{ latest_invoice.due }}</td>
+                                    <td>
+                                        {% if latest_invoice.type == "invoice" %}
+                                            Rechnung
+                                        {% else %}
+                                            Quittung
+                                        {% endif %}
+                                    </td>
                                     <td>{{ latest_invoice.include_tax }}</td>
+                                    <td>{{ latest_invoice.value }} €</td>
                                     <td>{{ latest_invoice.transaction }}</td>
+
                                     <td><a href="/webif/invoice/show/{{ latest_invoice.id }}">Anzeigen</a></td>
                                 </tr>
                             {% endfor %}
@@ -432,7 +448,9 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-6 mb-3">
+
+            <h3>Transaktionen</h3>
+            <div class="col-sm-12 mb-3">
                 <div class="card h-100">
                     <div class="card-body">
                         <h6 class="d-flex align-items-center mb-3">

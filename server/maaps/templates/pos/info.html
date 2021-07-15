@@ -34,7 +34,7 @@
                 {% if user_profile.paying_user != None %}
                     <b>{{user_profile.paying_user}}</b> zahlt für Dich!
                 {% else %}
-                    {% if user_profile.allow_invoice == True %}
+                    {% if user_profile.allow_postpaid == True %}
                         Du kannst auf Rechnung zahlen
                     {% else %}
                         Du hast {{user_profile.prepaid_deposit |floatformat:2}} Euro Guthaben

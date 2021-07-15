@@ -14,7 +14,7 @@ class MachineUsersInline(admin.TabularInline):
     fk_name = 'user'
 
 class ProfileAdmin(BaseUserAdmin):
-    list_display = ("first_name", "last_name", "company_name", "deposit", "email", "is_staff", "allow_invoice", "paying_user")
+    list_display = ("first_name", "last_name", "company_name", "deposit", "email", "is_staff", "allow_postpaid", "paying_user")
     inlines = (ProfileInline, MachineUsersInline)
 
     def company_name(self, obj):
@@ -23,8 +23,8 @@ class ProfileAdmin(BaseUserAdmin):
     def deposit(self, obj):
         return obj.profile.prepaid_deposit
 
-    def allow_invoice(self, obj):
-        return obj.profile.allow_invoice
+    def allow_postpaid(self, obj):
+        return obj.profile.allow_postpaid
 
     def paying_user(self, obj):
         return obj.profile.paying_user
@@ -47,7 +47,7 @@ class TokenAdmin(admin.ModelAdmin):
 
 @admin.register(models.Machine)
 class MachineAdmin(admin.ModelAdmin):
-    list_display = ("id", "name", "comment", "ask_clean", "ask_pay_material", "show_autologout", "price_per_hour", "price_per_usage","tutor_required_count", "tutor_required_once_after_month", "current_session")
+    list_display = ("id", "name", "comment", "group_name", "ask_clean", "ask_pay_material", "show_autologout", "price_per_hour", "price_per_usage","tutor_required_count", "tutor_required_once_after_month", "current_session")
 
 @admin.register(models.Transaction)
 class TransactionAdmin(admin.ModelAdmin):
@@ -100,8 +100,13 @@ class SpaceAccessTrackingAdmin(admin.ModelAdmin):
     list_display = ("id", "user", "created", "start", "end", "spaceRentPayment")
     list_filter = ("created", "start", "end")
 
+@admin.register(models.Invoice)
+class InvoiceAdmin(admin.ModelAdmin):
+    list_display = ("id", "user", "created", "due", "value", "transaction", "include_tax", "type")
+    list_filter = ("created", "include_tax", "type")
+
+
 
 admin.site.register(models.Price)
-admin.site.register(models.Invoice)
 admin.site.unregister(User)
 admin.site.register(User, ProfileAdmin)

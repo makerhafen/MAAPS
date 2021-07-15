@@ -15,6 +15,9 @@ def webif__invoice__show(request, invoice_id):
         invoice_items.append(materialPayment)
     for spaceRentPayment in invoice.spaceRentPayments.all():
         invoice_items.append(spaceRentPayment)
+    for prepaidDepositPayment in invoice.prepaidDepositPayments.all():
+        invoice_items.append(prepaidDepositPayment)
+
     invoice_items.sort(key=lambda x: x.created)
 
     return HttpResponse(loader.get_template('webif/invoice/show.html').render({

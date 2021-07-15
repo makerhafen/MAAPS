@@ -51,6 +51,7 @@ urlpatterns = [
     path('webif/user/show/<int:user_id>'        , views.webif__user__show  , name='webif__user__show'),
     path('webif/user/update/<int:user_id>'      , views.webif__user__update, name='webif__user__update'),
     path('webif/user/delete/<int:user_id>'      , views.webif__user__delete, name='webif__user__delete'),
+    path('webif/user/deposit/<int:profile_id>'     , views.webif__user__deposit, name='webif__user__deposit'),
     path('webif/user/contract/<int:user_id>'        , views.webif__user__contract, name='webif__user__contract'),
     path('webif/user/create_new_card/<int:user_id>'  , views.webif__user__create_new_card, name='webif__user__create_new_card'),
 

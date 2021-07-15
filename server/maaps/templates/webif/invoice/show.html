@@ -18,7 +18,7 @@
             max-width: 800px;
             margin: auto;
             padding: 30px;
-            border: 1px solid #eee;
+            #border: 1px solid #eee;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
             font-size: 16px;
             line-height: 24px;
@@ -105,18 +105,63 @@
         .invoice-box.rtl table tr td:nth-child(2) {
             text-align: left;
         }
+
+        @media screen {
+            div.footer {
+                display: none;
+            }
+        }
+        @media print {
+            html, body {
+                width: 210mm;
+                height: 297mm;
+            }
+            .column {
+                page-break-inside: avoid;
+            }
+            p {
+                page-break-inside: avoid;
+            }
+            div.footer {
+                position: fixed;
+                bottom: 0;
+            }
+        }
     </style>
     <br>
-    Rechung für {{invoice.user}}<br>
 
     {% if last_error != None %}
-    <div class="row">
+        <div class="row">
         <div class="col-md-12 ">
             <b>Fehler:</b><br>
         </div>
     </div>
     {% endif %}
 
+    <div class="footer" style="text-align:center;width:100%;color:red;border-top:1px solid gray;">
+        <div style="width:23%;float:left">
+            Makerhafen gGmbH <br>
+            Stahltwiete 21   <br>
+            22761 Hamburg
+        </div>
+        <div style="width:23%;float:left">
+            +49 40 53050911         <br>
+            office@makerhafen.de    <br>
+            https://makerhafen.de
+        </div>
+        <div style="width:30%;float:left">
+            BIC:   DEUTDEDBHAM  <br>
+            IBAN:  DE06200700240914441100   <br>
+            UstID: DE337879639 <br>
+            SteuerNr: 17/451/10661
+        </div>
+        <div style="width:23%;float:left" >
+            Sitz: Hamburg       <br>
+            Gf: Susanne Theelen <br>
+            Amtsgericht Hamburg <br>
+            HRB 164690
+        </div>
+    </div>
 
     <div class="invoice-box">
         <table cellpadding="0" cellspacing="0">
@@ -129,9 +174,12 @@
                                 <b>Makerhafen</b>
                             </td>
                             <td>
-                                Rechnung #: 123<br />
+                                {% if invoice.type == "invoice" %}Rechnung{% else %}Zahlungsbeleg{% endif %} #: 123<br />
                                 Erstellt: {{ invoice.created |date:'d.m.Y' }}<br />
-                                Fällig: {{ invoice.due |date:'d.m.Y' }}
+                                {% if invoice.type == "invoice" %}
+                                    Fällig: {{ invoice.due |date:'d.m.Y' }}
+                                {% else %}
+                                {% endif %}
                             </td>
                         </tr>
                     </table>
@@ -148,7 +196,6 @@
                                 Stahltwiete 21<br />
                                 22761 Hamburg<br />
                                 office@makerhafen.de<br />
-                                UstID: DE-66666666
                             </td>
                             <td>
                                 {% if invoice.user.profile.company_name %}
@@ -167,9 +214,8 @@
 
             <tr class="heading">
                 <td>Position</td>
-                <td>Preis</td>
+                <td>Kosten</td>
             </tr>
-
 
             {% for invoice_item in invoice_items %}
             <tr class="item">
@@ -191,28 +237,33 @@
                         ; {{invoice_item.created|date:'d.m.Y H:i'}}
                     {% elif invoice_item.type %}
                         {% if invoice_item.type == "monthly" %}
-                            Monatsmiete {{invoice_item.end|date:'d.m.Y'}} - {{invoice_item.end|date:'d.m.Y'}}
+                            Werkstattnutzung {{invoice_item.start|date:'d.m.Y'}} - {{invoice_item.end|date:'d.m.Y'}}
                         {% else %}
-                            Tagesmiete {{invoice_item.start|date:'d.m.Y'}}
+                            Werkstattnutzung {{invoice_item.start|date:'d.m.Y'}}
                         {% endif %}
+                    {% else %}
+                        Guthaben aufgeladen
                     {% endif %}
 
                 </td>
-                <td>€{{invoice_item.price}}</td>
+                <td>€{{ invoice_item.price | floatformat:2 }}</td>
             </tr>
             {% endfor %}
 
-            <tr>
-                <td></td>
-                <td style="border-top: 2px solid lightgray">Brutto:&nbsp&nbsp&nbsp€{{invoice.value}}</td>
-            </tr>
-            <tr class="">
-                <td></td>
-                <td>Mwst.&nbsp19%:&nbsp&nbsp&nbsp€{{invoice.value}}</td>
-            </tr>
+
+            {% if invoice.include_tax %}
+                <tr>
+                    <td></td>
+                    <td style="border-top: 2px solid lightgray">Brutto:&nbsp&nbsp&nbsp€{{invoice.value | floatformat:2 }}</td>
+                </tr>
+                    <tr class="">
+                    <td></td>
+                    <td>Mwst.&nbsp19%:&nbsp&nbsp&nbsp€{{invoice.taxes | floatformat:2 }}</td>
+                </tr>
+            {% endif %}
             <tr class="total">
                 <td></td>
-                <td style="border-top: 2px solid gray">Summe:&nbsp&nbsp&nbsp€{{invoice.value}}</td>
+                <td style="border-top: 2px solid gray">Summe:&nbsp&nbsp&nbsp€{{invoice.total | floatformat:2 }}</td>
             </tr>
         </table>
     </div>

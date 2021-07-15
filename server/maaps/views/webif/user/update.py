@@ -15,7 +15,7 @@ def webif__user__update(request, user_id):
         'first_name': profile.user.first_name,
         'last_name': profile.user.last_name,
         'company_name': profile.company_name,
-        'allow_invoice': profile.allow_invoice,
+        'allow_postpaid': profile.allow_postpaid,
         'commercial_account': profile.commercial_account,
         'discount_account': profile.discount_account,
         'monthly_payment': profile.monthly_payment,

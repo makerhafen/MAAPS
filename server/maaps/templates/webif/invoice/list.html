@@ -22,12 +22,12 @@
                 <thead>
                     <tr>
                         <th scope="col">Benutzer</th>
-                        <th scope="col">Firma</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">Guthaben (Euro)</th>
-                        <th scope="col">Auf Rechnung</th>
-                        <th scope="col">Jemand anderes zahlt</th>
-                        <th scope="col">Bild</th>
+                        <th scope="col">Betrag Brutto</th>
+                        <th scope="col">Mwst.</th>
+                        <th scope="col">Total</th>
+                        <th scope="col">Kommerziel</th>
+                        <th scope="col">Art</th>
+                        <th scope="col">Aktion</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -37,14 +37,11 @@
                             <a href="/webif/user/show/{{ invoice.user.profile.id }}">{{ invoice.user.company_name }} {{ invoice.user.first_name }}, {{ invoice.user.last_name }}
                             </a>
                         </td>
-                        <td>{{ invoice.company_name }}</td>
-                        <td>{{ invoice.user.email }}</td>
-                        <td {% if profile.prepaid_deposit < 0 %}style="color:red"{% endif %}>{{ profile.prepaid_deposit }}</td>
-                        <td>{{ invoice.allow_invoice }}</td>
-                        <td>{{ invoice.paying_user }}</td>
-                        <td>
-                            {% if profile.profile_picture %}<img style="width:50px" src = "{{ profile.profile_picture.url }}"/>{% endif %}
-                        </td>
+                        <td>{{ invoice.value }}</td>
+                        <td>{{ invoice.taxes }}</td>
+                        <td>{{ invoice.total }}</td>
+                        <td>{{ invoice.include_tax }}</td>
+                        <td>{{ invoice.type }}</td>
                         <td>
                             <a type="button" class="btn btn-success" href="/webif/invoice/show/{{ invoice.id }}">Anzeigen</a>
                         </td>

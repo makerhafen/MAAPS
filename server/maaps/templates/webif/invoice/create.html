@@ -15,23 +15,44 @@
     <div class="row">
         <div class="col-md-8"><h4>Rechnung für {{profile}} erstellen</h4></div>
         <div class="col-md-4" style="text-align:right"><a type="button" class="btn btn-success" href="/webif/invoice/create/">Neuen Rechnung erstellen stellen</a></div>
+
+        {% if profile.allow_postpaid %}
+            <b>Diese ist eine Rechung die noch bezahlt werden muss</b>
+        {% else %}
+            <b>Diese Rechung wurde schon bezahlt</b>
+        {% endif %}
     </div>
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <form method="post">
                 {% csrf_token %}
-                <h4>Maschinen Zugriffe</h4>
-                {% for unpayed_machine_session in unpayed_machine_sessions %}
-                    <input type="checkbox" name="unpayed_machine_sessions" value="{{ unpayed_machine_session.id }}" > {{ unpayed_machine_session }}<br>
-                {% endfor %}
-                <h4>Material</h4>
-                {% for unpayed_material in unpayed_materials %}
-                    <input type="checkbox" name="unpayed_materials" value="{{ unpayed_material.id }}" > {{ unpayed_material }}<br>
-                {% endfor %}
-                <h4>Space rent</h4>
-                {% for unpayed_spacerent in unpayed_spacerents %}
-                    <input type="checkbox" name="unpayed_spacerents" value="{{ unpayed_spacerent.id }}" > {{ unpayed_spacerent }}<br>
-                {% endfor %}
+                {% if profile.allow_postpaid %}
+                    <h4>Maschinen Zugriffe</h4>
+                    {% for unpayed_machine_session in unpayed_machine_sessions %}
+                        <input type="checkbox" name="unpayed_machine_sessions" value="{{ unpayed_machine_session.id }}" > {{ unpayed_machine_session }}<br>
+                    {% endfor %}
+                    <h4>Material</h4>
+                    {% for unpayed_material in unpayed_materials %}
+                        <input type="checkbox" name="unpayed_materials" value="{{ unpayed_material.id }}" > {{ unpayed_material }}<br>
+                    {% endfor %}
+                    <h4>Space rent</h4>
+                    {% for unpayed_spacerent in unpayed_spacerents %}
+                        <input type="checkbox" name="unpayed_spacerents" value="{{ unpayed_spacerent.id }}" > {{ unpayed_spacerent }}<br>
+                    {% endfor %}
+                    <h4>Space rent</h4>
+                    {% for payed_deposit_transaction in payed_deposit_transactions %}
+                        <input type="checkbox" name="payed_deposit_transactions" value="{{ payed_deposit_transaction.id }}" > {{ payed_deposit_transaction }}<br>
+                    {% endfor %}
+                {% else %}
+                    <h4>Prepaid Guthaben aufladen</h4>
+                    {% for prepaidDepositPayment in prepaidDepositPayments %}
+                        <input type="checkbox" name="prepaidDepositPayments" value="{{ prepaidDepositPayment.id }}" > {{ prepaidDepositPayment }}<br>
+                    {% endfor %}
+                    <h4>Raummiete</h4>
+                    {% for spaceRentPayment in spaceRentPayments %}
+                        <input type="checkbox" name="spaceRentPayments" value="{{ spaceRentPayment.id }}" > {{ spaceRentPayment }}<br>
+                    {% endfor %}
+                {% endif %}
 
                 <a type="button" class="btn btn-danger" href="{%url 'webif__user__list' %}">Cancel</a>
                 <button type="submit" class="btn btn-success">Update</button>

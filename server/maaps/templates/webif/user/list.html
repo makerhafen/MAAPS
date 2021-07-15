@@ -49,9 +49,9 @@
                         <td>
                             {% if profile.paying_user %}
 
-                                {% if profile.paying_user.allow_invoice %}{{ profile.paying_user }}, Ja{% else %}{% endif %}
+                                {% if profile.paying_user.allow_postpaid %}{{ profile.paying_user }}, Ja{% else %}{% endif %}
                             {% else %}
-                                {% if profile.allow_invoice %}Ja{% else %}{% endif %}
+                                {% if profile.allow_postpaid %}Ja{% else %}{% endif %}
                             {% endif %}
                         </td>
                         <td>
