@@ -70,11 +70,12 @@ def create_transaction_and_invoice(user_profile, value, type):
     transaction.value = value
     transaction.type = type
     transaction.save()
-    return create_invoice(user_profile, value, models.InvoiceType.receipt, transaction)
+    invoice = create_invoice(user_profile, value, models.InvoiceType.receipt, transaction)
+    return transaction, invoice
 
 
 def pay_prepaid_deposit(user_profile, value, transaction_type):
-    invoice = create_transaction_and_invoice(user_profile, value, transaction_type)
+    transaction, invoice = create_transaction_and_invoice(user_profile, value, transaction_type)
     prepaidDepositPayment = models.PrepaidDepositPayment()
     prepaidDepositPayment.user = user_profile.user
     prepaidDepositPayment.price = value
@@ -82,7 +83,7 @@ def pay_prepaid_deposit(user_profile, value, transaction_type):
     prepaidDepositPayment.save()
     user_profile.prepaid_deposit += value
     user_profile.save()
-    return invoice
+    return transaction, invoice
 
 def _get_price(profile, identifier ):
     price = models.Price.objects.get(identifier = identifier)
@@ -94,7 +95,7 @@ def _get_price(profile, identifier ):
         return price.default
 
 def pay_spaceRentPayment(user_profile, value, transaction_type):
-    invoice = create_transaction_and_invoice(user_profile, value, transaction_type)
+    transaction, invoice = create_transaction_and_invoice(user_profile, value, transaction_type)
     spaceRentPayment = models.SpaceRentPayment()
     try:
         current_spaceRentPayment = models.SpaceRentPayment.objects.filter(
@@ -115,4 +116,4 @@ def pay_spaceRentPayment(user_profile, value, transaction_type):
     spaceRentPayment.for_user = user_profile.user
     spaceRentPayment.invoice = invoice
     spaceRentPayment.save()
-    return invoice
+    return transaction, invoice

@@ -25,7 +25,7 @@ def pos__deposit(request):
             user_profile, error = get_profile_from_post(request)
             if user_profile is not None:
                 value_before_payment = user_profile.prepaid_deposit
-                invoice = pay_prepaid_deposit(user_profile, deposit_value, models.TransactionType.from_cash_for_deposit)
+                transaction, invoice = pay_prepaid_deposit(user_profile, deposit_value, models.TransactionType.from_cash_for_deposit)
 
     template = loader.get_template('pos/deposit.html')
     return HttpResponse(template.render({

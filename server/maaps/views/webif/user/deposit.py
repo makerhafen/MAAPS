@@ -26,10 +26,10 @@ def webif__user__deposit(request, profile_id):
             if user_profile is not None:
                 invoice = None
                 if transaction_type == models.TransactionType.from_cash_for_deposit or transaction_type == models.TransactionType.from_bank_for_deposit:
-                    invoice = pay_prepaid_deposit(user_profile, deposit_value, transaction_type)
+                    transaction, invoice = pay_prepaid_deposit(user_profile, deposit_value, transaction_type)
 
                 if transaction_type == models.TransactionType.from_cash_for_rent or transaction_type == models.TransactionType.from_bank_for_rent:
-                    invoice = pay_spaceRentPayment(user_profile, deposit_value, transaction_type)
+                    transaction, invoice = pay_spaceRentPayment(user_profile, deposit_value, transaction_type)
 
                 return redirect('webif__invoice__show',invoice_id=invoice.id)
 

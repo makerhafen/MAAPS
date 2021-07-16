@@ -108,5 +108,6 @@ class InvoiceAdmin(admin.ModelAdmin):
 
 
 admin.site.register(models.Price)
+admin.site.register(models.PrepaidDepositPayment)
 admin.site.unregister(User)
 admin.site.register(User, ProfileAdmin)
