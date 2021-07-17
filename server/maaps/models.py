@@ -22,6 +22,32 @@ def rename_file(instance, filename):
     filename = '{}_{}.{}'.format(instance.user.username, now().strftime('%Y.%m.%d_%H.%M.%S'), ext)
     return os.path.join('photos/', filename)
 
+
+
+#
+# ENUMS
+#
+class SpaceRentPaymentType:
+    monthly = "monthly"
+    daily = "daily"
+
+class TransactionType:
+    from_cash_for_deposit = "from_cash_for_deposit"
+    from_cash_for_invoice = "from_cash_for_invoice"
+    from_cash_for_rent = "from_cash_for_rent"
+    from_bank_for_deposit = "from_bank_for_deposit"
+    from_bank_for_invoice = "from_bank_for_invoice"
+    from_bank_for_rent = "from_bank_for_rent"
+    from_deposit_for_machine = "from_deposit_for_machine"
+    from_deposit_for_material = "from_deposit_for_material"
+    from_deposit_for_rent = "from_deposit_for_rent"
+
+class InvoiceType:
+    receipt = "receipt"
+    invoice = "invoice"
+
+
+
 #
 # OTHER
 #
@@ -53,28 +79,6 @@ class SpaceAccessTracking(models.Model):
     end = models.DateTimeField(blank=True, null=True)
     spaceRentPayment = models.ForeignKey("SpaceRentPayment", on_delete=models.SET_NULL, blank=True, null=True, related_name="spaceAccessTrackings")
 
-
-#
-# ENUMS
-#
-class SpaceRentPaymentType:
-    monthly = "monthly"
-    daily = "daily"
-
-class TransactionType:
-    from_cash_for_deposit = "from_cash_for_deposit"
-    from_cash_for_invoice = "from_cash_for_invoice"
-    from_cash_for_rent = "from_cash_for_rent"
-    from_bank_for_deposit = "from_bank_for_deposit"
-    from_bank_for_invoice = "from_bank_for_invoice"
-    from_bank_for_rent = "from_bank_for_rent"
-    from_deposit_for_machine = "from_deposit_for_machine"
-    from_deposit_for_material = "from_deposit_for_material"
-    from_deposit_for_rent = "from_deposit_for_rent"
-
-class InvoiceType:
-    receipt = "receipt"
-    invoice = "invoice"
 
 
 #
@@ -123,6 +127,7 @@ class Profile(models.Model):
         if self.paying_user is None:
             return self
         return self.paying_user
+
 
 
 #
@@ -212,6 +217,7 @@ class MachineSession(models.Model):
         return "%s;%s" % (self.machine.name, self.start)
 
 
+
 #
 # PAYED ACTIONS
 #
@@ -285,7 +291,6 @@ class Invoice(models.Model):
     include_tax = models.BooleanField(default=False)  # == mit mwst, rechnung oder spendenquittung
     type = models.CharField(max_length=100, default=InvoiceType.receipt, blank=True,null=True)
 
-
 class Transaction(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -297,6 +302,16 @@ class Transaction(models.Model):
 
     def __str__(self):
         return self.type + ", " + self.user.username + ", " + "%s" % self.value + "Euro"
+
+#
+# Mail
+#
+class Mail(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
 
 #
 # FUNCTIONS
@@ -313,7 +328,6 @@ def Token__update_identifier(sender, instance, *args, **kwargs):
         instance.identifier = instance.identifier[:28]
         instance.identifier = "%s;%s" % (instance.identifier, uid)
 
-
 @receiver(post_save, sender=User)
 def User__add_profile(sender, instance, *args, **kwargs):
     if not hasattr(instance, "profile"):
@@ -325,7 +339,6 @@ def User__add_profile(sender, instance, *args, **kwargs):
         token.can_write = True
         token.profile = instance.profile
         token.save()
-
 
 @receiver(post_save, sender=Machine)
 def Machine__create_token(sender, instance, *args, **kwargs):

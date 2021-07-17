@@ -17,7 +17,6 @@ def webif__user__deposit(request, profile_id):
     transaction_type = request.POST.get("type", None)
     user_profile = models.Profile.objects.get(id=profile_id)
 
-    print(deposit_value,transaction_type)
     if deposit_value is not None:
         deposit_value = float(deposit_value)
         if deposit_value <= 0:

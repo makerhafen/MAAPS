@@ -100,14 +100,17 @@ class SpaceAccessTrackingAdmin(admin.ModelAdmin):
     list_display = ("id", "user", "created", "start", "end", "spaceRentPayment")
     list_filter = ("created", "start", "end")
 
+
 @admin.register(models.Invoice)
 class InvoiceAdmin(admin.ModelAdmin):
     list_display = ("id", "user", "created", "due", "value", "transaction", "include_tax", "type")
     list_filter = ("created", "include_tax", "type")
 
-
+@admin.register(models.PrepaidDepositPayment)
+class PrepaidDepositPaymentAdmin(admin.ModelAdmin):
+    list_display = ("id", "created", "user", "for_user", "price", "transaction", "invoice")
+    list_filter = ("created",)
 
 admin.site.register(models.Price)
-admin.site.register(models.PrepaidDepositPayment)
 admin.site.unregister(User)
 admin.site.register(User, ProfileAdmin)
