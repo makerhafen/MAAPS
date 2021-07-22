@@ -9,10 +9,13 @@ def find_session_redirect(machine):
     if machine.current_session is None:
         return redirect('machine__login_user')
     if machine.current_session.tutor is None and machine.user_requires_tutor(machine.current_session.user):
+        # if machine.last_session.tutor is not None and machine.last_session.ended < 1h:
+        #   machine.current_session.tutor = machine.last_session.tutor
         return redirect('machine__tutor_required')
     if machine.current_session.tutor is None and machine.user_requires_tutor_once(machine.current_session.user):
         return redirect('machine__tutor_required')
     if machine.current_session.rating_clean == -1 and machine.ask_clean is True:
+        # and if machine.last_session.user != machine.current_session.user   # user has changed, ask
         return redirect('machine__rate_machine')
     paying_user_profile = machine.current_session.user.profile
     if paying_user_profile.paying_user is not None:

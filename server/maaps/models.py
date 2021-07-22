@@ -12,6 +12,7 @@ from django.dispatch import receiver
 from django.utils.timezone import now
 from django_resized import ResizedImageField
 from django.utils import timezone
+from unidecode import unidecode
 
 
 #
@@ -303,6 +304,7 @@ class Transaction(models.Model):
     def __str__(self):
         return self.type + ", " + self.user.username + ", " + "%s" % self.value + "Euro"
 
+
 #
 # Mail
 #
@@ -322,9 +324,9 @@ def Token__update_identifier(sender, instance, *args, **kwargs):
         uid = "%s" % uuid.uuid4()
         uid = "".join(uid.split("-")[-3:])  # 20 zeichen, 48 max
         if instance.profile is not None:
-            instance.identifier = "U:%s" % instance.profile.user.username
+            instance.identifier = "U:%s" % unidecode(instance.profile.user.username)
         if instance.machine is not None:
-            instance.identifier = "M:%s" % instance.machine.name
+            instance.identifier = "M:%s" % unidecode(instance.machine.name)
         instance.identifier = instance.identifier[:28]
         instance.identifier = "%s;%s" % (instance.identifier, uid)
 
