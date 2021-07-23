@@ -60,24 +60,6 @@ class UserForm(forms.Form):
         user.profile.city = self.cleaned_data["city"]
         user.profile.birthdate = self.cleaned_data["birthdate"]
         user.profile.save()
-        if is_new_user is True:
-            paying_user_profile = user.profile
-            print("IS NEW")
-            if user.profile.paying_user is not None:
-                paying_user_profile = user.profile.paying_user
-                print("AAA")
-            print(user, paying_user_profile)
-
-            if paying_user_profile.monthly_payment is True:
-                print("")
-                spaceRentPayment = models.SpaceRentPayment()
-                spaceRentPayment.user = paying_user_profile.user
-                spaceRentPayment.for_user = user
-                spaceRentPayment.start = timezone.now()
-                spaceRentPayment.end = timezone.now() + timedelta(days=31) #
-                spaceRentPayment.price = 12
-                spaceRentPayment.type = models.SpaceRentPaymentType.monthly
-                spaceRentPayment.save()
 
         allowed_machines = [int(allowed_machine) for allowed_machine in self.allowed_machines]
         all_machines = Machine.objects.all()

@@ -201,10 +201,9 @@
                                 {% if invoice.user.profile.company_name %}
                                     {{ invoice.user.profile.company_name}} <br />
                                 {% endif %}
-                                {% if invoice.user.profile.company_name %}
-                                    {{ invoice.user.profile.street}}, {{invoice.user.profile.plz}} {{invoice.user.city}}<br /> <br />
-                                {% endif %}
                                 {{ invoice.user.first_name}}, {{invoice.user.last_name}}<br />
+                                {{ invoice.user.profile.street}}<br>
+                                {{invoice.user.profile.postalcode}} {{invoice.user.profile.city}}<br>
                                 {{ invoice.user.email}}
                             </td>
                         </tr>

@@ -2,6 +2,8 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
 from . import models
+from django.urls import reverse
+from django.utils.html import format_html
 
 
 class ProfileInline(admin.StackedInline):
@@ -51,11 +53,17 @@ class MachineAdmin(admin.ModelAdmin):
 
 @admin.register(models.Transaction)
 class TransactionAdmin(admin.ModelAdmin):
-    list_display = ("id", "created", "user", "value", "type", "comment")
+    list_display = ("id", "created", "user", "value", "type", "comment", "link_to_invoice")
     list_filter = ( "type",)
 
     def user(self, obj):
         return obj.profile.user
+
+    def link_to_invoice(self, transaction):
+        link = reverse("admin:maaps_invoice_change", args=[transaction.invoice.id])
+        return format_html('<a href="{}"> {}</a>', link, transaction.invoice)
+
+    link_to_invoice.short_description = 'Invoice'
 
 
 @admin.register(models.MachineSessionPayment)
