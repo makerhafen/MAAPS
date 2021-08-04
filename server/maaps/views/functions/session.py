@@ -137,3 +137,4 @@ def end_session(session):
         session.end = timezone.now()
         session.save()
         return session, current_payment_session
+    return None, None

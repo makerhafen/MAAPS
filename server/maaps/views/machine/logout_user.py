@@ -8,6 +8,9 @@ def machine__logout_user(request):
     machine = get_machine_from_session(request)
     if machine is None:
         return find_session_redirect(machine)
+    if machine.current_session is None:
+        return find_session_redirect(machine)
+
     current_session, current_payment_session = end_session(machine.current_session)
     if current_session.start is None:  # user aborted before start
         return redirect('machine__login')
