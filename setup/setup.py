@@ -172,11 +172,18 @@ class Server(System):
     def _install_server(self):
         self._git_download()
         self._ssh('''
+            echo 'python3 /home/%s/MAAPS/server/manage.py runserver 0.0.0.0:8001 >> /var/log/maaps/server.log 2>&1' |tee /home/%s/maaps_start.sh
+            chmod +x /home/%s/maaps_start.sh
+        ''' % (self.username, self.username, self.username))
+
+        self._ssh('''
             cd  /home/%s/MAAPS/server/ ; 
             python3 manage.py migrate ; 
             cat /etc/xdg/lxsession/LXDE-pi/autostart | grep -v manage.py > 1 ; sudo mv 1 /etc/xdg/lxsession/LXDE-pi/autostart ; 
-            echo 'python3 /home/%s/MAAPS/server/manage.py runserver 0.0.0.0:8001 > /var/log/maaps/server.log' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart ;
+            cat /etc/xdg/lxsession/LXDE-pi/autostart | grep -v maaps_start.sh > 1 ; sudo mv 1 /etc/xdg/lxsession/LXDE-pi/autostart ; 
+            echo '/home/%s/maaps_start.sh' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart ;
         ''' % (self.username, self.username))
+
 
     def backup(self):
         date_time = datetime.now().strftime("%Y.%m.%d_%H:%M:%S")
