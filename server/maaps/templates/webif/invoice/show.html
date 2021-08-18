@@ -174,7 +174,7 @@
                                 <b>Makerhafen</b>
                             </td>
                             <td>
-                                {% if invoice.type == "invoice" %}Rechnung{% else %}Zahlungsbeleg{% endif %} #: 123<br />
+                                {% if invoice.type == "invoice" %}Rechnung{% else %}Zahlungsbeleg{% endif %}<br />
                                 Erstellt: {{ invoice.created |date:'d.m.Y' }}<br />
                                 {% if invoice.type == "invoice" %}
                                     Fällig: {{ invoice.due |date:'d.m.Y' }}
