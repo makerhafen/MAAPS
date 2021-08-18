@@ -110,7 +110,7 @@ def pay_spaceRentPayment(user_profile, value, transaction_type):
 
     price_per_month = _get_price(user_profile, identifier="spaceRentPayment.monthly")
     days_payed = int(math.ceil(round(31.0 / price_per_month * value,2)))
-
+    spaceRentPayment.price = value
     spaceRentPayment.end = spaceRentPayment.start + timedelta(days=days_payed)
     spaceRentPayment.user = user_profile.user
     spaceRentPayment.for_user = user_profile.user
