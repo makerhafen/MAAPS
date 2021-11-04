@@ -246,7 +246,7 @@ class SiteSetup:
         self._scan_network_data = []
         self._scan_network_progress_current = 0
         self._scan_network_progress_target = 256
-        with ThreadPool(8) as p:
+        with ThreadPool(4) as p:
             p.map(self._scan_network, ips_chunks)
 
         print(" Scan done       ")

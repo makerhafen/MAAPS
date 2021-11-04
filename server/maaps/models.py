@@ -327,6 +327,7 @@ def Token__update_identifier(sender, instance, *args, **kwargs):
             instance.identifier = "U:%s" % unidecode(instance.profile.user.username)
         if instance.machine is not None:
             instance.identifier = "M:%s" % unidecode(instance.machine.name)
+        instance.identifier = instance.identifier.replace(" ","_")
         instance.identifier = instance.identifier[:28]
         instance.identifier = "%s;%s" % (instance.identifier, uid)
 
