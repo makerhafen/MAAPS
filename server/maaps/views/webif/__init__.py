@@ -6,3 +6,4 @@ from .session import *
 from .spaceaccesstracking import *
 from .prices import webif__prices
 from .agb import webif__agb
+from .contract import webif__contract

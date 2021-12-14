@@ -1,0 +1,222 @@
+{% extends "webif/base.html" %}
+
+{% block content %}
+
+<style>
+    @media screen {
+      div.footer {
+        display: none;
+      }
+    }
+    @media print {
+      div.footer {
+        position: fixed;
+        bottom: 0;
+      }
+    }
+</style>
+
+    <div class="footer" style="text-align:center;width:100%;color:red;border-top:1px solid gray;">
+        <div style="width:22%;float:left">
+            Makerhafen gGmbH <br>
+            Stahltwiete 21   <br>
+            22761 Hamburg
+        </div>
+        <div style="width:22%;float:left">
+            +49 40 53050911         <br>
+            office@makerhafen.de    <br>
+            https://makerhafen.de
+        </div>
+        <div style="width:33%;float:left">
+            BIC:   DEUTDEDBHAM  <br>
+            IBAN:  DE06200700240914441100   <br>
+            UstID: DE337879639 <br>
+            SteuerNr: 17/451/10661
+        </div>
+        <div style="width:22%;float:left" >
+            Sitz: Hamburg      <br>
+            Gf: Susanne Theelen <br>
+            Amtsgericht Hamburg <br>
+            HRB 164690
+        </div>
+    </div>
+
+    <nav aria-label="breadcrumb" class="main-breadcrumb hidden-print">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/webif">Makerhafen</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Support</li>
+        </ol>
+    </nav>
+
+    <div class="row ">
+        <div class="col-xs-8">
+            <div class="row ">
+                <div class="col-xs-3">
+                    <img src="https://raw.githubusercontent.com/makerhafen/Logos/master/makerhafen%20logo%201100x1100.png" style="width: 100%; max-width: 100%" />
+                </div>
+                <div class="col-xs-8">
+                    <h1 style="font-size: 3em;font-weight: bold;">
+                        Makerhafen&nbspunterstützen
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-8 col-xs-offset-2">
+            <table class="table">
+                <tbody>
+                <tr>
+                    <td style="border-top:0px">Name, Vorname</td>
+                    <td style="border-top:0px"> </td>
+                </tr>
+                <tr>
+                    <td>Strasse</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Plz, Stadt</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Email</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Geburtsdatum</td>
+                    <td></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-xs-12  ">
+            Ich möchte die gemeinnützige Arbeit des Makerhafen unterstützen und/oder die Werkstatt regelmässig nutzen.
+            Ich habe die allgemeinen Geschäftsbedingungen der Makerhafen gGmbH zur Kenntniss genommen und verstehe,
+            dass ich alle zur Verfügung gestellten Werkzeuge und Anlagen auf eigene Gefahr nutze.
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-xs-12  ">
+           <input type="checkbox"/>
+            Standard-Beitrag: 32 € / Monat
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12  ">
+           <input type="checkbox"/>
+            Ich unterstütze den Makerhafen monatlich mit einer Spende von ______ €
+        </div>
+
+    </div>
+
+
+    <br>
+    <br>
+
+    <div class="row">
+        <div class="col-xs-6">
+            <div class="row">
+                <div class="col-xs-10" style="border-top: 1px solid gray">
+                    Ort, Datum
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div class="row">
+                <div class="col-xs-10" style="border-top: 1px solid gray">
+                    Unterschrift
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br>
+
+    <div class="row">
+        <div class="col-xs-12  ">
+            <h4>
+                Sepa-Lastschriftmandat
+            </h4>
+        </div>
+    </div>
+
+    <br>
+
+    <div class="row">
+        <div class="col-xs-8 col-xs-offset-0">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td style="border-top:0px"> Gläubiger-Idenifikationsnummer </td>
+                        <td style="border-top:0px"> DE70ZZZ00002439811 </td>
+                    </tr>
+                    <tr>
+                        <td>Mandatsreferenz</td>
+                        <td> {{mref}}  </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            Ich ermächtige den Zahlungsempfänger Makerhafen gGmbH Zahungen von meinem Konto mittels Lastschrift einzuziehen.
+            Zugleich weise ich mein Kreditinstitut an, die vom Zahlungsempfänger Makerhafen gGmbH auf mein Konto gezogenen Lastschriften einzulösen.
+            Hinweis: Ich kann innerhalb von acht Wochen, beginnend mit dem Belastungsdatum, die Erstattung des belasteten Betrages verlangen.
+            Es gelten dabei die mit meinem Kreditinstitut vereinbarten Bedingungen.
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-7">
+
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td style="border-top:0px">Kontoinhaber</td>
+                        <td style="border-top:0px">  </td>
+                    </tr>
+                    <tr>
+                        <td>IBAN</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>BIC</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <br>
+
+    <div class="row">
+        <div class="col-xs-6">
+            <div class="row">
+                <div class="col-xs-10" style="border-top: 1px solid gray">
+                    Ort, Datum
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-6">
+            <div class="row">
+                <div class="col-xs-10" style="border-top: 1px solid gray">
+                    Unterschrift
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <br>
+    <br>
+
+{% endblock %}
