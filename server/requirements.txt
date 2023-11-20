@@ -1,4 +1,5 @@
 django
 django-crispy-forms
+crispy-bootstrap4
 django-resized
 unidecode
