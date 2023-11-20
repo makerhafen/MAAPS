@@ -175,8 +175,25 @@
                             </td>
                             <td>
 
-                                {% if invoice.type == "invoice" %}Rechnung{% else %}Zahlungsbeleg{% endif %}<br />
-                                {% if "_bank_" in invoice.transaction.type %}Überweisung{% else %}Barzahlung{% endif %}<br />
+                                {% if invoice.type == "invoice" %}
+                                    Rechnung
+                                {% else %}
+                                    {% if "virtual_" not in invoice.transaction.type %}
+                                        Zahlungsbeleg
+                                    {% endif %}
+                                {% endif %}
+
+                                <br />
+                                {% if "_bank_" in invoice.transaction.type %}
+                                    Überweisung
+                                {% else %}
+                                    {% if "virtual_" in invoice.transaction.type %}
+                                        Virtuelles Guthaben gebucht<br>
+                                        Es wurd kein Geld wurde gezahlt.
+                                    {% else %}
+                                        Barzahlung
+                                    {% endif %}
+                                {% endif %}<br />
                                 Erstellt: {{ invoice.created |date:'d.m.Y' }}<br />
                                 {% if invoice.type == "invoice" %}
                                     Fällig: {{ invoice.due |date:'d.m.Y' }}
@@ -247,7 +264,7 @@
                     {% endif %}
 
                 </td>
-                <td>€{{ invoice_item.price | floatformat:2 }}</td>
+                <td>{% if "virtual_" not in invoice.transaction.type %}€{%endif%}{{ invoice_item.price | floatformat:2 }}</td>
             </tr>
             {% endfor %}
 
@@ -255,16 +272,16 @@
             {% if invoice.include_tax %}
                 <tr>
                     <td></td>
-                    <td style="border-top: 2px solid lightgray">Brutto:&nbsp&nbsp&nbsp€{{invoice.value | floatformat:2 }}</td>
+                    <td style="border-top: 2px solid lightgray">Brutto:&nbsp&nbsp&nbsp{% if "virtual_" not in invoice.transaction.type %}€{%endif%}{{invoice.value | floatformat:2 }}</td>
                 </tr>
                     <tr class="">
                     <td></td>
-                    <td>Mwst.&nbsp19%:&nbsp&nbsp&nbsp€{{invoice.taxes | floatformat:2 }}</td>
+                    <td>Mwst.&nbsp19%:&nbsp&nbsp&nbsp{% if "virtual_" not in invoice.transaction.type %}€{%endif%}{{invoice.taxes | floatformat:2 }}</td>
                 </tr>
             {% endif %}
             <tr class="total">
                 <td></td>
-                <td style="border-top: 2px solid gray">Summe:&nbsp&nbsp&nbsp€{{invoice.total | floatformat:2 }}</td>
+                <td style="border-top: 2px solid gray">Summe:&nbsp&nbsp&nbsp{% if "virtual_" not in invoice.transaction.type %}€{%endif%}{{invoice.total | floatformat:2 }}</td>
             </tr>
         </table>
     </div>

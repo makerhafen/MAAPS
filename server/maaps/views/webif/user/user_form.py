@@ -18,12 +18,13 @@ class UserForm(forms.Form):
     street = forms.CharField(label="Strasse und Hausnummer", required=False)
     postalcode = forms.CharField(label="PLZ", required=False)
     city = forms.CharField(label="Stadt", required=False)
-    allow_postpaid = forms.BooleanField(label="Bezahlung auf Rechnung", required=False)
-    commercial_account = forms.BooleanField(label="Kommerzieller Benutzer", required=False)
-    discount_account = forms.BooleanField(label="Ermäßigter Benutzer", required=False)
-    monthly_payment = forms.BooleanField(label="Monatlich zahlen", required=False)
-    birthdate = forms.DateField(label="Geburtsdatum (Pflicht bei Minderjährigen!)", required=False)
+    #birthdate = forms.DateField(label="Geburtsdatum", required=False)
     paying_user = forms.ModelChoiceField(queryset=Profile.objects.all(), required=False, label="Ein anderer Benutzer zahlt für diesen Benutzer")
+
+    commercial_account = forms.BooleanField(label="Kommerzieller Benutzer", required=False)
+    allow_postpaid = forms.BooleanField(label="Bezahlung auf Rechnung", required=False)
+    discount_account = forms.BooleanField(label="Sozialtarif", required=False)
+    monthly_payment = forms.BooleanField(label="Monatlicher zahler", required=False)
     allowed_machines = []
     profile_picture = None
 
@@ -58,7 +59,7 @@ class UserForm(forms.Form):
         user.profile.street = self.cleaned_data["street"]
         user.profile.postalcode = self.cleaned_data["postalcode"]
         user.profile.city = self.cleaned_data["city"]
-        user.profile.birthdate = self.cleaned_data["birthdate"]
+        #user.profile.birthdate = self.cleaned_data["birthdate"]
         user.profile.save()
 
         allowed_machines = [int(allowed_machine) for allowed_machine in self.allowed_machines]

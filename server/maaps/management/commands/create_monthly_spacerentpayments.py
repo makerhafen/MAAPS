@@ -27,6 +27,9 @@ class Command(BaseCommand):
                     spaceRentPayment.price = price.commercial
                 elif paying_user_profile.discount_account:
                     spaceRentPayment.price = price.discount
+                elif paying_user_profile.monthly_payment:
+                    spaceRentPayment.price = price.members
+
                 else:
                     spaceRentPayment.price = price.default
                 spaceRentPayment.start = timezone.now()

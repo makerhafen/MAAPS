@@ -48,11 +48,6 @@
         </ol>
     </nav>
 
-   <div class="hidden-print">
-        <h3 style="text-align:center;color:red">Diese Seite pro Ausdruck neu laden, um eine neue Mandatsreferenz zu erzeugen.</h3>
-
-    </div>
-
     <div class="row ">
         <div class="col-xs-8">
             <div class="row ">
@@ -86,6 +81,10 @@
                 </tr>
                 <tr>
                     <td>Email</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Paypal</td>
                     <td></td>
                 </tr>
                 </tbody>
@@ -126,55 +125,25 @@
     </div>
 
     <br>
-    <br>
-    <br>
+
 
     <div class="row">
-        <div class="col-xs-12  ">
+        <div class="col-xs-3">
             <h4>
-                Sepa-Lastschriftmandat
+                <img style="width:100px;"src="/static/img/PayPal.svg">
             </h4>
         </div>
+        <div class="col-xs-6">
+            <img style="width:100%" src="/static/img/paypal_donate_monthly.png">
+        </div>
     </div>
-
-    <br>
-
     <div class="row">
-        <div class="col-xs-12">
-            Ich ermächtige den Zahlungsempfänger Makerhafen gGmbH Zahungen von meinem Konto mittels Lastschrift einzuziehen.
-            Zugleich weise ich mein Kreditinstitut an, die vom Zahlungsempfänger Makerhafen gGmbH auf mein Konto gezogenen Lastschriften einzulösen.
-            Hinweis: Ich kann innerhalb von acht Wochen, beginnend mit dem Belastungsdatum, die Erstattung des belasteten Betrages verlangen.
-            Es gelten dabei die mit meinem Kreditinstitut vereinbarten Bedingungen.
+        <div class="col-xs-12" style="text-align:center">
+            <p>paypal.com/donate/?hosted_button_id=EXZXJWBPD2EE8<br>
+            Link öffnen, Betrag eingeben, "Monatlich" auswählen.</p>
         </div>
     </div>
-    <br>
-    <div class="row">
-        <div class="col-xs-7">
 
-            <table class="table">
-                <tbody>
-                    <tr>
-                        <td style="border-top:0px">Kontoinhaber</td>
-                        <td style="border-top:0px">  </td>
-                    </tr>
-                    <tr>
-                        <td>IBAN</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>BIC</td>
-                        <td></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="col-xs-5 col-xs-offset-0">
-            <p style="text-align:center">Gläubiger-Idenifikationsnummer</p>
-            <p style="font-size:1.2em;text-align:center">DE70ZZZ00002439811</p>
-            <p style="text-align:center">Mandatsreferenz:</p>
-            <p style="font-size:1.2em;text-align:center">{{mref}}</p>
-        </div>
-    </div>
     <br>
     <br>
 
@@ -198,6 +167,6 @@
 
     <br>
     <br>
-    <br>
+
 
 {% endblock %}

@@ -239,13 +239,13 @@ class SiteSetup:
             for i in range(0, len(lst), n):
                 yield lst[i:i + n]
         partialip = ".".join(network.split(".")[0:-1])
-        ips_chunks = [c for c in chunks([partialip + "." + str(i) for i in range(0, 256)], 4)]
+        ips_chunks = [c for c in chunks([partialip + "." + str(i) for i in range(0, 255)], 4)]
         random.shuffle(ips_chunks)
 
-        print("\nScanning %s to %s.256" % (network, partialip))
+        print("\nScanning %s to %s.255" % (network, partialip))
         self._scan_network_data = []
         self._scan_network_progress_current = 0
-        self._scan_network_progress_target = 256
+        self._scan_network_progress_target = 255
         with ThreadPool(4) as p:
             p.map(self._scan_network, ips_chunks)
 

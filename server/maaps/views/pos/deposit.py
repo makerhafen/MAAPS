@@ -5,7 +5,7 @@ import maaps.models as models
 from maaps.views.functions.session import get_profile_from_post, get_profile_from_session
 from maaps.views.functions.payment import pay_prepaid_deposit
 
-def pos__deposit(request):
+def pos__deposit_old(request):
     admin_profile = get_profile_from_session(request)
     if admin_profile is None:
         return redirect('pos__index')

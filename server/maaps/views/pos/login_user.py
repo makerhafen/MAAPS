@@ -14,6 +14,8 @@ def _get_price(profile, identifier):
         return price.commercial
     elif profile.get_paying_user().discount_account:
         return price.discount
+    elif profile.get_paying_user().monthly_payment:
+        return price.members
     else:
         return price.default
 

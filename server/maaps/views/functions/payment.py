@@ -9,7 +9,6 @@ def user_can_pay(user_profile):
         return False, "no_deposit_available"
     return True, ""
 
-
 def create_payment_session(machine, paying_user_profile):
     r, error = user_can_pay(paying_user_profile)
     if r is False:
@@ -70,9 +69,11 @@ def create_transaction_and_invoice(user_profile, value, type):
     transaction.value = value
     transaction.type = type
     transaction.save()
-    invoice = create_invoice(user_profile, value, models.InvoiceType.receipt, transaction)
+    if type == models.TransactionType.virtual_for_deposit:
+        invoice = create_invoice(user_profile, value, models.InvoiceType.virtual, transaction)
+    else:
+        invoice = create_invoice(user_profile, value, models.InvoiceType.receipt, transaction)
     return transaction, invoice
-
 
 def pay_prepaid_deposit(user_profile, value, transaction_type):
     transaction, invoice = create_transaction_and_invoice(user_profile, value, transaction_type)
@@ -91,6 +92,9 @@ def _get_price(profile, identifier ):
         return price.commercial
     elif profile.get_paying_user().discount_account:
         return price.discount
+    elif profile.get_paying_user().monthly_payment:
+        return price.members
+
     else:
         return price.default
 

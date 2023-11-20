@@ -42,11 +42,12 @@ class TransactionType:
     from_deposit_for_machine = "from_deposit_for_machine"
     from_deposit_for_material = "from_deposit_for_material"
     from_deposit_for_rent = "from_deposit_for_rent"
+    virtual_for_deposit = "virtual_for_deposit"
 
 class InvoiceType:
     receipt = "receipt"
     invoice = "invoice"
-
+    virtual = "virtual"
 
 
 #
@@ -57,6 +58,7 @@ class Price (models.Model):
     updated = models.DateTimeField(auto_now=True)
     identifier = models.CharField(max_length=100, blank=True)
     discount = models.FloatField(default=0)
+    members = models.FloatField(default=0)
     default = models.FloatField(default=0)
     commercial = models.FloatField(default=0)
 
@@ -182,9 +184,12 @@ class Machine(models.Model):
         if paying_user_profile.commercial_account:
             if self.price_per_hour  is not None : price_per_hour = self.price_per_hour.commercial
             if self.price_per_usage is not None : price_per_usage = self.price_per_usage.commercial
-        elif paying_user_profile.commercial_account:  # discount account
+        elif paying_user_profile.discount_account:  # discount account
             if self.price_per_hour  is not None: price_per_hour = self.price_per_hour.discount
             if self.price_per_usage is not None: price_per_usage = self.price_per_usage.discount
+        elif paying_user_profile.monthly_payment:  # membership
+            if self.price_per_hour  is not None: price_per_hour = self.price_per_hour.members
+            if self.price_per_usage is not None: price_per_usage = self.price_per_usage.members
         else:
             if self.price_per_hour  is not None: price_per_hour = self.price_per_hour.default
             if self.price_per_usage is not None: price_per_usage = self.price_per_usage.default

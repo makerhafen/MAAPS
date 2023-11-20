@@ -21,7 +21,8 @@
                 <thead>
                     <tr>
                         <th scope="col">Zahlungsweise</th>
-                        <th scope="col">Ermäßigt</th>
+                        <th scope="col">Sozial</th>
+                        <th scope="col">Mitglieder</th>
                         <th scope="col">Standard</th>
                         <th scope="col">Kommerziel</th>
                     </tr>
@@ -30,12 +31,14 @@
                     <tr>
                         <td>Monatsabo</td>
                         <td>{{spaceRentPayment_monthly.discount}} €/Monat</td>
+                        <td>{{spaceRentPayment_monthly.members}} €/Monat</td>
                         <td>{{spaceRentPayment_monthly.default}} €/Monat</td>
                         <td>{{spaceRentPayment_monthly.commercial}} €/Monat</td>
                     </tr>
                     <tr>
                         <td>Tagespass</td>
                         <td>{{spaceRentPayment_daily.discount}} €/Tag</td>
+                        <td>{{spaceRentPayment_daily.members}} €/Tag</td>
                         <td>{{spaceRentPayment_daily.default}} €/Tag</td>
                         <td>{{spaceRentPayment_daily.commercial}} €/Tag</td>
                     </tr>
@@ -50,7 +53,8 @@
                 <thead>
                     <tr>
                         <th scope="col">Maschine</th>
-                        <th scope="col">Ermäßigt</th>
+                        <th scope="col">Sozial</th>
+                        <th scope="col">Mitglieder</th>
                         <th scope="col">Standard</th>
                         <th scope="col">Kommerziel</th>
                     </tr>
@@ -67,10 +71,15 @@
                             {{ machine.price_per_hour.default }} €/Stunde<br>
                             {% if machine.price_per_usage %}{{ machine.price_per_usage.default }} €/Benutzung{% endif %}
                         </td>
+                         <td>
+                            {{ machine.price_per_hour.members }} €/Stunde<br>
+                            {% if machine.price_per_usage %}{{ machine.price_per_usage.default }} €/Benutzung{% endif %}
+                        </td>
                         <td>
                             {{ machine.price_per_hour.commercial }} €/Stunde<br>
                             {% if machine.price_per_usage %}{{ machine.price_per_usage.commercial }} €/Benutzung{% endif %}
                         </td>
+
                     </tr>
                     {% endfor %}
                 </tbody>

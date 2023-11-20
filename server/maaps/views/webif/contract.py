@@ -13,3 +13,6 @@ def webif__contract(request):
     mref += "-"
     mref += "".join(random.sample(string.ascii_lowercase, 3))
     return HttpResponse(loader.get_template('webif/contract.html').render({"mref": mref}, request))
+
+def webif__contract_paypal(request):
+    return HttpResponse(loader.get_template('webif/contract_paypal.html').render({}, request))
