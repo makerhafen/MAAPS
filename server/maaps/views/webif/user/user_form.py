@@ -63,6 +63,7 @@ class UserForm(forms.Form):
         user.profile.save()
 
         allowed_machines = [int(allowed_machine) for allowed_machine in self.allowed_machines]
+        print(allowed_machines)
         all_machines = Machine.objects.all()
         for machine in all_machines:
             if machine.id in allowed_machines and user not in machine.allowed_users.all():

@@ -13,6 +13,8 @@ def webif__user__create(request):
         form = UserForm(request.POST)
         if form.is_valid():
             image_data = request.POST.get('image_data', None)
+            allowed_machines = request.POST.getlist('allowed_machines', None)
+            form.allowed_machines = allowed_machines
             if image_data is not None and "," in image_data:
                 form.profile_picture = base64.b64decode(bytes(image_data.split(",")[-1], 'UTF-8'))
             try:

@@ -37,9 +37,8 @@ def webif__user__update(request, user_id):
                 form.profile_picture = base64.b64decode(bytes(image_data.split(",")[-1], 'UTF-8'))
             try:
                 form.save()
-                return redirect('webif__user__list')
+                return redirect('webif__user__show', user_id=profile.id)
             except Exception as e:
                 print("Failed to save form:", e)
                 error = "%s" % e
-    return render(request, 'webif/user/update.html',
-                  {'form': form, 'profile': profile, 'machines': machines, "last_error": error})
+    return render(request, 'webif/user/update.html', {'form': form, 'profile': profile, 'machines': machines, "last_error": error})
