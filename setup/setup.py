@@ -103,10 +103,12 @@ class Raspberry(System):
             echo 'python3 /home/%s/MAAPS/client/hardware.py' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart ;
         ''' % self.username)
 
+    #echo 'chromium-browser --disable-restore-session-state --kiosk %s:8001/%s/%s' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart ;
+
     def _install_autostart_chromium(self, server):
         self._ssh('''
-            cat /etc/xdg/lxsession/LXDE-pi/autostart | grep -v chromium-browser > 1 ; sudo mv 1 /etc/xdg/lxsession/LXDE-pi/autostart ;
-            echo 'chromium-browser --disable-restore-session-state --kiosk %s:8001/%s/%s' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart ;
+            cat /etc/xdg/lxsession/LXDE-pi/autostart | grep -v chromium-browser > 1 ; sudo mv 1 /etc/xdg/lxsession/LXDE-pi/autostart ; mkdir /home/pi/.epiphany/ ; 
+            echo 'epiphany-browser --profile /home/pi/.epiphany/ -a -i %s:8001/%s/%s' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart ;
         ''' % (server.ip, self.system_type, self.token.replace(" ", "%20")))
 
     def _install_wlan_restarter(self):

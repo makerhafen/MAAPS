@@ -6,4 +6,5 @@ machine, 192.168.43.49 , dc:a6:32:17:dc:b7 , pi       , raspberry , 180         
 machine, 192.168.43.124, dc:a6:32:0b:de:25 , pi       , raspberry , 180          , M:Prusa Mini 2;4dff8d93a5bf4b37ef77
 machine, 192.168.43.125, dc:a6:32:0b:d0:91 , pi       , raspberry , 180          , M:Prusa Mini 3;4bb5b566e2fd1357d941
 machine, 192.168.43.126, dc:a6:32:0b:de:7c , pi       , raspberry , 180          , M:Prusa Mini 4;4004a971a0f2e60ce59f
+machine, 192.168.42.155, b8:27:eb:dd:08:92 , pi       , raspberry , 180          , M:Prusa_Mini_5;4b2d9b0ea6ffbcd69cf9
 machine, 192.168.43.144, dc:a6:32:0b:dc:be , pi       , raspberry , 180          , M:Prusa MK3S 1;4254b4dd014913f2ca9a
