@@ -56,9 +56,9 @@ class System:
 
 class Raspberry(System):
     def install(self, server):
-        self._update_raspberry()
-        self._install_lcd()
-        time.sleep(30)  # wait for pi to reboot
+        #self._update_raspberry()
+        #self._install_lcd()
+        #time.sleep(30)  # wait for pi to reboot
         self._install_spi()
         self._install_hardwarepy()
         self._install_autostart_chromium(server)
@@ -72,7 +72,7 @@ class Raspberry(System):
         self._ssh('sudo apt-get -y remove --purge wolfram-engine triggerhappy anacron logrotate dphys-swapfile', timeout=600)
         self._ssh('sudo systemctl disable bootlogs', timeout=600)
         self._ssh('sudo systemctl disable console-setup', timeout=600)
-        self._ssh('sudo apt-get -y install busybox-syslogd', timeout=600)
+        self._ssh('sudo apt-get -y install busybox-syslogd epiphany-browser', timeout=600)
         self._ssh('sudo dpkg --purge rsyslog', timeout=600)
 
         self._ssh('''
