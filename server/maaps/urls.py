@@ -39,8 +39,8 @@ urlpatterns = [
     path(r'machine/auto_logout'                 , views.machine__auto_logout      , name='machine__auto_logout'),
     path(r'machine/M:<machine_token>'           , views.machine__login_machine    , name='machine__login_with_parameter'),
 
-    path(r'api/login/M:<machine_token>/<user_token>', views.api__login_user,name='api_login_user_to_machine'),
-    path(r'api/logout/M:<machine_token>/<user_token>', views.api__logout_user, name='api_logout_user_from_machine'),
+    path(r'api/login/M:<machine_token>/<user_token>', views.api.api_login_user_to_machine,name='api_login_user_to_machine'),
+    path(r'api/logout/M:<machine_token>/<user_token>', views.api.api_logout_user_from_machine, name='api_logout_user_from_machine'),
 
       # Webinterface
     path('webif/'                               , views.webif__dashboard   , name='webif__dashboard'),
@@ -66,6 +66,5 @@ urlpatterns = [
     path('webif/invoice/show/<int:invoice_id>', views.webif__invoice__show, name='webif__invoice__show'),
     path('webif/invoice/list_createable'      , views.webif__invoice__list_createable, name='webif__invoice__list_createable'),
     path('webif/invoice/create/<int:user_id>' , views.webif__invoice__create, name='webif__invoice__create'),
-
       ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

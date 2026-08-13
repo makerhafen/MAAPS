@@ -9,7 +9,7 @@ from datetime import timedelta
 from maaps.views.functions.payment import create_invoice
 
 @staff_member_required
-def webif__invoice__create(request, user_id=""):
+def webif__invoice__create(request, user_id :str=""):
     invoice = None
     profile = None
     unpayed_machine_sessions = None
