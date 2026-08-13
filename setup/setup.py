@@ -62,7 +62,7 @@ class Raspberry(System):
         self._install_spi()
         self._install_hardwarepy()
         self._install_autostart_chromium(server)
-        self._install_wlan_restarter()
+        self._install_wlan_restarter(server)
         self.reboot()
 
     def _update_raspberry(self):
@@ -111,13 +111,13 @@ class Raspberry(System):
             echo 'epiphany-browser --profile /home/pi/.epiphany/ -a -i %s:8001/%s/%s' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart ;
         ''' % (server.ip, self.system_type, self.token.replace(" ", "%20")))
 
-    def _install_wlan_restarter(self):
+    def _install_wlan_restarter(self, server):
         open("/tmp/wlan_check.sh", "w").write('''
             #!/bin/bash
-            /bin/ping -W 2 -c 1 -I 'wlan0' '192.168.42.1' > /dev/null 2> /dev/null
+            /bin/ping -W 2 -c 1 -I 'wlan0' '%s' > /dev/null 2> /dev/null
             if [ $? -ge 1 ] ; then
                 /bin/sleep 10
-                /bin/ping -W 2 -c 2 -I 'wlan0' '192.168.42.1' > /dev/null 2> /dev/null
+                /bin/ping -W 2 -c 2 -I 'wlan0' '%s' > /dev/null 2> /dev/null
                 if [ $? -ge 1 ] ; then
                     /sbin/ifdown 'wlan0'
                     /bin/sleep 10
@@ -125,7 +125,8 @@ class Raspberry(System):
                 fi
             fi
             exit 0
-        ''')
+        ''' % (server.ip, server.ip))
+
         self._ssh_exec('scp %s /tmp/wlan_check.sh %s@%s:/tmp/wlan_check.sh' % (SSH_OPTIONS, self.username, self.ip), 120)
         self._ssh('sudo mv /tmp/wlan_check.sh /usr/local/sbin/wlan_check.sh')
         self._ssh('sudo chmod +x /usr/local/sbin/wlan_check.sh')

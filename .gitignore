@@ -7,3 +7,4 @@ __pycache__/
 *$py.class
 backups
 db.sqlite3
+.agentOne

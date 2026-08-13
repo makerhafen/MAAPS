@@ -1,10 +1,10 @@
 type   , ip            , mac_address       , username , password  , lcd_rotation , token
-server , 192.168.43.105, dc:a6:32:0b:d9:9d , pi       , raspberry , 0            ,
-pos    , 192.168.43.105, dc:a6:32:0b:d9:9d , pi       , raspberry , 180          ,
-machine, 192.168.43.115, dc:a6:32:0b:da:2e , pi       , raspberry , 180          , M:Lasercutter;4ca09c53a3ac422d5a23
-machine, 192.168.43.49 , dc:a6:32:17:dc:b7 , pi       , raspberry , 180          , M:Prusa Mini 1;49059a8f8d5cc5cf1e9f
-machine, 192.168.43.124, dc:a6:32:0b:de:25 , pi       , raspberry , 180          , M:Prusa Mini 2;4dff8d93a5bf4b37ef77
-machine, 192.168.43.125, dc:a6:32:0b:d0:91 , pi       , raspberry , 180          , M:Prusa Mini 3;4bb5b566e2fd1357d941
-machine, 192.168.43.126, dc:a6:32:0b:de:7c , pi       , raspberry , 180          , M:Prusa Mini 4;4004a971a0f2e60ce59f
-machine, 192.168.42.155, b8:27:eb:dd:08:92 , pi       , raspberry , 180          , M:Prusa_Mini_5;4b2d9b0ea6ffbcd69cf9
-machine, 192.168.43.144, dc:a6:32:0b:dc:be , pi       , raspberry , 180          , M:Prusa MK3S 1;4254b4dd014913f2ca9a
+server , 192.168.4.10,  dc:a6:32:0b:d9:9d , pi       , raspberry , 0            ,
+pos    , 192.168.4.10,  dc:a6:32:0b:d9:9d , pi       , raspberry , 180          ,
+machine, 192.168.4.11,  dc:a6:32:17:dc:b7 , pi       , raspberry , 180          , M:Prusa Mini 1;49059a8f8d5cc5cf1e9f
+machine, 192.168.4.12,  dc:a6:32:0b:de:25 , pi       , raspberry , 180          , M:Prusa Mini 2;4dff8d93a5bf4b37ef77
+machine, 192.168.4.13,  dc:a6:32:0b:d0:91 , pi       , raspberry , 180          , M:Prusa Mini 3;4bb5b566e2fd1357d941
+machine, 192.168.4.14,  dc:a6:32:0b:de:7c , pi       , raspberry , 180          , M:Prusa Mini 4;4004a971a0f2e60ce59f
+machine, 192.168.4.15,  b8:27:eb:dd:08:92 , pi       , raspberry , 180          , M:Prusa_Mini_5;4b2d9b0ea6ffbcd69cf9
+machine, 192.168.4.31,  dc:a6:32:0b:dc:be , pi       , raspberry , 180          , M:Prusa MK3S 1;4254b4dd014913f2ca9a
+machine, 192.168.4.41,  dc:a6:32:0b:da:2e , pi       , raspberry , 180          , M:Lasercutter;4ca09c53a3ac422d5a23
