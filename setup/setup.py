@@ -75,7 +75,7 @@ class Raspberry(System):
         self._ssh('sudo apt-get -y remove --purge wolfram-engine triggerhappy anacron logrotate dphys-swapfile', timeout=600)
         self._ssh('sudo systemctl disable bootlogs', timeout=600)
         self._ssh('sudo systemctl disable console-setup', timeout=600)
-        self._ssh('sudo apt-get -y install busybox-syslogd epiphany-browser', timeout=600)
+        self._ssh('sudo apt-get -y install busybox-syslogd chromium-browser', timeout=600)
         self._ssh('sudo dpkg --purge rsyslog', timeout=600)
 
         self._ssh('''
@@ -111,8 +111,8 @@ class Raspberry(System):
 
     def _install_autostart_chromium(self, server):
         self._ssh('''
-            cat /etc/xdg/lxsession/LXDE-pi/autostart | grep -v chromium-browser > 1 ; sudo mv 1 /etc/xdg/lxsession/LXDE-pi/autostart ; mkdir /home/pi/.epiphany/ ; 
-            echo 'epiphany-browser --profile /home/pi/.epiphany/ -a -i %s:8001/%s/%s' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart ;
+            cat /etc/xdg/lxsession/LXDE-pi/autostart | grep -v chromium-browser | grep -v epiphany > 1 ; sudo mv 1 /etc/xdg/lxsession/LXDE-pi/autostart ; mkdir /home/pi/.epiphany/ ; 
+            echo 'chromium-browser --disable-restore-session-state --kiosk %s:8001/%s/%s' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart ;
         ''' % (server.ip, self.system_type, self.token.replace(" ", "%20")))
 
     def _install_wlan_restarter(self, server):
