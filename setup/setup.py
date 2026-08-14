@@ -66,6 +66,9 @@ class Raspberry(System):
         self.reboot()
 
     def _update_raspberry(self):
+        self._ssh('echo "deb http://legacy.raspbian.org/raspbian/ buster main contrib non-free rpi" > /tmp/apt', timeout=600)
+        self._ssh('sudo mv  /tmp/apt /etc/apt/sources.list', timeout=600)
+
         self._ssh('sudo apt-get -y update', timeout=600)
         self._ssh('sudo apt-get -y upgrade', timeout=600)
         self._ssh('sudo apt-get -y remove --purge lxplug-ptbatt pulseaudio cups-browsed piwiz ', timeout=600)
