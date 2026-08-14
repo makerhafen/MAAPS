@@ -90,7 +90,7 @@ class Raspberry(System):
         self._ssh('''sudo chmod -R 777 /var/log/maaps''', timeout=600)
 
     def _install_lcd(self):
-        self._ssh('rm -rf /tmp/LCD-show/ ; rm -rf /home/pi/LCD-show/ ')
+        self._ssh('sudo rm -rf /tmp/LCD-show/ ; sudo rm -rf /home/pi/LCD-show/ ')
         self._ssh('cd /home/pi/ && git clone https://github.com/waveshare/LCD-show.git;')
         self._ssh('cd /home/pi/LCD-show/ && chmod +x LCD35-show && sudo ./LCD35-show %s;' % self.lcd_rotation)
 
