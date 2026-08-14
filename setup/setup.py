@@ -57,8 +57,8 @@ class System:
 class Raspberry(System):
     def install(self, server):
         self._update_raspberry()
-        #self._install_lcd()
-        #time.sleep(30)  # wait for pi to reboot
+        self._install_lcd()
+        time.sleep(30)  # wait for pi to reboot
         self._install_spi()
         self._install_hardwarepy()
         self._install_autostart_chromium(server)
