@@ -5,6 +5,7 @@ server/db.sqlite3
 __pycache__/
 *.py[cod]
 *$py.class
+*.pyc
 backups
 db.sqlite3
-.agentOne
+.agentone

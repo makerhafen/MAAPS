@@ -11,7 +11,7 @@ logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 
 SSH_OPTIONS = '-q -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -oPubkeyAuthentication=no'
 
-PI_MACS = ["dc:a6:32:", "b8:27:eb", "e4:5f:01"  ]
+PI_MACS = ["dc:a6:32:", "b8:27:eb", "e4:5f:01"]
 
 
 class System:
@@ -107,8 +107,6 @@ class Raspberry(System):
             echo 'python3 /home/%s/MAAPS/client/hardware.py' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart ;
         ''' % self.username)
 
-    #echo 'chromium-browser --disable-restore-session-state --kiosk %s:8001/%s/%s' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart ;
-
     def _install_autostart_chromium(self, server):
         self._ssh('''
             cat /etc/xdg/lxsession/LXDE-pi/autostart | grep -v chromium-browser | grep -v epiphany > 1 ; sudo mv 1 /etc/xdg/lxsession/LXDE-pi/autostart ; mkdir /home/pi/.epiphany/ ; 
@@ -139,13 +137,14 @@ class Raspberry(System):
             echo '*/2 * * * * /usr/local/sbin/wlan_check.sh' | sudo tee -a /etc/crontab ;
         ''')
 
+
 class Server(System):
     def __init__(self, system_type, ip, mac_address, username, password):
         super().__init__(system_type, ip, mac_address, username, password, None, "")
 
-    def install(self):
+    def install(self, secret_key=""):
         self._install_stunnel()
-        self._install_server()
+        self._install_server(secret_key)
         self.reboot()
 
     def _install_stunnel(self):
@@ -176,12 +175,17 @@ class Server(System):
             echo "nohup sudo stunnel4 /etc/stunnel/stunnel.conf" | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart ;  
         ''')
 
-    def _install_server(self):
+    def _install_server(self, secret_key=""):
         self._git_download()
+        if secret_key:
+            self._ssh('echo "%s" > /home/%s/MAAPS/server/secret_key.txt' % (secret_key, self.username))
+
         self._ssh('''
-            echo 'python3 /home/%s/MAAPS/server/manage.py runserver 0.0.0.0:8001 >> /var/log/maaps/server.log 2>&1' |tee /home/%s/maaps_start.sh
+            echo '#!/bin/bash' > /home/%s/maaps_start.sh
+            echo 'export SECRET_KEY="%s"' >> /home/%s/maaps_start.sh
+            echo 'python3 /home/%s/MAAPS/server/manage.py runserver 0.0.0.0:8001 >> /var/log/maaps/server.log 2>&1' >> /home/%s/maaps_start.sh
             chmod +x /home/%s/maaps_start.sh
-        ''' % (self.username, self.username, self.username))
+        ''' % (self.username, secret_key, self.username, self.username, self.username, self.username))
 
         self._ssh('''
             cd  /home/%s/MAAPS/server/ ; 
@@ -191,12 +195,11 @@ class Server(System):
             echo '/home/%s/maaps_start.sh' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart ;
         ''' % (self.username, self.username))
 
-
-    def backup(self):
+    def backup(self, deployment_folder):
         date_time = datetime.now().strftime("%Y.%m.%d_%H:%M:%S")
-        destination = "backups/%s/" % date_time
+        destination = os.path.join(deployment_folder, "backups", date_time)
         print("Creating new backup dir '%s'" % destination)
-        os.system("mkdir -p '%s'" % destination)
+        os.makedirs(destination, exist_ok=True)
 
         ssh_cmd = 'scp -r %s %s@%s:/home/%s/MAAPS/server/media/ %s' % (SSH_OPTIONS, self.username, self.ip, self.username, destination)
         print("Backing up media, please wait")
@@ -231,7 +234,10 @@ class Machine(Raspberry):
 
 
 class SiteSetup:
-    def __init__(self):
+    def __init__(self, deployment_folder):
+        self.deployment_folder = os.path.abspath(deployment_folder)
+        if not os.path.isdir(self.deployment_folder):
+            raise FileNotFoundError("Deployment-Ordner '%s' existiert nicht" % self.deployment_folder)
         self.server = None
         self.poss = []
         self.machines = []
@@ -258,8 +264,8 @@ class SiteSetup:
 
         print(" Scan done       ")
         print(" %s IPs active" % len(self._scan_network_data))
-        print(" %s unknown Raspberry PI found" % len([x for x in self._scan_network_data if x.find("UNKNOWN PI") != -1] ))
-        print(" %s MAAPS devices found" % len([x for x in self._scan_network_data if x.find("MAAPS")!= -1] ))
+        print(" %s unknown Raspberry PI found" % len([x for x in self._scan_network_data if x.find("UNKNOWN PI") != -1]))
+        print(" %s MAAPS devices found" % len([x for x in self._scan_network_data if x.find("MAAPS") != -1]))
         print("\nResults:")
         self._scan_network_data.sort(key=lambda item: tuple(int(part) for part in item.split("\t")[0].split('.')))
         for nd in self._scan_network_data:
@@ -287,10 +293,9 @@ class SiteSetup:
                             if m.token != "":
                                 status += ", Token: %s" % m.token
                 self._scan_network_data.append(ip + "\t\t" + mac + "\t" + status)
-                #break
 
     def _get_known_by_mac(self, mac):
-        if self.server.mac_address == mac:
+        if self.server and self.server.mac_address == mac:
             return self.server
         m = [m for m in self.machines if m.mac_address == mac]
         if len(m) > 0:
@@ -301,65 +306,117 @@ class SiteSetup:
         return None
 
     def _read_data(self):
-        for l in open("devices.csv", "r").read().split("\n")[1:]:
+        devices_file = os.path.join(self.deployment_folder, "devices.csv")
+        if not os.path.isfile(devices_file):
+            raise FileNotFoundError("devices.csv in Deployment-Ordner '%s' nicht gefunden" % self.deployment_folder)
+
+        lines = open(devices_file, "r").read().split("\n")[1:]
+        for l in lines:
             l = l.strip()
-            if l == "": continue
+            if l == "":
+                continue
             system_type, ip, mac_address, username, password, lcd_rotation, token = [p.strip() for p in l.split(",")]
             if system_type == "server":
-                if self.server is not None: raise Exception("Only one server is allowed")
+                if self.server is not None:
+                    raise Exception("Only one server is allowed")
                 self.server = Server(system_type, ip, mac_address, username, password)
             elif system_type == "pos":
                 self.poss.append(POS(system_type, ip, mac_address, username, password, lcd_rotation, token))
             elif system_type == "machine":
                 self.machines.append(Machine(system_type, ip, mac_address, username, password, lcd_rotation, token))
 
+    def get_or_create_secret_key(self):
+        secret_file = os.path.join(self.deployment_folder, "secret_key.txt")
+        if os.path.isfile(secret_file):
+            with open(secret_file, "r") as f:
+                key = f.read().strip()
+                if key:
+                    return key
+        import secrets
+        key = secrets.token_urlsafe(50)
+        with open(secret_file, "w") as f:
+            f.write(key + "\n")
+        print("Ein neuer SECRET_KEY wurde generiert und in '%s' gespeichert." % secret_file)
+        return key
+
     def show(self):
-        print("Machines:")
-        print(open("devices.csv", "r").read())
+        print("Devices configuration (%s/devices.csv):" % self.deployment_folder)
+        devices_file = os.path.join(self.deployment_folder, "devices.csv")
+        print(open(devices_file, "r").read())
+
 
 helptxt = '''
-    setup.py help               # show this help
-    setup.py configcard <dir>   # enable ssh and wlan on SD card mounted to <dir>
-    setup.py scan <network>     # search /24 (256 ips) in <network> for raspberry PIs
-    setup.py serversetup        # install/upgrade server
-    setup.py backup             # backup server
-    setup.py restore <source>   # restore server from source folder backup
-    setup.py install <ip | all> # install/upgrade raspberry pi machine or PointOfSale
-    setup.py show               # Show devices
+MAAPS Deployment & Management Tool
+
+Verwendung:
+    python3 setup.py <site_deployment_folder> <command> [options]
+    python3 setup.py help
+
+Befehle:
+    show                       Gerätekonfiguration aus devices.csv anzeigen
+    serversetup                Server auf Zielsystem installieren/aktualisieren
+    install <ip | all>         Raspberry Pi (POS / Machine) installieren/aktualisieren
+    backup                     Server-Datenbank & Media in <site_deployment_folder>/backups/ sichern
+    restore <source>           Server aus Backup-Ordner <source> wiederherstellen
+    configcard <dir>           WLAN (wpa_supplicant.conf) & SSH auf gemounteter SD-Karte (<dir>) einrichten
+    scan <network>             Subnetz (z.B. 192.168.1.0) nach Raspberry PIs scanen (erfordert root)
+    help                       Diese Hilfe anzeigen
+
+Beispiel:
+    python3 setup.py /path/to/MAAPS-Deployment show
+    python3 setup.py /path/to/MAAPS-Deployment backup
 '''
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("\n    Error: Missing options\n%s" % helptxt)
+    if len(sys.argv) < 2 or sys.argv[1] in ["help", "-h", "--help"]:
+        print(helptxt)
+        exit(0)
+
+    site_deployment_folder = sys.argv[1]
+
+    if not os.path.isdir(site_deployment_folder):
+        print("\n    Fehler: Ungültiger Deployment-Ordner '%s'\n%s" % (site_deployment_folder, helptxt))
         exit(1)
 
-    option = sys.argv[1]
+    if len(sys.argv) < 3:
+        print("\n    Fehler: Fehlender Befehl für Deployment-Ordner '%s'\n%s" % (site_deployment_folder, helptxt))
+        exit(1)
 
-    siteSetup = SiteSetup()
+    option = sys.argv[2]
+
+    try:
+        siteSetup = SiteSetup(site_deployment_folder)
+    except Exception as e:
+        print("\n    Fehler beim Laden des Deployment-Ordners: %s\n" % e)
+        exit(1)
 
     if option == "configcard":
-        if len(sys.argv) < 3:
-            print("\n    Error: Missing target directory\n%s" % helptxt)
+        if len(sys.argv) < 4:
+            print("\n    Fehler: Fehlendes Zielverzeichnis der SD-Karte\n%s" % helptxt)
             exit(1)
-        directory = sys.argv[2]
-        open(os.path.join(directory, "wpa_supplicant.conf"), "w").write(open("wpa_supplicant.conf", "r").read())
+        directory = sys.argv[3]
+        wpa_file = os.path.join(siteSetup.deployment_folder, "wpa_supplicant.conf")
+        if os.path.isfile(wpa_file):
+            open(os.path.join(directory, "wpa_supplicant.conf"), "w").write(open(wpa_file, "r").read())
+        else:
+            print("Hinweis: wpa_supplicant.conf nicht in '%s' gefunden, erstelle leere Datei." % siteSetup.deployment_folder)
         open(os.path.join(directory, "ssh"), "w").write('')
-        print("Card configured")
+        print("SD-Karte in '%s' erfolgreich für SSH und WLAN konfiguriert." % directory)
 
     elif option == "scan":
-        if len(sys.argv) < 3:
-            print("\n    Error: Missing target network to scan\n%s" % helptxt)
+        if len(sys.argv) < 4:
+            print("\n    Fehler: Fehlendes Zielnetzwerk zum Scannen (z.B. 192.168.1.0)\n%s" % helptxt)
             exit(1)
         if os.geteuid() != 0:
-            print("\n    Error: Network scan requires ROOT privileges\n")
+            print("\n    Fehler: Netzwerkanalyse erfordert ROOT-Rechte (sudo)\n")
             exit(1)
-        siteSetup.scan_network(sys.argv[2])
+        siteSetup.scan_network(sys.argv[3])
 
     elif option == "install":
-        if len(sys.argv) < 3:
-            print("\n    Error: Missing target ip or all\n%s" % helptxt)
+        if len(sys.argv) < 4:
+            print("\n    Fehler: Fehlende Ziel-IP oder 'all'\n%s" % helptxt)
             exit(1)
-        target = sys.argv[2]
+        target = sys.argv[3]
         for machine in siteSetup.machines:
             if machine.ip == target or target == "all":
                 machine.install(siteSetup.server)
@@ -368,22 +425,20 @@ if __name__ == "__main__":
                 pos.install(siteSetup.server)
 
     elif option == "serversetup":
-        siteSetup.server.install()
+        secret_key = siteSetup.get_or_create_secret_key()
+        siteSetup.server.install(secret_key)
 
     elif option == "backup":
-        siteSetup.server.backup()
+        siteSetup.server.backup(siteSetup.deployment_folder)
 
     elif option == "show":
         siteSetup.show()
 
-    elif option == "help":
-        print(helptxt)
-
     elif option == "restore":
-        if len(sys.argv) < 3:
-            print("\n    Error: Missing source folder\n%s" % helptxt)
+        if len(sys.argv) < 4:
+            print("\n    Fehler: Fehlendes Backup-Quellverzeichnis\n%s" % helptxt)
             exit(1)
-        siteSetup.server.restore(sys.argv[2])
+        siteSetup.server.restore(sys.argv[3])
 
     else:
-        print("\n    Error: Unknown option '%s'\n%s" % (sys.argv[1], helptxt))
+        print("\n    Fehler: Unbekannter Befehl '%s'\n%s" % (option, helptxt))

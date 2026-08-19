@@ -2,7 +2,14 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY = 'fo15rp=#xbqzp$4w07r%b^tl34707gxoa8zbr51a@lc&kp3s&e'
+SECRET_KEY_FILE = os.path.join(BASE_DIR, 'secret_key.txt')
+if 'SECRET_KEY' in os.environ:
+    SECRET_KEY = os.environ['SECRET_KEY']
+elif os.path.isfile(SECRET_KEY_FILE):
+    with open(SECRET_KEY_FILE, 'r') as f:
+        SECRET_KEY = f.read().strip()
+else:
+    SECRET_KEY = 'fo15rp=#xbqzp$4w07r%b^tl34707gxoa8zbr51a@lc&kp3s&e'
 
 DEBUG = True
 

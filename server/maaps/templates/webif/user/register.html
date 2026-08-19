@@ -1,0 +1,49 @@
+{% extends "webif/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="main-breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/webif">Makerhafen</a></li>
+            <li class="breadcrumb-item active">Registrierung</li>
+        </ol>
+    </nav>
+    <!-- /Breadcrumb -->
+
+    {% if last_error != None %}
+        <div class="row">
+            <div class="col-md-12 alert alert-danger">
+                <b>Fehler bei der Registrierung:</b> {{ last_error }}
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><b>Neues Benutzerkonto erstellen</b></h3>
+                </div>
+                <div class="panel-body">
+                    <p class="text-muted">
+                        Willkommen im Makerhafen! Bitte fülle das Formular aus, um dich zu registrieren.
+                        Nach der Registrierung schaltet ein Administrator dein Konto und deine Geräte-Freigaben frei.
+                    </p>
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        
+                        {% include "webif/user/get_picture.html" %}
+                        <br><br>
+                        
+                        <div class="text-right">
+                            <a class="btn btn-default" href="{% url 'webif__dashboard' %}">Abbrechen</a>
+                            <button type="submit" class="btn btn-success">Konto jetzt registrieren</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

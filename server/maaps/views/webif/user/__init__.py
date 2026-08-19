@@ -8,3 +8,4 @@ from .show_contract import webif__user__contract_paypal
 from .show_contract import webif__user__contract_sepa
 from .create_new_card import webif__user__create_new_card
 from .deposit import webif__user__deposit
+from .register import webif__user__register

@@ -1,0 +1,29 @@
+{% extends "webif/base.html" %}
+
+{% block content %}
+    <div class="row" style="margin-top: 40px;">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><b>Registrierung erfolgreich!</b></h3>
+                </div>
+                <div class="panel-body text-center" style="padding: 30px;">
+                    <i class="fa fa-check-circle fa-5x text-success" style="color: #5cb85c; margin-bottom: 20px;"></i>
+                    <h4>Vielen Dank, {{ registered_user.first_name }}!</h4>
+                    <p style="font-size: 16px; margin-top: 15px;">
+                        Dein Benutzerkonto (<strong>{{ registered_user.username }}</strong>) wurde erfolgreich angelegt.
+                    </p>
+                    <div class="alert alert-info" style="margin-top: 20px; text-align: left;">
+                        <strong>Wie geht es jetzt weiter?</strong>
+                        <ul>
+                            <li>Ein Administrator prüft deine Angaben und schaltet die Berechtigungen für benötigte Maschinen frei.</li>
+                            <li>Deine RFID-Karte wird am POS-Terminal beschrieben und dir ausgehändigt.</li>
+                        </ul>
+                    </div>
+                    <br>
+                    <a href="{% url 'webif__dashboard' %}" class="btn btn-primary btn-lg">Zurück zur Startseite</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

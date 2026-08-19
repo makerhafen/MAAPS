@@ -27,25 +27,25 @@ MAAPS - Machine Access And Payments System
 
 ### Setup
 
-Add devices to setup/devices.csv, edit setup/wpa_supplicant.conf to match your wlan.
+Create or configure your deployment folder (e.g., `/path/to/MAAPS-Deployment`) containing `devices.csv` and `wpa_supplicant.conf`.
 
 #### Server
+```bash
+python3 setup.py /path/to/MAAPS-Deployment serversetup
 ```
-python3 setup.py serversetup
-```
-On first install login to server now, go to /home/{PI_USERNAME}/MAAPS/server and run
-```
+On first install login to server now, go to `/home/{PI_USERNAME}/MAAPS/server` and run
+```bash
 python3 manage.py createsuperuser 
 ```
 
 to add your first user. 
-Open the user admin page https://SERVERIP/webif/user/list, add firstname and lastname to admin user and save.
-Open the django admin page at https://SERVERIP/admin/, open the "Tokens" page and get the token identifier for admin (for example U:admin;4c31a8d19b95a7dfe85c)
+Open the user admin page `https://SERVERIP/webif/user/list`, add firstname and lastname to admin user and save.
+Open the django admin page at `https://SERVERIP/admin/`, open the "Tokens" page and get the token identifier for admin (for example `U:admin;4c31a8d19b95a7dfe85c`).
 
 #### Point of Sale
 Install your first point of sale
-```
-python3 setup.py install <POS_IP>
+```bash
+python3 setup.py /path/to/MAAPS-Deployment install <POS_IP>
 ```
 After that, we must write our first admin RFID card. 
 Login to the first POS, go to /home/{PI_USERNAME}/MAAPS/client/. 
